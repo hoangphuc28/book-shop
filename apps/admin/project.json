@@ -1,7 +1,7 @@
 {
-  "name": "book-shop",
+  "name": "admin",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/book-shop/src",
+  "sourceRoot": "apps/admin/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -9,16 +9,20 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "book-shop:build"
+        "buildTarget": "admin:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "book-shop:build:development"
+          "buildTarget": "admin:build:development"
         },
         "production": {
-          "buildTarget": "book-shop:build:production"
+          "buildTarget": "admin:build:production"
         }
       }
+    },
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f apps/admin/Dockerfile . -t admin"
     }
   }
 }

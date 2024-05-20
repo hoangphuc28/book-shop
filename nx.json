@@ -34,7 +34,11 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["apps/book-shop-e2e/**/*"]
+      "exclude": [
+        "apps/book-shop-e2e/**/*",
+        "apps/admin-e2e/**/*",
+        "apps/customer-e2e/**/*"
+      ]
     }
   ],
   "nxCloudAccessToken": "ZmIyZTFjZDItZDdjMC00MzlkLTg1MzQtNWI1NjdjNjIzOGVlfHJlYWQtd3JpdGU="

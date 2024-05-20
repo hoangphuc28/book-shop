@@ -1,0 +1,28 @@
+{
+  "name": "customer",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/customer/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "customer:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "customer:build:development"
+        },
+        "production": {
+          "buildTarget": "customer:build:production"
+        }
+      }
+    },
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f apps/customer/Dockerfile . -t customer"
+    }
+  }
+}

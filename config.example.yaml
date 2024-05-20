@@ -1,0 +1,33 @@
+NODE_ENV: 'development'
+
+APPS:
+  SERVER:
+    ADMIN:
+      PORT:
+      JWT:
+        SECRET:
+        EXPIRES_IN:
+    CUSTOMER:
+      PORT:
+      JWT:
+        SECRET:
+        EXPIRES_IN:
+
+DATABASE:
+  POSTGRES:
+    HOST:
+    PORT:
+    DATABASE:
+    SCHEMA:
+    USERNAME:
+    PASSWORD:
+    SSL:
+    SYNCHRONIZE:
+
+AWS:
+  REGION:
+  ACCESS_KEY_ID:
+  SECRET_ACCESS_KEY:
+  SERVICES:
+    S3:
+      BUCKET_NAME:
