@@ -1,0 +1,28 @@
+name: book-store
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres-${COMPOSE_PROJECT_NAME}
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${COMPOSE_PROJECT_NAME}
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: Abc@123
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  admin-server:
+    # platform: linux/amd64
+    image: zhoangp28/${COMPOSE_PROJECT_NAME}
+    container_name: admin-server-${COMPOSE_PROJECT_NAME}
+    build:
+      context: .
+      dockerfile: apps/admin/Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:
