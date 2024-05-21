@@ -12,7 +12,7 @@ const src = 'https://cdn.shopify.com/s/files/1/0533/2089/files/design-books-the-
     </div>
     <div className="pi-text">
       <div className="catagory-name">Coat</div>
-      <a href="#">
+      <a href="/products/1">
         <h5 style={{color: '#5B5B5B'}}>Guangzhou sweater</h5>
       </a>
       <div className="product-price">
