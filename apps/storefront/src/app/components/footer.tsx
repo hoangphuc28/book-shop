@@ -4,68 +4,60 @@ import Logo from "../../../images/logo2.png";
 
 export default function Footer() {
   return(
-   <footer className="pt-16 pb-12 border-t border-gray-100" style={{background: '#020243'}}>
-  <div className="container grid grid-cols-1 ">
-    <div className="col-span-1 space-y-4">
-      <Image width={120} height={120} src={Logo} alt="logo" className="w-30" />
-      <div className="mr-2">
-        <p className="text-gray-500">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia, hic?
-        </p>
+<footer className="py-10 text-white" style={{background: '#040028'}}>
+  <div className="container mx-auto flex flex-col items-center md:flex-row md:justify-between">
+    <div className="mb-8 md:mb-0 text-left md:text-left">
+      <div className="flex justify-center w-full md:justify-start mb-4">
+        <div className="text-5xl font-bold w-full tracking-wider leading-none">
+          <div className="flex items-start space-x-2">
+          <Image width={150} height={150} src={Logo} alt="logo" className="w-30" />
+          </div>
+        </div>
       </div>
-      <div className="flex space-x-5">
-        <a href="#" className="text-gray-400 hover:text-gray-500"><i className="fa-brands fa-facebook-square" /></a>
-        <a href="#" className="text-gray-400 hover:text-gray-500"><i className="fa-brands fa-instagram-square" /></a>
-        <a href="#" className="text-gray-400 hover:text-gray-500"><i className="fa-brands fa-twitter-square" /></a>
-        <a href="#" className="text-gray-400 hover:text-gray-500">
-          <i className="fa-brands fa-github-square" />
-        </a>
-      </div>
+      <p className="text-sm">Start a business and design the life you want – all in one place.</p>
     </div>
-    <div className="col-span-2 grid grid-cols-2 gap-4">
-      <div className="grid grid-cols-2 gap-4 md:gap-8">
-        <div>
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Solutions</h3>
-          <div className="mt-4 space-y-4">
-            <a href="#" className="text-base text-gray-500 hover:text-gray-900 block">Marketing</a>
-            <a href="#" className="text-base text-gray-500 hover:text-gray-900 block">Analitycs</a>
-            <a href="#" className="text-base text-gray-500 hover:text-gray-900 block">Commerce</a>
-            <a href="#" className="text-base text-gray-500 hover:text-gray-900 block">Insights</a>
-          </div>
-        </div>
-        <div>
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Support</h3>
-          <div className="mt-4 space-y-4">
-            <a href="#" className="text-base text-gray-500 hover:text-gray-900 block">Pricing</a>
-            {/* <a href="#" class="text-base text-gray-500 hover:text-gray-900 block">Documentation</a> */}
-            <a href="#" className="text-base text-gray-500 hover:text-gray-900 block">Guides</a>
-            <a href="#" className="text-base text-gray-500 hover:text-gray-900 block">API Status</a>
-          </div>
-        </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-left md:text-left">
+      <div>
+        <h6 className="font-semibold mb-2">BUILD YOUR BUSINESS</h6>
+        <ul>
+          <li className="mb-1"><a href="#" className="hover:underline">Business ideas</a></li>
+          <li className="mb-1"><a href="#" className="hover:underline">Case studies</a></li>
+          <li className="mb-1"><a href="#" className="hover:underline">Design and branding</a></li>
+          <li className="mb-1"><a href="#" className="hover:underline">Dropshipping</a></li>
+          <li className="mb-1"><a href="#" className="hover:underline">Marketing</a></li>
+        </ul>
       </div>
-      <div className="grid grid-cols-2 gap-8">
-        <div>
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Solutions</h3>
-          <div className="mt-4 space-y-4">
-            <a href="#" className="text-base text-gray-500 hover:text-gray-900 block">Marketing</a>
-            <a href="#" className="text-base text-gray-500 hover:text-gray-900 block">Analitycs</a>
-            <a href="#" className="text-base text-gray-500 hover:text-gray-900 block">Commerce</a>
-            <a href="#" className="text-base text-gray-500 hover:text-gray-900 block">Insights</a>
-          </div>
-        </div>
-        <div>
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Support</h3>
-          <div className="mt-4 space-y-4">
-            <a href="#" className="text-base text-gray-500 hover:text-gray-900 block">Pricing</a>
-            {/* <a href="#" class="text-base text-gray-500 hover:text-gray-900 block">Documentation</a> */}
-            <a href="#" className="text-base text-gray-500 hover:text-gray-900 block">Guides</a>
-            <a href="#" className="text-base text-gray-500 hover:text-gray-900 block">API Status</a>
-          </div>
-        </div>
+      <div>
+        <h6 className="font-semibold mb-2">STORIES</h6>
+        <ul>
+          <li className="mb-1"><a href="#" className="hover:underline">A day in my life</a></li>
+          <li className="mb-1"><a href="#" className="hover:underline">My first 90 days</a></li>
+          <li className="mb-1"><a href="#" className="hover:underline">Raise the bar</a></li>
+          <li className="mb-1"><a href="#" className="hover:underline">Starter stories</a></li>
+        </ul>
+      </div>
+      <div>
+        <h6 className="font-semibold mb-2">YOUR LIFE</h6>
+        <ul>
+          <li className="mb-1"><a href="#" className="hover:underline">Mindset</a></li>
+          <li className="mb-1"><a href="#" className="hover:underline">Money</a></li>
+          <li className="mb-1"><a href="#" className="hover:underline">Productivity</a></li>
+          <li className="mb-1"><a href="#" className="hover:underline">Wellbeing</a></li>
+        </ul>
+      </div>
+      <div>
+        <h6 className="font-semibold mb-2">FREE BUSINESS TOOLS</h6>
+        <ul>
+          <li className="mb-1"><a href="#" className="hover:underline">Business Name Generator</a></li>
+          <li className="mb-1"><a href="#" className="hover:underline">Slogan Generator</a></li>
+          <li className="mb-1"><a href="#" className="hover:underline">Traffic Calculator</a></li>
+          <li className="mb-1"><a href="#" className="hover:underline">Profit Margin Calculator</a></li>
+        </ul>
       </div>
     </div>
   </div>
 </footer>
+
 
   )
 }

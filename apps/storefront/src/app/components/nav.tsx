@@ -4,7 +4,7 @@ import Image from "next/image";
 import Logo from "../../../images/logo2.png";
 export default function Nav() {
   return (
-    <nav className="sticky top-0 z-50" style={{background: '#020243'}}>
+    <nav className="sticky top-0 z-50" style={{background: '#040028'}}>
       <div className="container flex">
         <div className="flex items-center justify-between flex-grow md:pl-12 py-5">
 
