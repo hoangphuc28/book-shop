@@ -75,7 +75,7 @@ const Review = () => {
               name="simple-controlled"
               value={newReview.rating}
               onChange={(event, newValue) => {
-                setNewReview({ ...newReview, rating: newValue });
+                // setNewReview({ ...newReview, rating: newValue });
               }}
               className="mb-4"
             />
