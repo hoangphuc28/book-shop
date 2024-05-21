@@ -1,0 +1,28 @@
+{
+  "name": "user-api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/user-api/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "user-api:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "user-api:build:development"
+        },
+        "production": {
+          "buildTarget": "user-api:build:production"
+        }
+      }
+    },
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f apps/user-api/Dockerfile . -t customer"
+    }
+  }
+}

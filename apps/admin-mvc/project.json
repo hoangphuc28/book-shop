@@ -1,0 +1,28 @@
+{
+  "name": "admin-mvc",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/admin-mvc/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "admin-mvc:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "admin-mvc:build:development"
+        },
+        "production": {
+          "buildTarget": "admin-mvc:build:production"
+        }
+      }
+    },
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f apps/admin-mvc/Dockerfile . -t admin"
+    }
+  }
+}
