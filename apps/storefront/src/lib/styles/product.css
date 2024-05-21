@@ -1,91 +1,90 @@
 .product-item {
-    margin-bottom: 26px;
-    border-radius: unset;
-    border: 1px solid #c78443;
+  margin-bottom: 26px;
+  border-radius: unset;
+  border: 1px solid #c78443;
 }
 .product-item .pi-pic {
-    overflow: hidden;
-    position: relative;
+  overflow: hidden;
+  position: relative;
 }
 .product-item .pi-text {
-    text-align: center;
+  text-align: center;
 }
 .product-item .pi-pic img {
-    min-width: 100%;
-    height: 250px;
+
 }
 .product-item .pi-pic ul {
-    position: absolute;
-    left: 0;
-    bottom: -52px;
-    -webkit-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;
-    text-align: center;
-    width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: -52px;
+  -webkit-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+  text-align: center;
+  width: 100%;
 }
 .product-item .pi-pic ul li {
-    list-style: none;
-    display: inline-block;
-    background: #ffffff;
+  list-style: none;
+  display: inline-block;
+  background: #ffffff;
 }
 .product-item .pi-pic ul li.w-icon.active a {
-    background: #e7ab3c;
-    color: #ffffff;
+  background: #e7ab3c;
+  color: #ffffff;
 }
 
 @media only screen and (min-width: 1200px) and (max-width: 1920px) {
-    .product-item .pi-pic ul li a {
-        padding: 16px 12px 12px 11px;
-    }
+  .product-item .pi-pic ul li a {
+      padding: 16px 12px 12px 11px;
+  }
 }
 .product-item .pi-pic ul li a {
-    font-size: 16px;
-    font-weight: 700;
-    color: #252525;
-    display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #252525;
+  display: block;
 }
 .quick-view {
-    margin: 0 3px;
+  margin: 0 3px;
 }
 .product-item .pi-text .catagory-name {
-    font-size: 10px;
-    color: #b2b2b2;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
+  font-size: 10px;
+  color: #b2b2b2;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 .product-item .pi-text a {
-    display: block;
+  display: block;
 }
 .product-item .pi-text a h5 {
-    color: #252525;
+  color: #252525;
 }
 .product-item .pi-text .product-price {
-    color: #020243;
-    font-size: 20px;
-    letter-spacing: 5px;
+  color: #020243;
+  font-size: 14px;
+  letter-spacing: 5px;
 }
 .product-item .pi-text .product-price span {
-    font-size: 14px;
-    font-weight: 400;
-    color: #b2b2b2;
-    text-decoration: line-through;
+  font-size: 14px;
+  font-weight: 400;
+  color: #b2b2b2;
+  text-decoration: line-through;
 }
 .product-item:hover .pi-pic ul {
-    bottom: 0;
+  bottom: 0;
 }
 .btn-style1 {
-    background: #020243;
-    border: 1px solid #020243;
-    font-family: "OpenSans Regular";
-    font-size: 16px;
-    color: #fff;
-    letter-spacing: 5px;
+  background: #020243;
+  border: 1px solid #020243;
+  font-family: "OpenSans Regular";
+  font-size: 14px;
+  color: #fff;
+  letter-spacing: 5px;
 }
 .btn-style1:hover {
-    transition: all .2s ease-in;
-    border: 1px solid #020243;
-    background: none;
-    color: #020243;
+  transition: all .2s ease-in;
+  border: 1px solid #020243;
+  background: none;
+  color: #020243;
 }

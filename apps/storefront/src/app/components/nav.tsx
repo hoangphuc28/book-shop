@@ -7,7 +7,6 @@ export default function Nav() {
     <nav className="sticky top-0 z-50" style={{background: '#040028'}}>
       <div className="container flex">
         <div className="flex items-center justify-between flex-grow md:pl-12 py-5">
-
           <div className="flex items-center space-x-6 capitalize">
           <Link href="/">
           <Image width={80} height={80} src={Logo} alt="logo"/>
@@ -24,7 +23,7 @@ export default function Nav() {
               </div>
             </div>
             <a
-              href="pages/shop.html"
+              href="/products"
               className="transition t-style1" style={{letterSpacing: '3px'}}
             >
               Shop
