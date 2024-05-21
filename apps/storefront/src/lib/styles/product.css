@@ -63,7 +63,7 @@
 .product-item .pi-text .product-price {
   color: #020243;
   font-size: 14px;
-  letter-spacing: 5px;
+  letter-spacing: 3px;
 }
 .product-item .pi-text .product-price span {
   font-size: 14px;
@@ -80,7 +80,7 @@
   font-family: "OpenSans Regular";
   font-size: 14px;
   color: #fff;
-  letter-spacing: 5px;
+  letter-spacing: 3px;
 }
 .btn-style1:hover {
   transition: all .2s ease-in;

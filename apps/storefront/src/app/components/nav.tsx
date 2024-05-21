@@ -37,7 +37,7 @@ export default function Nav() {
               Login
             </a>
             <Link
-              href="#"
+              href="/cart"
               className="text-center text-gray-700 hover:text-primary transition relative"
             >
               <div className="flex items-center">
