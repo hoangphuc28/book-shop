@@ -1,6 +1,7 @@
 "use client";
 import CardItem from "./cardItem";
 import * as React from "react";
+import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
@@ -35,7 +36,7 @@ export default function Featured() {
           </div>
         </TabPanel>
         <TabPanel value="2">
-          <div className="grid grid-cols-4 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-4 md:grid-cols-4 gap-10">
             <CardItem />
             <CardItem />
             <CardItem />
