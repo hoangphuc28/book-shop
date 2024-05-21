@@ -1,9 +1,13 @@
+import Image from 'next/image'
+import Logo from "../../../images/logo2.png";
+
+
 export default function Footer() {
   return(
-   <footer className="bg-white pt-16 pb-12 border-t border-gray-100">
+   <footer className="pt-16 pb-12 border-t border-gray-100" style={{background: '#020243'}}>
   <div className="container grid grid-cols-1 ">
     <div className="col-span-1 space-y-4">
-      <img src="assets/images/logo.svg" alt="logo" className="w-30" />
+      <Image width={120} height={120} src={Logo} alt="logo" className="w-30" />
       <div className="mr-2">
         <p className="text-gray-500">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia, hic?
