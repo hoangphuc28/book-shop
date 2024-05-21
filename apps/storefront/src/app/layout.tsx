@@ -1,6 +1,7 @@
 import '../lib/styles/styles.css'
 import '../lib/styles/main.css'
 import '../lib/styles/product.css'
+import '../lib/styles/payment.css'
 import Nav from './components/nav';
 import Footer from './components/footer';
 import { Open_Sans } from 'next/font/google';

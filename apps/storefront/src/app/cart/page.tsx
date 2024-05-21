@@ -1,7 +1,8 @@
 'use client'
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import CounterInput from '../components/numberInput';
 
+import { useState } from 'react';
+import NumberInput from '../components/numberInput';
 
 export default function Cart() {
   const src =
@@ -31,7 +32,7 @@ export default function Cart() {
           </div>
           <div className="text-primary text-lg font-semibold">$320.00</div>
           <div className='ml-5'>
-            <CounterInput
+            <NumberInput
             />
           </div>
           <CloseOutlinedIcon fontSize='large' sx={{ color: 'red' }} className='cursor-pointer' />
@@ -117,7 +118,7 @@ export default function Cart() {
           </label>
         </div>
         <a
-          href="#"
+          href="/checkout"
           className="btn-style1 px-2 py-2 w-full block text-center"
         >
           CHECKOUT
