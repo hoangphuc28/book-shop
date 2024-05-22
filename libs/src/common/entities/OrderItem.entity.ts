@@ -5,15 +5,16 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  BaseEntity,
 } from 'typeorm';
 import { Book } from './Book.entity';
 import { Coupon } from './Coupon.entity';
 import { Order } from './Order.entity';
 
 @Entity()
-export class OrderItem {
-  @PrimaryGeneratedColumn()
-  orderItemID: number;
+export class OrderItem extends BaseEntity {
+  @PrimaryGeneratedColumn('uuid')
+  orderItemID: string;
 
   @ManyToOne(() => Book, (book) => book.orderItems)
   book: Book;

@@ -5,14 +5,14 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  BaseEntity,
 } from 'typeorm';
-import { Order } from './Order.entity';
-import { Review } from './Review.entity';
+import { Customer } from './Customer.entity';
 
 @Entity()
-export class User {
-  @PrimaryGeneratedColumn()
-  userID: number;
+export class User extends BaseEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   avatar: string;
@@ -41,9 +41,6 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => Order, (order) => order.user)
-  orders: Order[];
-
-  @OneToMany(() => Review, (review) => review.user)
-  reviews: Review[];
+  @OneToMany(() => Customer, (customer) => customer)
+  customers: Customer[];
 }

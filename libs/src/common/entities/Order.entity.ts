@@ -6,37 +6,24 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToOne,
+  BaseEntity,
 } from 'typeorm';
 import { User } from './User.entity';
 import { OrderItem } from './OrderItem.entity';
-import { PaymentMethod } from './PaymentMethod.entity'; // Import PaymentMethod entity
+import { OrderStatus } from '../constants';
+import { Payment } from './Payment.entity';
+import { Customer } from './Customer.entity';
 
-enum OrderStatus {
-  PENDING = 'pending',
-  PROCESSING = 'processing',
-  COMPLETED = 'completed',
-  CANCELLED = 'cancelled',
-}
+
 
 @Entity()
-export class Order {
-  @PrimaryGeneratedColumn()
-  orderID: number;
-
-  @ManyToOne(() => User, (user) => user.orders)
-  user: User;
-
-  @ManyToOne(() => PaymentMethod, (paymentMethod) => paymentMethod.orders) // Change to PaymentMethod
-  paymentMethod: PaymentMethod; // Change to PaymentMethod
+export class Order extends BaseEntity {
+  @PrimaryGeneratedColumn('uuid')
+  orderID: string;
 
   @Column()
-  recipientName: string;
-
-  @Column()
-  recipientAddress: string;
-
-  @Column()
-  recipientPhone: string;
+  orderCode: string;
 
   @Column()
   totalPrice: string;
@@ -44,7 +31,7 @@ export class Order {
   @Column({
     type: 'enum',
     enum: OrderStatus,
-    default: OrderStatus.PENDING,
+    default: OrderStatus.Order_Placed,
   })
   status: OrderStatus;
 
@@ -53,6 +40,12 @@ export class Order {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToOne(() => Payment, (payment) => payment.order)
+  payment: Payment;
+
+  @OneToOne(() => Customer, (customer) => customer.order)
+  customer: Customer;
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
   orderItems: OrderItem[];

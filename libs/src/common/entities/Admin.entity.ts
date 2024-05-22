@@ -5,14 +5,16 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BaseEntity,
+  OneToOne,
+  JsonContains,
 } from 'typeorm';
-import { Payment } from './Payment.entity';
-import { OneToMany } from 'typeorm';
+
+import { AboutPage } from './About.entity';
 
 @Entity('admin')
 export class Admin extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: number
+  id: string
 
   @Column()
   avatar: string;
@@ -32,14 +34,17 @@ export class Admin extends BaseEntity {
   @Column()
   password: string;
 
-  @OneToMany(() => Payment, (payment) => payment.admins)
-  payment: Payment;
+  @Column('jsonb', { nullable: true })
+  paymentInfor: Record<string, any>
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToOne(() => AboutPage, (aboutPage) => aboutPage.admin)
+  aboutPage: AboutPage
   constructor(partial: Partial<Admin>) {
     super()
     Object.assign(this, partial)

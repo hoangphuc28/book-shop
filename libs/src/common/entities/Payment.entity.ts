@@ -5,23 +5,18 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
+  OneToOne,
+  BaseEntity,
 } from 'typeorm';
-import { PaymentMethod } from './PaymentMethod.entity';
 import { Admin } from './Admin.entity';
+import { PaymentMethod } from '../constants';
+import { Order } from './Order.entity';
 
 @Entity()
-export class Payment {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @ManyToOne(() => PaymentMethod, (paymentMethod) => paymentMethod.payments)
-  paymentMethod: PaymentMethod;
-
-  @Column()
-  paymentKey: string;
-
-  @Column()
-  paymentValue: string;
+export class Payment extends BaseEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -29,6 +24,9 @@ export class Payment {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Admin, (admin) => admin.payment)
-  admins: Admin[];
+  @Column({ type: 'enum', enum: PaymentMethod, default: PaymentMethod.Cod })
+  paymentMethod: PaymentMethod
+
+  @OneToOne(() => Order, (order) => order.payment)
+  order: Order;
 }

@@ -6,15 +6,16 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  BaseEntity,
 } from 'typeorm';
-import { Category } from './Category.entity.js';
-import { Review } from './Review.entity.js';
-import { OrderItem } from './OrderItem.entity.js';
+import { Category } from './Category.entity';
+import { Review } from './Review.entity';
+import { OrderItem } from './OrderItem.entity';
 
 @Entity('books')
-export class Book {
-  @PrimaryGeneratedColumn()
-  id: number
+export class Book extends BaseEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
 
   @ManyToOne(() => Category, (category) => category.books)
   category: Category;
@@ -28,14 +29,26 @@ export class Book {
   @Column()
   description: string;
 
-  @Column('decimal')
-  price: number;
+  @Column()
+  price: string;
 
   @Column()
-  isActive: boolean;
+  packingDemestration: string;
+
+  @Column()
+  weight: string;
+
+  @Column()
+  pageCount: number;
 
   @Column()
   publishDate: Date;
+
+  @Column('decimal')
+  rating: number;
+
+  @Column()
+  isActive: boolean;
 
   @CreateDateColumn()
   createdAt: Date;

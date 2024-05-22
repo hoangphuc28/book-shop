@@ -5,13 +5,14 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  BaseEntity,
 } from 'typeorm';
 import { OrderItem } from './OrderItem.entity';
 
 @Entity()
-export class Coupon {
-  @PrimaryGeneratedColumn()
-  id: number;
+export class Coupon extends BaseEntity{
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   code: string;
@@ -20,13 +21,16 @@ export class Coupon {
   discountPercent: number;
 
   @Column()
+  discountValue: string
+
+  @Column()
   startDate: Date;
 
   @Column()
   expireDate: Date;
 
   @Column()
-  isAvailable: boolean;
+  isActive: boolean;
 
   @CreateDateColumn()
   createdAt: Date;

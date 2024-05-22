@@ -5,20 +5,22 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  BaseEntity,
 } from 'typeorm';
 import { Book } from './Book.entity';
 import { User } from './User.entity';
+import { Customer } from './Customer.entity';
 
 @Entity()
-export class Review {
-  @PrimaryGeneratedColumn()
-  reviewID: number;
+export class Review extends BaseEntity{
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ManyToOne(() => Book, (book) => book.reviews)
   book: Book;
 
-  @ManyToOne(() => User, (user) => user.reviews)
-  user: User;
+  @ManyToOne(() => Customer, (customer) => customer.reviews)
+  customers: Customer;
 
   @Column()
   rating: number;
