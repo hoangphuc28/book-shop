@@ -2,6 +2,7 @@ import Link from "next/link";
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Image from "next/image";
 import Logo from "../../../images/logo2.png";
+import AccessibleForwardOutlinedIcon from '@mui/icons-material/AccessibleForwardOutlined';
 export default function Nav() {
   return (
     <nav className="sticky top-0 z-50" style={{background: '#040028'}}>
@@ -47,7 +48,10 @@ export default function Nav() {
                 2
               </div>
             </Link>
+            <Link href='/profile/information'>
+            <AccessibleForwardOutlinedIcon fontSize="large" sx={{color: 'white'}}/></Link>
           </div>
+
         </div>
       </div>
     </nav>
