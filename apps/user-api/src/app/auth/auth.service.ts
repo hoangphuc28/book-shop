@@ -9,6 +9,7 @@ import { MailService } from 'libs/src/core/mail/mail.service';
 import { readFile } from 'fs';
 import { join } from 'path';
 import * as ejs from 'ejs';
+import { RegisterDto } from './dto/register.dto';
 @Injectable()
 export class AuthService {
   constructor(
@@ -16,63 +17,99 @@ export class AuthService {
     private jwtService: JwtService,
     private configService: ConfigService,
     private mailService: MailService
-  ) { }
-  async login(email: string, password: string, @Res() response: Response): Promise<any> {
+  ) {}
+  async login(
+    email: string,
+    password: string,
+    @Res() response: Response
+  ): Promise<any> {
     const user = await this.accountService.findUserByEmail(email);
     if (!user) throw new BadRequestException('User does not exist');
-    const passwordMatches = await bcrypt.compare(password, user.password)
+    const passwordMatches = await bcrypt.compare(password, user.password);
     if (!passwordMatches)
       throw new BadRequestException('Password is incorrect');
     const tokens = await this.getTokens(user.id, user.email);
-    user.refreshToken = tokens.refreshToken
-    response.cookie('refresh', tokens.refreshToken)
+    user.refreshToken = tokens.refreshToken;
+    response.cookie('refresh', tokens.refreshToken);
     return {
       information: await this.accountService.update(user),
       accessToken: tokens.accessToken,
-      expiredAt: Date.now() + this.configService.get('APPS.SERVER.CUSTOMER.JWT.ACCESS.EXPIRES_IN') * 1000
-    }
-
+      expiredAt:
+        Date.now() +
+        this.configService.get('APPS.SERVER.CUSTOMER.JWT.ACCESS.EXPIRES_IN') *
+          1000,
+    };
   }
-  async verify(
-    email: string,
-    password: string,
-    fullName: string,
-    phone: string,
-    address: string
-  ): Promise<any> {
-    const templatePath = join(__dirname, '../../../apps/user-api/static/verify.ejs')
-    await readFile(templatePath, 'utf8', (err, data) => {
-      if (err)
-        throw new BadRequestException(err)
-      const htmlContent = ejs.render(data, {
-        verifyUrl: 'http:3000/abc',
+  async verify(registerDto: RegisterDto): Promise<any> {
+    try {
+      const userExists = await this.accountService.findUserByEmail(registerDto.email);
+      if (userExists) {
+        throw new BadRequestException('User already exists');
+      }
+      registerDto.password = bcrypt.hashSync(
+        registerDto.password,
+        bcrypt.genSaltSync()
+      );
+      const expired = this.configService.get(
+        'APPS.SERVER.CUSTOMER.JWT.VERIFY.EXPIRES_IN'
+      );
+      const secretKey = this.configService.get<string>(
+        'APPS.SERVER.CUSTOMER.JWT.VERIFY.SECRET'
+      );
+      const templatePath = join(__dirname, 'assets/mail-verify.ejs');
+      const token = await this.jwtService.signAsync(registerDto, {
+        secret: secretKey,
+        expiresIn: expired,
       });
-      this.mailService.sendMail(email, 'Verify Account', 'Verify Account', htmlContent)
-    });
-  }
-  async registry(
-    email: string,
-    password: string,
-    fullName: string,
-    phone: string,
-    address: string
-  ): Promise<any> {
-    const userExists = await this.accountService.findUserByEmail(email);
-    if (userExists) {
-      throw new BadRequestException('User already exists');
+      readFile(templatePath, 'utf8', (err, data) => {
+        if (err) throw new BadRequestException(err);
+        const htmlContent = ejs.render(data, {
+          name: registerDto.fullName,
+          verifyUrl: `${
+            this.configService.get('APPS.SERVER.CUSTOMER.HOST') +
+            ':' +
+            this.configService.get('APPS.SERVER.CUSTOMER.PORT')
+          }/api/auth/verify?token=${token}`,
+        });
+        this.mailService.sendMail(
+          registerDto.email,
+          'Verify Account',
+          'Verify Account',
+          htmlContent
+        );
+      });
+      return {
+        message: 'Register successlly! Please verify your account',
+        code: 200,
+      };
+    } catch (error) {
+      return error;
     }
-    const newAccount = await this.accountService.save(
-      email,
-      bcrypt.hashSync(password, bcrypt.genSaltSync()),
-      fullName,
-      phone,
-      address
-    );
-    const tokens = await this.getTokens(newAccount.id, newAccount.email);
-    newAccount.refreshToken = tokens.refreshToken
-    return {
-      information: await this.accountService.update(newAccount),
-      tokens: tokens
+  }
+  async registry(token: string): Promise<any> {
+    try {
+      const { email, password, phone, address, fullName } =
+        await this.jwtService.verify(token, {
+          secret: this.configService.get<string>(
+            'APPS.SERVER.CUSTOMER.JWT.VERIFY.SECRET'
+          ),
+        });
+      const newAccount = await this.accountService.save(
+        email,
+        password,
+        fullName,
+        phone,
+        address,
+        true
+      );
+      const tokens = await this.getTokens(newAccount.id, newAccount.email);
+      newAccount.refreshToken = tokens.refreshToken;
+      return {
+        information: await this.accountService.update(newAccount),
+        tokens: tokens,
+      };
+    } catch (error) {
+      return error;
     }
   }
   async getTokens(userId: string, email: string) {
@@ -83,9 +120,13 @@ export class AuthService {
           email,
         },
         {
-          secret: this.configService.get<string>('APPS.SERVER.CUSTOMER.JWT.ACCESS.SECRET'),
-          expiresIn: this.configService.get('APPS.SERVER.CUSTOMER.JWT.ACCESS.EXPIRES_IN'),
-        },
+          secret: this.configService.get<string>(
+            'APPS.SERVER.CUSTOMER.JWT.ACCESS.SECRET'
+          ),
+          expiresIn: this.configService.get(
+            'APPS.SERVER.CUSTOMER.JWT.ACCESS.EXPIRES_IN'
+          ),
+        }
       ),
       this.jwtService.signAsync(
         {
@@ -93,9 +134,13 @@ export class AuthService {
           email,
         },
         {
-          secret: this.configService.get<string>('APPS.SERVER.CUSTOMER.JWT.REFRESH.SECRET'),
-          expiresIn: this.configService.get('APPS.SERVER.CUSTOMER.JWT.REFRESH.EXPIRES_IN'),
-        },
+          secret: this.configService.get<string>(
+            'APPS.SERVER.CUSTOMER.JWT.REFRESH.SECRET'
+          ),
+          expiresIn: this.configService.get(
+            'APPS.SERVER.CUSTOMER.JWT.REFRESH.EXPIRES_IN'
+          ),
+        }
       ),
     ]);
 
@@ -104,5 +149,4 @@ export class AuthService {
       refreshToken,
     };
   }
-
 }

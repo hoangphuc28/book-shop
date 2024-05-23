@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Res} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Res, Render, Query} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -16,8 +16,15 @@ export class AuthController {
 
   @Post('/register')
   async registry(@Body() registerDto: RegisterDto): Promise<any> {
-        const {email, password, phone, address, fullName} = registerDto
-        return this.authService.verify(email, password, phone, address, fullName)
-        // return await this.authService.registry(email, password, fullName, phone, address)
+        return this.authService.verify(registerDto)
+  }
+  @Post('verify')
+  async verify(@Query('token') token: string) {
+    return this.authService.registry(token)
+  }
+  @Get('verify')
+  @Render('verify')
+  getIndex() {
+    return { message: 'Hello from NestJS!' };
   }
 }

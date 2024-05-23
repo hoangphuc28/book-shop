@@ -10,8 +10,8 @@ import { join } from 'path';
 async function bootstrap() {
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.setBaseViewsDir(join(__dirname, '..', 'static'));
-  console.log(join(__dirname, '..', 'static'))
+  app.setBaseViewsDir(join(__dirname, 'assets'));
+  console.log(join(__dirname, 'assets'))
   app.setViewEngine('ejs');
   const globalPrefix = 'api';
   const configService = app.get(ConfigService);
