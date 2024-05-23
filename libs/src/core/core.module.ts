@@ -1,7 +1,8 @@
-import { Module } from "@nestjs/common";
-import { ConfigModule } from "./config/config.module";
+import { Module } from '@nestjs/common';
+import { ConfigModule } from './config/config.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
-  imports: [ConfigModule],
+  imports: [ConfigModule, MailModule],
 })
-export class CoreModule{}
+export class CoreModule {}

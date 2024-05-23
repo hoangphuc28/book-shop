@@ -7,8 +7,9 @@ export class AboutPage extends BaseEntity {
   id: string
 
   @Column()
+  name: string
+
+  @Column()
   content: string
 
-  @OneToOne(() => Admin, (admin) => admin.aboutPage)
-  admin: Admin
 }

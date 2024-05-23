@@ -43,8 +43,6 @@ export class Admin extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToOne(() => AboutPage, (aboutPage) => aboutPage.admin)
-  aboutPage: AboutPage
   constructor(partial: Partial<Admin>) {
     super()
     Object.assign(this, partial)

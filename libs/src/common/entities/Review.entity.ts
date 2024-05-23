@@ -8,8 +8,7 @@ import {
   BaseEntity,
 } from 'typeorm';
 import { Book } from './Book.entity';
-import { User } from './User.entity';
-import { Customer } from './Customer.entity';
+import { Account } from './Account.entity';
 
 @Entity()
 export class Review extends BaseEntity{
@@ -19,8 +18,8 @@ export class Review extends BaseEntity{
   @ManyToOne(() => Book, (book) => book.reviews)
   book: Book;
 
-  @ManyToOne(() => Customer, (customer) => customer.reviews)
-  customers: Customer;
+  @ManyToOne(() => Account, (account) => account.reviews)
+  accounts: Account;
 
   @Column()
   rating: number;

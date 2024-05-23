@@ -2,18 +2,16 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
   OneToOne,
   BaseEntity,
 } from 'typeorm';
-import { User } from './User.entity';
 import { OrderItem } from './OrderItem.entity';
-import { OrderStatus } from '../constants';
-import { Payment } from './Payment.entity';
-import { Customer } from './Customer.entity';
+import { OrderStatus, PaymentStatus } from '../constants';
+import { Account } from './Account.entity';
+
 
 
 
@@ -35,17 +33,23 @@ export class Order extends BaseEntity {
   })
   status: OrderStatus;
 
+  @Column({
+    type: 'enum',
+    enum: PaymentStatus,
+    default: PaymentStatus.Pending,
+  })
+  paymentStatus: PaymentStatus;
+
+
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToOne(() => Payment, (payment) => payment.order)
-  payment: Payment;
 
-  @OneToOne(() => Customer, (customer) => customer.order)
-  customer: Customer;
+  @OneToOne(() => Account, (account) => account.order)
+  account: Account;
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
   orderItems: OrderItem[];

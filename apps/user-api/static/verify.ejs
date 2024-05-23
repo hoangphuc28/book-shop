@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Email Address</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border: 1px solid #dddddd;
+        }
+        .header {
+            background-color: #1E2E82;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .header img {
+            max-width: 150px;
+        }
+        .content {
+            padding: 20px;
+            text-align: center;
+        }
+        .content h1 {
+            color: #1E2E82;
+        }
+        .content p {
+            color: #333333;
+        }
+        .verify-button {
+            display: inline-block;
+            background-color: #FF6F00;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .footer {
+            background-color: #f4f4f4;
+            color: #333333;
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #dddddd;
+        }
+        .footer a {
+            color: #1E2E82;
+            text-decoration: none;
+        }
+        .footer img {
+            margin: 0 5px;
+            max-width: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <img src="your-logo-url.png" alt="Your Site Logo">
+        </div>
+        <div class="content">
+            <h1>Thanks for Signing Up!</h1>
+            <p>Hi,</p>
+            <p>You're almost ready to get started. Please click on the button below to verify your email address and enjoy exclusive cleaning services with us!</p>
+            <a href="<%= verifyUrl %>" class="verify-button">Verify Your Email</a>
+            <p>Thanks,<br>The Company Team</p>
+        </div>
+        <div class="footer">
+            <p>Get in touch</p>
+            <p>+1 123 4444<br>Info@YourCompany.com</p>
+            <div>
+                <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b9/2023_Facebook_icon.svg" alt="Facebook"></a>
+                <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Logo_of_Twitter.svg/512px-Logo_of_Twitter.svg.png?20220821125553" alt="Twitter"></a>
+                <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/2048px-Instagram_logo_2016.svg.png" alt="Instagram"></a>
+            </div>
+            <p>Copyrights © Company All Rights Reserved</p>
+        </div>
+    </div>
+</body>
+</html>
