@@ -46,8 +46,8 @@ export default function LoginPage() {
                 Remember me
               </label>
             </div>
-            <a href="#" className="text-primary">
-              Forgot password
+            <a href="/auth/reset" className="text-primary">
+              Forgot passwords
             </a>
           </div>
           <div className="mt-4">

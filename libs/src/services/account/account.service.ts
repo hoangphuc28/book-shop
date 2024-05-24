@@ -34,7 +34,8 @@ export class AccountService {
     await this.accountRepository.update(account.id, account);
     return this.accountRepository.findOne({ where: { id: account.id } });
   }
+
   async findUserByEmail(email: string): Promise<Account | null> {
-    return  this.accountRepository.findOne({where: {email: email}})
+    return this.accountRepository.findOne({where: {email}})
   }
 }
