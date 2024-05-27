@@ -35,14 +35,10 @@ export default function RegisterPage() {
       setError(error.response.data.message)
     }
     setLoading(false)
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
 
   };
-  useEffect(() => {
-    if (error || success) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }, [error, success]);
   return (
     <Fragment>
       <Stack sx={{ width: '100%' }} spacing={2}>

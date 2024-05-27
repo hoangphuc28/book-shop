@@ -14,9 +14,9 @@ export class AuthService {
   constructor(
     private accountService: AccountService,
     private jwtService: JwtService,
-    private configService: ConfigService,
+    public configService: ConfigService,
     private mailService: MailService
-  ) {}
+  ) { }
   async login(
     email: string,
     password: string,
@@ -36,7 +36,7 @@ export class AuthService {
       expiredAt:
         Date.now() +
         this.configService.get('APPS.SERVER.CUSTOMER.JWT.ACCESS.EXPIRES_IN') *
-          1000,
+        1000,
     };
   }
   async registry(registerDto: RegisterDto): Promise<any> {
@@ -51,11 +51,10 @@ export class AuthService {
         registerDto.password,
         bcrypt.genSaltSync()
       );
-      const redirectUrl = `${
-        this.configService.get('APPS.SERVER.CUSTOMER.HOST') +
+      const redirectUrl = `${this.configService.get('APPS.SERVER.CUSTOMER.HOST') +
         ':' +
         this.configService.get('APPS.SERVER.CUSTOMER.PORT')
-      }/api/auth/verify-registry`
+        }/api/auth/verify-registry`
       await this.sendMailVerify(
         'Thanks for Sigin Up!',
         redirectUrl,
@@ -82,6 +81,12 @@ export class AuthService {
             'APPS.SERVER.CUSTOMER.JWT.VERIFY.SECRET'
           ),
         });
+      const userExists = await this.accountService.findUserByEmail(
+        email
+      );
+      if (userExists) {
+        return
+      }
       return await this.accountService.save(
         email,
         password,
@@ -90,12 +95,6 @@ export class AuthService {
         address,
         true
       );
-      // const tokens = await this.getTokens(newAccount.id, newAccount.email);
-      // // newAccount.refreshToken = tokens.refreshToken;
-      // // return {
-      // //   information: await this.accountService.update(newAccount),
-      // //   tokens: tokens,
-      // // };
     } catch (error) {
       return error;
     }
@@ -165,7 +164,8 @@ export class AuthService {
     const htmlContent = ejs.render(data, {
       content: content,
       name: fullName,
-      verifyUrl: redirectUrl+ `?token=${token}`});
+      verifyUrl: redirectUrl + `?token=${token}`
+    });
 
     await this.mailService.sendMail(
       email,
@@ -176,11 +176,10 @@ export class AuthService {
   }
   async sendPasswordResetEmail(email: string): Promise<any> {
     const userExists = await this.accountService.findUserByEmail(email);
-    const redirectUrl = `${
-      this.configService.get('APPS.SERVER.CUSTOMER.HOST') +
+    const redirectUrl = `${this.configService.get('APPS.SERVER.CUSTOMER.HOST') +
       ':' +
       this.configService.get('APPS.SERVER.CUSTOMER.PORT')
-    }/api/auth/reset-password`
+      }/api/auth/reset-password`
     if (!userExists) {
       throw new BadRequestException('User does not exists');
     }
@@ -204,10 +203,10 @@ export class AuthService {
     if (!userExists) {
       throw new BadRequestException('User does not exists');
     }
-    if(password !== confirmPassword) {
+    if (password !== confirmPassword) {
       throw new BadRequestException('Password do not match')
     }
-    userExists.password =  bcrypt.hashSync(
+    userExists.password = bcrypt.hashSync(
       password,
       bcrypt.genSaltSync()
     );
