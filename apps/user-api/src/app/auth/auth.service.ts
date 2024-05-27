@@ -20,8 +20,7 @@ export class AuthService {
   async login(
     email: string,
     password: string,
-    @Res() response: Response
-  ): Promise<any> {
+  ) {
     const user = await this.accountService.findUserByEmail(email);
     if (!user) throw new BadRequestException('User does not exist');
     const passwordMatches = await bcrypt.compare(password, user.password);
@@ -29,20 +28,11 @@ export class AuthService {
       throw new BadRequestException('Password is incorrect');
     const tokens = await this.getTokens(user.id, user.email);
     user.refreshToken = tokens.refreshToken;
-    response.cookie('refresh', tokens.refreshToken, {
-      httpOnly: true, // Cookie chỉ được gửi qua HTTP(S), không thể truy cập bằng JavaScript
-      // secure: process.env.NODE_ENV === 'production', // Chỉ gửi cookie qua HTTPS khi ở môi trường production
-      sameSite: 'strict', // Cookie chỉ được gửi trong các request cùng site
-    });
+    await this.accountService.update(user)
     return {
-      information: await this.accountService.update(user),
-      accessToken: tokens.accessToken,
-      expiredAt:
-        Date.now() +
-        this.configService.get('APPS.SERVER.CUSTOMER.JWT.ACCESS.EXPIRES_IN') *
-        1000,
-    };
+      tokens
   }
+}
   async registry(registerDto: RegisterDto): Promise<any> {
     const userExists = await this.accountService.findUserByEmail(
       registerDto.email

@@ -22,9 +22,32 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
     @Body() data: LoginDto
   ) {
-    return this.authService.login(data.email, data.password, response);
+    try {
+      const res = await this.authService.login(data.email, data.password);
+      response.cookie('refresh', res.tokens.refreshToken, {});
+      // httpOnly: true, // Cookie chỉ được gửi qua HTTP(S), không thể truy cập bằng JavaScript
+      // secure: process.env.NODE_ENV === 'production', // Chỉ gửi cookie qua HTTPS khi ở môi trường production
+      // sameSite: 'strict', // Cookie chỉ được gửi trong các request cùng site
+      return {
+        accessToken: res.tokens.accessToken,
+        expiredAt:
+          Date.now() +
+          this.authService.configService.get(
+            'APPS.SERVER.CUSTOMER.JWT.ACCESS.EXPIRES_IN'
+          ) *
+            1000,
+      };
+    } catch (error) {
+      return {
+        message: 'Internal server error',
+        status: '500',
+      };
+    }
   }
-  //Just send a token to the email for verification
+  @Post('logout')
+  async logout(@Res({ passthrough: true }) response: Response) {
+    response.clearCookie('refresh');
+  }
   @Post('register')
   async registry(@Body() registerDto: RegisterDto): Promise<any> {
     return this.authService.registry(registerDto);
@@ -33,18 +56,20 @@ export class AuthController {
   @Get('verify-registry')
   async verify(@Query('token') token: string, @Res() res: Response) {
     try {
-     const result =  await this.authService.verifyRegistry(token);
+      const result = await this.authService.verifyRegistry(token);
       res.redirect(
         `${
-          this.authService.configService.get('APPS.STOREFRONT.HOST') + ':' +
+          this.authService.configService.get('APPS.STOREFRONT.HOST') +
+          ':' +
           this.authService.configService.get('APPS.STOREFRONT.PORT')
         }/verification/success`
       );
     } catch (error) {
-      console.log(error)
+      console.log(error);
       res.redirect(
         `${
-          this.authService.configService.get('APPS.STOREFRONT.HOST') + ':' +
+          this.authService.configService.get('APPS.STOREFRONT.HOST') +
+          ':' +
           this.authService.configService.get('APPS.STOREFRONT.PORT')
         }/verification/fail`
       );

@@ -1,6 +1,29 @@
+'use client'
+import { Button } from "@mui/material";
 import Link from "next/link";
-
+import { useRouter } from "next/navigation";
+import { useSession } from "../../contexts/session";
+import { deleteCookie, setCookie } from 'cookies-next';
+import { authApi, baseUrl } from "../api";
+import axios from "axios";
 export default function SideBarProfile() {
+  const router = useRouter()
+  const {setAccessToken}: any = useSession()
+  const logout = async () => {
+    try {
+      const res = await axios({
+        url: `${baseUrl+authApi.logout}`,
+        method: 'POST',
+        withCredentials: true
+      })
+      localStorage.removeItem('accessToken')
+      setAccessToken(null)
+      router.push('/auth/login')
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
     return (
         <div className="col-span-3">
             <div className="px-4 py-3 shadow flex items-center gap-4">
@@ -36,12 +59,12 @@ export default function SideBarProfile() {
                     </a>
                 </div>
                 <div className="space-y-1 pl-8 pt-4">
-                    <a href="#" className="relative hover:text-primary block font-medium capitalize transition">
+                    <Button onClick={() => logout()} className="relative hover:text-primary block font-medium capitalize transition">
                         <span className="absolute -left-8 top-0 text-base">
                             <i className="fa-regular fa-arrow-right-from-bracket" />
                         </span>
                         Logout
-                    </a>
+                    </Button>
                 </div>
             </div>
         </div>

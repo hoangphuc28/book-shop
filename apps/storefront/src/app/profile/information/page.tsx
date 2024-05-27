@@ -1,4 +1,9 @@
-export default function Profile() {
+import { baseUrl } from "../../api"
+
+
+
+export default async function Profile() {
+
     return (
         <div className="col-span-9 shadow rounded px-6 pt-5 pb-7">
             <h4 className="text-lg font-medium capitalize mb-4">
