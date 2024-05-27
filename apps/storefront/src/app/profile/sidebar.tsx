@@ -8,13 +8,16 @@ import { authApi, baseUrl } from "../api";
 import axios from "axios";
 export default function SideBarProfile() {
   const router = useRouter()
-  const {setAccessToken}: any = useSession()
+  const {accessToken, setAccessToken}: any = useSession()
   const logout = async () => {
     try {
       const res = await axios({
         url: `${baseUrl+authApi.logout}`,
         method: 'POST',
-        withCredentials: true
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
       })
       localStorage.removeItem('accessToken')
       setAccessToken(null)

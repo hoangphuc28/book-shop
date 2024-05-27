@@ -5,5 +5,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 @Controller('account')
 export class AccountController {
 
-
+  @Get('profile')
+  async getProfile() {
+    return {}
+  }
 }

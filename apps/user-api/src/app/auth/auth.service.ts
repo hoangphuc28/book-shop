@@ -16,11 +16,8 @@ export class AuthService {
     private jwtService: JwtService,
     public configService: ConfigService,
     private mailService: MailService
-  ) { }
-  async login(
-    email: string,
-    password: string,
-  ) {
+  ) {}
+  async login(email: string, password: string) {
     const user = await this.accountService.findUserByEmail(email);
     if (!user) throw new BadRequestException('User does not exist');
     const passwordMatches = await bcrypt.compare(password, user.password);
@@ -28,11 +25,22 @@ export class AuthService {
       throw new BadRequestException('Password is incorrect');
     const tokens = await this.getTokens(user.id, user.email);
     user.refreshToken = tokens.refreshToken;
-    await this.accountService.update(user)
+    await this.accountService.update(user.id, {refreshToken: user.refreshToken});
     return {
-      tokens
+      tokens,
+    };
   }
-}
+  async logout(userId: string) {
+    try {
+        this.accountService.update(userId, {refreshToken: null})
+    } catch (error) {
+      console.log(error)
+      return {
+        message: 'Internal server error',
+        status: 500,
+      };
+    }
+  }
   async registry(registerDto: RegisterDto): Promise<any> {
     const userExists = await this.accountService.findUserByEmail(
       registerDto.email
@@ -45,10 +53,11 @@ export class AuthService {
         registerDto.password,
         bcrypt.genSaltSync()
       );
-      const redirectUrl = `${this.configService.get('APPS.SERVER.CUSTOMER.HOST') +
+      const redirectUrl = `${
+        this.configService.get('APPS.SERVER.CUSTOMER.HOST') +
         ':' +
         this.configService.get('APPS.SERVER.CUSTOMER.PORT')
-        }/api/auth/verify-registry`
+      }/api/auth/verify-registry`;
       await this.sendMailVerify(
         'Thanks for Sigin Up!',
         redirectUrl,
@@ -75,11 +84,9 @@ export class AuthService {
             'APPS.SERVER.CUSTOMER.JWT.VERIFY.SECRET'
           ),
         });
-      const userExists = await this.accountService.findUserByEmail(
-        email
-      );
+      const userExists = await this.accountService.findUserByEmail(email);
       if (userExists) {
-        return
+        return;
       }
       return await this.accountService.save(
         email,
@@ -136,9 +143,7 @@ export class AuthService {
     phone?: string,
     fullName?: string,
     address?: string,
-    password?: string,
-
-
+    password?: string
   ): Promise<any> {
     const expireIn = this.configService.get(
       'APPS.SERVER.CUSTOMER.JWT.VERIFY.EXPIRES_IN'
@@ -158,7 +163,7 @@ export class AuthService {
     const htmlContent = ejs.render(data, {
       content: content,
       name: fullName,
-      verifyUrl: redirectUrl + `?token=${token}`
+      verifyUrl: redirectUrl + `?token=${token}`,
     });
 
     await this.mailService.sendMail(
@@ -170,15 +175,20 @@ export class AuthService {
   }
   async sendPasswordResetEmail(email: string): Promise<any> {
     const userExists = await this.accountService.findUserByEmail(email);
-    const redirectUrl = `${this.configService.get('APPS.SERVER.CUSTOMER.HOST') +
+    const redirectUrl = `${
+      this.configService.get('APPS.SERVER.CUSTOMER.HOST') +
       ':' +
       this.configService.get('APPS.SERVER.CUSTOMER.PORT')
-      }/api/auth/reset-password`
+    }/api/auth/reset-password`;
     if (!userExists) {
       throw new BadRequestException('User does not exists');
     }
     try {
-      await this.sendMailVerify('Reset Password For Your Account!', redirectUrl, userExists.email);
+      await this.sendMailVerify(
+        'Reset Password For Your Account!',
+        redirectUrl,
+        userExists.email
+      );
       return {
         message: 'Please check your email',
         code: 200,
@@ -187,7 +197,11 @@ export class AuthService {
       throw new BadRequestException('An error occurred');
     }
   }
-  async verifyPasswordUpdate(token: string, password: string, confirmPassword: string) {
+  async verifyPasswordUpdate(
+    token: string,
+    password: string,
+    confirmPassword: string
+  ) {
     const { email } = await this.jwtService.verify(token, {
       secret: this.configService.get<string>(
         'APPS.SERVER.CUSTOMER.JWT.VERIFY.SECRET'
@@ -198,12 +212,9 @@ export class AuthService {
       throw new BadRequestException('User does not exists');
     }
     if (password !== confirmPassword) {
-      throw new BadRequestException('Password do not match')
+      throw new BadRequestException('Password do not match');
     }
-    userExists.password = bcrypt.hashSync(
-      password,
-      bcrypt.genSaltSync()
-    );
-    this.accountService.update(userExists)
+    userExists.password = bcrypt.hashSync(password, bcrypt.genSaltSync());
+    this.accountService.update(userExists.id, {password: userExists.password});
   }
 }

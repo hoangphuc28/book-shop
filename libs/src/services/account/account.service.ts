@@ -30,9 +30,8 @@ export class AccountService {
       }),
     )
   }
-  async update(account: Account): Promise<Account | null> {
-    await this.accountRepository.update(account.id, account);
-    return this.accountRepository.findOne({ where: { id: account.id } });
+  async update(id: string, account: Partial<Account>) {
+    await this.accountRepository.update(id, account);
   }
 
   async findUserByEmail(email: string): Promise<Account | null> {

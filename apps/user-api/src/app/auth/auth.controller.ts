@@ -3,15 +3,17 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Res,
   Render,
   Query,
+  UseGuards,
+  Req
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -44,8 +46,10 @@ export class AuthController {
       };
     }
   }
+  @UseGuards(AccessTokenGuard)
   @Post('logout')
-  async logout(@Res({ passthrough: true }) response: Response) {
+  async logout(@Res({ passthrough: true }) response: Response, @Req() req: Request) {
+    this.authService.logout(req.user['sub'])
     response.clearCookie('refresh');
   }
   @Post('register')
