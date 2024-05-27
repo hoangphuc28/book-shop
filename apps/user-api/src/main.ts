@@ -4,15 +4,15 @@ import cookieParser from 'cookie-parser';
 import { AppModule } from './app/app.module';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
-import {TransformInterceptor} from '@book-shop/libs'
+import { TransformInterceptor } from '@book-shop/libs';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, { cors: true });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { cors: false });
 
   app.setBaseViewsDir(join(__dirname, 'templates'));
   app.setViewEngine('ejs');
-
   const globalPrefix = 'api';
   const configService = app.get(ConfigService);
   app.setGlobalPrefix(globalPrefix);
@@ -23,7 +23,10 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
-
+  app.enableCors({
+    origin: 'http://localhost:8080', // Địa chỉ của client Next.js
+    credentials: true, // Cho phép gửi credentials (cookie)
+  });
 
   await app.listen(port);
   Logger.log(

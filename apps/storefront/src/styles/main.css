@@ -62,6 +62,8 @@ body {
   margin: 0;
   /* 1 */
   line-height: inherit;
+  font-family: "OpenSans Regular" !important;
+
   /* 2 */
 }
 

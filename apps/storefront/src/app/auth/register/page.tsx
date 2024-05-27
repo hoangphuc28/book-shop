@@ -10,7 +10,8 @@ import axios from "axios";
 import { authApi, baseUrl } from "../../api";
 import { Fragment, useEffect, useState } from "react";
 import { Alert, Stack } from "@mui/material";
-import { useLoading } from "apps/storefront/src/components/loading";
+import { useLoading } from "apps/storefront/src/contexts/loading";
+
 
 export default function RegisterPage() {
   const [error, setError] = useState('')

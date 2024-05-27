@@ -29,7 +29,11 @@ export class AuthService {
       throw new BadRequestException('Password is incorrect');
     const tokens = await this.getTokens(user.id, user.email);
     user.refreshToken = tokens.refreshToken;
-    response.cookie('refresh', tokens.refreshToken);
+    response.cookie('refresh', tokens.refreshToken, {
+      httpOnly: true, // Cookie chỉ được gửi qua HTTP(S), không thể truy cập bằng JavaScript
+      // secure: process.env.NODE_ENV === 'production', // Chỉ gửi cookie qua HTTPS khi ở môi trường production
+      sameSite: 'strict', // Cookie chỉ được gửi trong các request cùng site
+    });
     return {
       information: await this.accountService.update(user),
       accessToken: tokens.accessToken,
