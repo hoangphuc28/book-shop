@@ -1,5 +1,5 @@
 
-import Review from "../../components/review";
+import Review from "../../../components/review";
 import DescriptionProductDetail from "./descriptionProductDetail";
 
 export default function Index({ params }: { params: { slug: string } }) {

@@ -4,11 +4,10 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Image from "next/image";
 import Logo from "../../images/logo2.png";
 import AccessibleForwardOutlinedIcon from '@mui/icons-material/AccessibleForwardOutlined';
-import { signIn } from "next-auth/react";
 export default function Nav() {
 
   return (
-    <nav className="sticky top-0 z-50" style={{background: '#040028'}}>
+    <nav className="sticky top-0 z-30" style={{background: '#040028'}}>
       <div className="container flex">
         <div className="flex items-center justify-between flex-grow md:pl-12 py-5">
           <div className="flex items-center space-x-6 capitalize">

@@ -88,3 +88,18 @@
   background: none;
   color: #020243;
 }
+.btn-style2 {
+  background: #c78443 !important;
+  border: 1px solid #c78443;
+  font-family: "OpenSans Regular";
+  font-size: 14px;
+  color: #fff;
+  letter-spacing: 3px;
+  transition: all .2s;
+}
+.btn-style2:hover {
+  background: white !important;
+  color: #c78443;
+  border-color: #c78443;
+  transition: all .2s;
+}

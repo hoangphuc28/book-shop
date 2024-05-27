@@ -1,5 +1,5 @@
-import CardItem from "../components/cardItem";
-import SidebarProducts from "../components/sidebarProduct";
+import CardItem from "../../components/cardItem";
+import SidebarProducts from "../../components/sidebarProduct";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 export default function Index() {
   return (

@@ -55,7 +55,7 @@ export class AuthService {
         this.configService.get('APPS.SERVER.CUSTOMER.HOST') +
         ':' +
         this.configService.get('APPS.SERVER.CUSTOMER.PORT')
-      }/api/auth/verify`
+      }/api/auth/verify-registry`
       await this.sendMailVerify(
         'Thanks for Sigin Up!',
         redirectUrl,

@@ -2,7 +2,7 @@
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 
 import { useState } from 'react';
-import NumberInput from '../components/numberInput';
+import NumberInput from '../../components/numberInput';
 
 export default function Cart() {
   const src = "https://cdn.shopify.com/s/files/1/0533/2089/files/design-books-the-design-of-everyday-things-book-cover.jpg?v=1587988106";

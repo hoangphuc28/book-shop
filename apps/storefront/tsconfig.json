@@ -16,6 +16,9 @@
         "name": "next"
       }
     ],
+    "paths": {
+      "@src/*": ["./src/*"]
+    },
     "types": [
       "jest",
       "node"
@@ -31,6 +34,7 @@
     "next-env.d.ts",
     ".next/types/**/*.ts"
   ],
+
   "exclude": [
     "node_modules",
     "jest.config.ts",

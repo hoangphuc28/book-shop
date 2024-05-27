@@ -1,10 +1,41 @@
+'use client'
+import { signIn, useSession } from 'next-auth/react';
+import { useState } from 'react';
+import axios from 'axios';
+interface UserInfo {
+  id: string;
+  fullName: string;
+  address: string;
+  phone: string;
+  email: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface AuthResponse {
+  information: UserInfo;
+  accessToken: string;
+  expiredAt: number;
+}
+
 export default function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async (e: any) => {
+    e.preventDefault();
+    await signIn('credentials', {
+      email: email,
+      password: password,
+    });
+  };
+
   return (
     <div className="contain py-16">
       <div className="max-w-lg mx-auto shadow px-6 py-7 rounded overflow-hidden">
         <h2 className="text-2xl uppercase font-medium mb-1">Login</h2>
-        <p className="text-gray-600 mb-6 text-sm">welcome back customer</p>
-        <form action="#" method="post" autoComplete="off">
+        <p className="text-gray-600 mb-6 text-sm">Welcome back customer</p>
+        <form onSubmit={handleLogin} autoComplete="off">
           <div className="space-y-2">
             <div>
               <label htmlFor="email" className="text-gray-600 mb-2 block">
@@ -14,6 +45,8 @@ export default function LoginPage() {
                 type="email"
                 name="email"
                 id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="block w-full border border-gray-300 px-4 py-3 text-gray-600 text-sm rounded focus:ring-0 focus:border-primary placeholder-gray-400"
                 placeholder="youremail.@domain.com"
               />
@@ -26,6 +59,8 @@ export default function LoginPage() {
                 type="password"
                 name="password"
                 id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="block w-full border border-gray-300 px-4 py-3 text-gray-600 text-sm rounded focus:ring-0 focus:border-primary placeholder-gray-400"
                 placeholder="*******"
               />
@@ -81,7 +116,7 @@ export default function LoginPage() {
           </a>
         </div>
         <p className="mt-4 text-center text-gray-600">
-          Dont have account?
+          Dont have an account?
           <a href="/auth/register" className="text-primary">
             Register now
           </a>
