@@ -4,10 +4,9 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Image from "next/image";
 import Logo from "../../images/logo2.png";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { useSession } from "../contexts/session";
-import { useEffect } from "react";
+import { useAuth } from "../utils/providers/auth";
 export default function Nav() {
-  const {accessToken}: any = useSession()
+const {getToken} = useAuth()
 
   return (
     <nav className="sticky top-0 z-30" style={{ background: '#040028' }}>
@@ -50,7 +49,7 @@ export default function Nav() {
                 2
               </div>
             </Link>
-            {accessToken !== null ? <Link href='/profile/information'>
+            {getToken() !== '' ? <Link href='/profile/information'>
               <AccountCircleIcon fontSize="large" sx={{ color: 'white' }} />
             </Link> : <Link href={'/auth/login'} className="transition t-style1" style={{ letterSpacing: '3px' }}>
               Login

@@ -4,11 +4,10 @@ import { AuthController } from './auth.controller';
 import { ServicesModule, CoreModule } from '@book-shop/libs';
 import { JwtModule } from '@nestjs/jwt';
 import { AccessTokenStrategy } from './strategies/accessToken.strategy';
-import { RefreshTokenStrategy } from './strategies/refreshToken.strategy';
-import { MailModule } from 'libs/src/core/mail/mail.module';
+import { MailModule } from '@book-shop/libs';
 @Module({
   imports: [ServicesModule, JwtModule.register({}), MailModule],
   controllers: [AuthController],
-  providers: [AuthService, AccessTokenStrategy, RefreshTokenStrategy],
+  providers: [AuthService, AccessTokenStrategy],
 })
 export class AuthModule {}

@@ -15,7 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@book-shop/libs": ["libs/src/index.ts"]
+      "@book-shop/libs": ["libs/src/index.ts"],
+      "@book-shop/user-api": ["apps/user-api"]
+
     }
   },
   "exclude": ["node_modules", "tmp"]

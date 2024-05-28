@@ -1,10 +1,10 @@
-import { BadRequestException, Injectable, Res } from '@nestjs/common';
-import { AccountService } from 'libs/src/services/account/account.service';
+import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { AccountService } from '@book-shop/libs';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { Response } from 'express';
-import { MailService } from 'libs/src/core/mail/mail.service';
+import { MailService } from '@book-shop/libs';
+
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import * as ejs from 'ejs';
@@ -16,23 +16,37 @@ export class AuthService {
     private jwtService: JwtService,
     public configService: ConfigService,
     private mailService: MailService
-  ) {}
+  ) { }
   async login(email: string, password: string) {
-    const user = await this.accountService.findUserByEmail(email);
-    if (!user) throw new BadRequestException('User does not exist');
-    const passwordMatches = await bcrypt.compare(password, user.password);
-    if (!passwordMatches)
-      throw new BadRequestException('Password is incorrect');
-    const tokens = await this.getTokens(user.id, user.email);
-    user.refreshToken = tokens.refreshToken;
-    await this.accountService.update(user.id, {refreshToken: user.refreshToken});
-    return {
-      tokens,
-    };
-  }
-  async logout(userId: string) {
     try {
-        this.accountService.update(userId, {refreshToken: null})
+      const user = await this.accountService.findUserByEmail(email);
+      if (!user)
+        throw new BadRequestException('Email or password is incorrect');
+      const passwordMatches = await bcrypt.compare(password, user.password);
+      if (!passwordMatches)
+        throw new BadRequestException('Email or password is incorrect');
+      const tokens = await this.getTokens(user.id, user.email);
+      user.refreshToken = tokens.refreshToken;
+      await this.accountService.update(user.id, { refreshToken: user.refreshToken });
+      return {
+        tokens,
+      };
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+      throw new InternalServerErrorException();
+    }
+  }
+  async logout(refresh: string) {
+    try {
+      const { sub } =
+        await this.jwtService.verify(refresh, {
+          secret: this.configService.get<string>(
+            'APPS.SERVER.CUSTOMER.JWT.REFRESH.SECRET'
+          ),
+        });
+      this.accountService.update(sub, { refreshToken: null })
     } catch (error) {
       console.log(error)
       return {
@@ -53,11 +67,10 @@ export class AuthService {
         registerDto.password,
         bcrypt.genSaltSync()
       );
-      const redirectUrl = `${
-        this.configService.get('APPS.SERVER.CUSTOMER.HOST') +
+      const redirectUrl = `${this.configService.get('APPS.SERVER.CUSTOMER.HOST') +
         ':' +
         this.configService.get('APPS.SERVER.CUSTOMER.PORT')
-      }/api/auth/verify-registry`;
+        }/api/auth/verify-registry`;
       await this.sendMailVerify(
         'Thanks for Sigin Up!',
         redirectUrl,
@@ -175,11 +188,10 @@ export class AuthService {
   }
   async sendPasswordResetEmail(email: string): Promise<any> {
     const userExists = await this.accountService.findUserByEmail(email);
-    const redirectUrl = `${
-      this.configService.get('APPS.SERVER.CUSTOMER.HOST') +
+    const redirectUrl = `${this.configService.get('APPS.SERVER.CUSTOMER.HOST') +
       ':' +
       this.configService.get('APPS.SERVER.CUSTOMER.PORT')
-    }/api/auth/reset-password`;
+      }/api/auth/reset-password`;
     if (!userExists) {
       throw new BadRequestException('User does not exists');
     }
@@ -215,6 +227,28 @@ export class AuthService {
       throw new BadRequestException('Password do not match');
     }
     userExists.password = bcrypt.hashSync(password, bcrypt.genSaltSync());
-    this.accountService.update(userExists.id, {password: userExists.password});
+    this.accountService.update(userExists.id, { password: userExists.password });
+  }
+  async refreshTokens(id: string, refreshToken: string) {
+    const user = await this.accountService.findUserById(id);
+    if (!user || !user.refreshToken)
+      throw new ForbiddenException('Access Denied');
+    if (user.refreshToken !== refreshToken) throw new ForbiddenException('Access Denied');
+    const accessToken = this.jwtService.signAsync(
+      {
+        sub: id,
+        email: user.email,
+      },
+      {
+        secret: this.configService.get<string>(
+          'APPS.SERVER.CUSTOMER.JWT.ACCESS.SECRET'
+        ),
+        expiresIn: this.configService.get(
+          'APPS.SERVER.CUSTOMER.JWT.ACCESS.EXPIRES_IN'
+        ),
+      }
+    )
+    await this.accountService.update(user.id, { refreshToken: refreshToken });
+    return accessToken;
   }
 }

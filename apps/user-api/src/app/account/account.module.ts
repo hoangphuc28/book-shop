@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
 import { AccountController } from './account.controller';
 import { Account, ServicesModule } from '@book-shop/libs';
+import { AccountResolver } from './account.resolver';
+import { JwtModule } from '@nestjs/jwt';
 
-import { TypeOrmModule } from '@nestjs/typeorm';
 
 
 @Module({
-  imports: [],
+  imports: [ServicesModule, JwtModule.register({})],
   controllers: [AccountController],
+  providers: [AccountResolver],
 })
 export class AccountModule {}

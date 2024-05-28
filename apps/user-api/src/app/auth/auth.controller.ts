@@ -7,29 +7,31 @@ import {
   Render,
   Query,
   UseGuards,
-  Req
+  Req,
+  InternalServerErrorException
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { Request, Response } from 'express';
 import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
+import { RefreshTokenGuard } from '../../common/guards/refreshToken.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('login')
   async login(
     @Res({ passthrough: true }) response: Response,
     @Body() data: LoginDto
   ) {
-    try {
       const res = await this.authService.login(data.email, data.password);
-      response.cookie('refresh', res.tokens.refreshToken, {});
-      // httpOnly: true, // Cookie chỉ được gửi qua HTTP(S), không thể truy cập bằng JavaScript
-      // secure: process.env.NODE_ENV === 'production', // Chỉ gửi cookie qua HTTPS khi ở môi trường production
-      // sameSite: 'strict', // Cookie chỉ được gửi trong các request cùng site
+      response.cookie('refresh', res.tokens.refreshToken, {
+        httpOnly: true, // Cookie chỉ được gửi qua HTTP(S), không thể truy cập bằng JavaScript
+        // secure: process.env.NODE_ENV === 'production', // Chỉ gửi cookie qua HTTPS khi ở môi trường production
+        // sameSite: 'strict', // Cookie chỉ được gửi trong các request cùng site
+      });
       return {
         accessToken: res.tokens.accessToken,
         expiredAt:
@@ -37,19 +39,13 @@ export class AuthController {
           this.authService.configService.get(
             'APPS.SERVER.CUSTOMER.JWT.ACCESS.EXPIRES_IN'
           ) *
-            1000,
+          1000,
       };
-    } catch (error) {
-      return {
-        message: 'Internal server error',
-        status: '500',
-      };
-    }
   }
-  @UseGuards(AccessTokenGuard)
   @Post('logout')
   async logout(@Res({ passthrough: true }) response: Response, @Req() req: Request) {
-    this.authService.logout(req.user['sub'])
+    const {refresh} = req.cookies
+    this.authService.logout(refresh)
     response.clearCookie('refresh');
   }
   @Post('register')
@@ -62,19 +58,17 @@ export class AuthController {
     try {
       const result = await this.authService.verifyRegistry(token);
       res.redirect(
-        `${
-          this.authService.configService.get('APPS.STOREFRONT.HOST') +
-          ':' +
-          this.authService.configService.get('APPS.STOREFRONT.PORT')
+        `${this.authService.configService.get('APPS.STOREFRONT.HOST') +
+        ':' +
+        this.authService.configService.get('APPS.STOREFRONT.PORT')
         }/verification/success`
       );
     } catch (error) {
       console.log(error);
       res.redirect(
-        `${
-          this.authService.configService.get('APPS.STOREFRONT.HOST') +
-          ':' +
-          this.authService.configService.get('APPS.STOREFRONT.PORT')
+        `${this.authService.configService.get('APPS.STOREFRONT.HOST') +
+        ':' +
+        this.authService.configService.get('APPS.STOREFRONT.PORT')
         }/verification/fail`
       );
     }
@@ -111,5 +105,19 @@ export class AuthController {
   @Render('reset-password')
   async resetPasswordPage() {
     return {};
+  }
+  @UseGuards(RefreshTokenGuard)
+  @Get('refresh')
+  async refreshToken(@Req() request: Request) {
+    const { sub, refreshToken }: any = request.user;
+    return {
+      accessToken: await this.authService.refreshTokens(sub, refreshToken),
+      expiredAt:
+        Date.now() +
+        this.authService.configService.get(
+          'APPS.SERVER.CUSTOMER.JWT.ACCESS.EXPIRES_IN'
+        ) *
+        1000
+    }
   }
 }

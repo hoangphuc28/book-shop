@@ -1,5 +1,9 @@
 import { Fragment } from "react";
 import SideBarProfile from "./sidebar";
+import { ApolloProvider } from "@apollo/client";
+import client from "../../utils/api/graphQL/apolloClient";
+import ApolloCustomProvider from "../../utils/providers/apollo";
+import WithAuthProvider from "../../utils/providers/withAuth";
 
 
 export const metadata = {
@@ -12,12 +16,14 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
+      <WithAuthProvider>
         <Fragment>
              <div className="mt-5 container grid grid-cols-12 items-start gap-6 pt-4 pb-16">
             <SideBarProfile/>
             {children}
             </div>
         </Fragment>
+        </WithAuthProvider>
 
     );
 }

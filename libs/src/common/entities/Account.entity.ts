@@ -1,3 +1,4 @@
+import { ObjectType, Field, ID } from '@nestjs/graphql';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -12,20 +13,26 @@ import { Order } from './Order.entity';
 import { Review } from './Review.entity';
 import { Exclude } from 'class-transformer';
 
+@ObjectType()
 @Entity()
 export class Account extends BaseEntity {
+  @Field(() => ID)
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Field()
   @Column()
   fullName: string;
 
+  @Field()
   @Column()
   address: string;
 
+  @Field()
   @Column()
   phone: string;
 
+  @Field()
   @Column()
   email: string;
 
@@ -37,9 +44,11 @@ export class Account extends BaseEntity {
   @Exclude()
   isActive: boolean;
 
+  @Field()
   @CreateDateColumn()
   createdAt: Date;
 
+  @Field()
   @UpdateDateColumn()
   updatedAt: Date;
 

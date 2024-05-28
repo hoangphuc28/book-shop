@@ -1,0 +1,9 @@
+overwrite: true
+schema: "path/to/your/schema.graphql"
+documents: "path/to/your/graphql/queries/**/*.graphql"
+generates:
+  path/to/generated/types.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"

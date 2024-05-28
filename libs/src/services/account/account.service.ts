@@ -34,7 +34,11 @@ export class AccountService {
     await this.accountRepository.update(id, account);
   }
 
-  async findUserByEmail(email: string): Promise<Account | null> {
+
+  async findUserByEmail(email: string) {
     return this.accountRepository.findOne({where: {email}})
+  }
+  async findUserById(id: string): Promise<Account | null> {
+    return this.accountRepository.findOne({where: {id}})
   }
 }

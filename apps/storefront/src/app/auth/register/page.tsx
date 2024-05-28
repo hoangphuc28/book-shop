@@ -7,10 +7,10 @@ import { z } from 'zod';
 import Label from "../../../components/label";
 import { Input } from "../../../components/input";
 import axios from "axios";
-import { authApi, baseUrl } from "../../api";
+import { authApi, baseUrl } from "../../../utils/api";
 import { Fragment, useEffect, useState } from "react";
 import { Alert, Stack } from "@mui/material";
-import { useLoading } from "apps/storefront/src/contexts/loading";
+import { useLoading } from "../../../utils/providers/loading";
 
 
 export default function RegisterPage() {
@@ -37,8 +37,6 @@ export default function RegisterPage() {
     }
     setLoading(false)
     window.scrollTo({ top: 0, behavior: 'smooth' });
-
-
   };
   return (
     <Fragment>
