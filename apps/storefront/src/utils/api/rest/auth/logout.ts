@@ -1,4 +1,3 @@
-import { ActionType, useSession } from "../../../providers/auth"
 import axios from "axios"
 import { baseUrl, authApi } from "../.."
 

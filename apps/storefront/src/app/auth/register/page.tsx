@@ -102,7 +102,7 @@ export default function RegisterPage() {
             <a href="#" className="w-full py-3 text-center text-white bg-red-600 uppercase font-medium text-sm">google</a>
           </div>
           {/* ./login with */}
-          <p className="mt-4 text-center text-gray-600">Already have account? <Link href={'/auth/login'} style={{ color: '#c78443' }}>Login now</Link></p>
+          <p className="mt-4 text-center text-gray-600">Already have account? <Link href={'login'} style={{ color: '#c78443' }}>Login now</Link></p>
         </div>
       </div>
     </Fragment>

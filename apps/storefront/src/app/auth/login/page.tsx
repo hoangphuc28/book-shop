@@ -1,14 +1,13 @@
 'use client'
 import { Fragment, useState } from 'react';
-import axios, { AxiosError } from 'axios';
 import Label from '../../../components/label';
 import { Input } from '../../../components/input';
-import { authApi, baseUrl } from '../../../utils/api';
 import { Stack, Alert } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { Login } from '../../../utils/interfaces/login';
 import { useAuth } from '../../../utils/providers/auth';
+import Link from 'next/link';
 
 
 
@@ -28,7 +27,7 @@ export default function LoginPage() {
       console.log(res)
       setError('')
       reset()
-      router.back()
+      router.push('/')
     } catch (error: any) {
       let message;
       if (error.response.status === 400)
@@ -58,13 +57,10 @@ export default function LoginPage() {
               <div>
                 <Label text="Email" htmlFor="email" />
                 <Input id="email" type="text" {...register('email')} />
-
               </div>
               <div>
                 <Label text="Password" htmlFor="password" />
-
                 <Input id="password" type="password" {...register('password')} />
-
               </div>
             </div>
             <div className="flex items-center justify-between mt-6">
@@ -82,9 +78,9 @@ export default function LoginPage() {
                   Remember me
                 </label>
               </div>
-              <a href="/auth/reset" className="text-primary">
+              <Link href={'reset'} className="text-primary">
                 Forgot passwords
-              </a>
+              </Link>
             </div>
             <div className="mt-4">
               <button
@@ -106,10 +102,8 @@ export default function LoginPage() {
             <a href="#" className="w-full py-3 text-center text-white bg-red-600 uppercase font-medium text-sm">google</a>
           </div>
           <p className="mt-4 text-center text-gray-600">
-            Dont have an account?
-            <a href="/auth/register" className="text-primary">
-              Register now
-            </a>
+            Dont have an account? {' '}
+            <Link href={'register'} style={{ color: '#c78443' }}>Register now</Link>
           </p>
         </div>
       </div>

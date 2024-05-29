@@ -188,10 +188,11 @@ export class AuthService {
   }
   async sendPasswordResetEmail(email: string): Promise<any> {
     const userExists = await this.accountService.findUserByEmail(email);
-    const redirectUrl = `${this.configService.get('APPS.SERVER.CUSTOMER.HOST') +
+    const redirectUrl = `${this.configService.get('APPS.STOREFRONT.HOST') +
       ':' +
-      this.configService.get('APPS.SERVER.CUSTOMER.PORT')
-      }/api/auth/reset-password`;
+      this.configService.get('APPS.STOREFRONT.PORT')
+      }/auth/reset/verify`;
+      console.log(redirectUrl)
     if (!userExists) {
       throw new BadRequestException('User does not exists');
     }

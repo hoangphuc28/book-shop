@@ -14,6 +14,9 @@ export default function WithAuthProvider({
     router.replace('/auth/login')
     return
   }
+  if (loading) {
+    return <p></p>;
+  }
   return (
     <>
     {children}

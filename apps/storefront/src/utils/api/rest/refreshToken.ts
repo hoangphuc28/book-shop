@@ -1,11 +1,9 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { authApi, baseUrl } from "..";
-import { ActionType, SessionContext, useSession } from "../../providers/auth";
 import { Logout } from "./auth/logout";
 
 
-export const refreshToken = async () => {
-  const {dispatch}: any = useSession
+export const refreshToken = async (callBack: void) => {
 
   try {
     const res = await axios({
@@ -13,11 +11,9 @@ export const refreshToken = async () => {
       method: 'GET',
       withCredentials: true
     })
-      localStorage.setItem('accessToken', res.data.accessToken)
-      // dispatch({type: ActionType.SET_TOKEN, payload: res.data.accessToken})
+    return res.data
   } catch (error) {
     Logout()
-    //window.location.href = '/auth/login'
     console.log(error)
   }
 };

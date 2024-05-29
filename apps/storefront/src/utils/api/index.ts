@@ -4,7 +4,8 @@ export const authApi = {
   login: "/auth/login",
   logout: "/auth/logout",
   refreshToken: '/auth/refresh',
-  resetPassword: "/auth/verify-password-reset",
+  resetPassword: '/auth/password-reset',
+  verifyResetPassword: '/auth/verify-password-reset'
 }
 export const accountApi = {
   getInformation: "/account/information"
