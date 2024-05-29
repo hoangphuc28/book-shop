@@ -1,8 +1,17 @@
-
+'use client'
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
+import { Tab } from "@mui/material";
+import { useState } from "react";
 import Review from "../../../components/review";
 import DescriptionProductDetail from "./descriptionProductDetail";
 
 export default function Index({ params }: { params: { slug: string } }) {
+  const [value, setValue] = useState("1");
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
   const src =
     "https://cdn.shopify.com/s/files/1/0533/2089/files/design-books-the-design-of-everyday-things-book-cover.jpg?v=1587988106";
 
@@ -87,8 +96,21 @@ export default function Index({ params }: { params: { slug: string } }) {
           </div>
         </div>
       </div>
-      <DescriptionProductDetail/>
-      <Review/>
+      <TabContext value={value}>
+          <TabList centered sx={{ justifyContent: 'center'}} onChange={handleChange} aria-label="lab API tabs example">
+            <Tab
+            label="Description" value="1" />
+            <Tab label="Reviews" value="2" />
+          </TabList>
+        <TabPanel value="1">
+        <DescriptionProductDetail/>
+
+        </TabPanel>
+        <TabPanel value="2">
+        <Review/>
+
+        </TabPanel>
+      </TabContext>
     </div>
   );
 }

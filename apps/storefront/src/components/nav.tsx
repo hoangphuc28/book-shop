@@ -6,7 +6,7 @@ import Logo from "../../images/logo2.png";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useAuth } from "../utils/providers/auth";
 export default function Nav() {
-const {getToken} = useAuth()
+const {token} = useAuth()
 
   return (
     <nav className="sticky top-0 z-30" style={{ background: '#040028' }}>
@@ -49,15 +49,11 @@ const {getToken} = useAuth()
                 2
               </div>
             </Link>
-            {getToken() !== '' ? <Link href='/profile/information'>
+            {token !== '' ? <Link href='/profile/information'>
               <AccountCircleIcon fontSize="large" sx={{ color: 'white' }} />
             </Link> : <Link href={'/auth/login'} className="transition t-style1" style={{ letterSpacing: '3px' }}>
               Login
             </Link>}
-
-
-
-
           </div>
 
         </div>

@@ -9,8 +9,8 @@ export default function WithAuthProvider({
   children: React.ReactNode;
 }) {
   const router = useRouter()
-  const{getToken, loading} = useAuth()
-  if(!loading && getToken() === '') {
+  const{token, loading} = useAuth()
+  if(!loading && token === '') {
     router.replace('/auth/login')
     return
   }

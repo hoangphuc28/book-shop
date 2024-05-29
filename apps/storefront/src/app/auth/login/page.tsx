@@ -8,12 +8,13 @@ import { useRouter } from 'next/navigation';
 import { Login } from '../../../utils/interfaces/login';
 import { useAuth } from '../../../utils/providers/auth';
 import Link from 'next/link';
+import { LoginApi } from '../../../utils/api/rest/auth/login';
 
 
 
 export default function LoginPage() {
-  const { login } = useAuth()
   const router = useRouter()
+  const {setToken, setAccount} = useAuth()
   const { register, handleSubmit, reset } = useForm<Login>({
     defaultValues: {
       email: '',
@@ -23,10 +24,12 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const onSubmit = async (data: Login) => {
     try {
-      const res = await login(data)
-      console.log(res)
+      const resData = await LoginApi(data)
+
       setError('')
       reset()
+      setToken(resData.accessToken)
+      // setAccount(data.info)
       router.push('/')
     } catch (error: any) {
       let message;

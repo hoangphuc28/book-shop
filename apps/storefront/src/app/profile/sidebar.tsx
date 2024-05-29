@@ -3,12 +3,14 @@ import { Button } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../utils/providers/auth";
+import { LogoutApi } from "../../utils/api/rest/auth/logout";
 export default function SideBarProfile() {
-  const {logout} = useAuth()
   const router = useRouter()
+  const {setToken} = useAuth()
   const logoutHandler = async () => {
       try {
-        await logout()
+        await LogoutApi()
+        setToken('')
         router.push('/auth/login')
       } catch (error) {
         alert(error)

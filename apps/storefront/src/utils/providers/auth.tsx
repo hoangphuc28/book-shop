@@ -1,17 +1,18 @@
 'use client'
 import axios, { AxiosError } from 'axios';
 import router from 'next/router';
-import React, { createContext, useReducer, useContext, useEffect, useState } from 'react';
-import { baseUrl, authApi } from '../api';
-import { Login } from '../interfaces/login';
-import { Logout } from '../api/rest/auth/logout';
+import React, { createContext, useContext, useEffect, useState, Dispatch, SetStateAction } from 'react';
+import { Account } from '../interfaces/account';
+import { refreshToken } from '../api/rest/auth/refreshToken';
+import { LogoutApi } from '../api/rest/auth/logout';
 
 // Create context for reducer
 export const AuthContext = createContext<{
-  login: (data: Login) => void
-  logout: () => void
-  getToken: () => string
+  token: string
+  setToken: Dispatch<SetStateAction<string>>
   loading: boolean
+  account: Account | null
+  setAccount: Dispatch<SetStateAction<Account | null>>
 } | null>(null);
 
 // Provider component to provide reducer and state
@@ -22,59 +23,36 @@ export const AuthProvider = ({
 }) => {
   const [token, setToken] = useState('')
   const [loading, setLoading] = useState(true);
-  const getToken = (): string => {
-    return token
-  }
+  const [account, setAccount] = useState<Account | null>(null);
 
-  const login = async (data: Login) => {
-    try {
-      const res = await axios({
-        url: `${baseUrl+authApi.login}`,
-        method: 'POST',
-        data: data,
-        withCredentials: true
-      })
-      setToken(res.data.accessToken)
-      localStorage.setItem('accessToken', res.data.accessToken)
-    } catch (error) {
-      console.log(error)
-      if (axios.isAxiosError(error)) {
-        throw error;
-      } else {
-        throw new Error('Error');
-      }
-    }
+const refresh = async () => {
+  try {
+    const resData = await refreshToken()
+    setToken(resData.accessToken)
+  } catch (error) {
+    console.log(error)
+    LogoutApi()
   }
-  const logout = async () => {
-    try {
-      await axios({
-        url: `${baseUrl + authApi.logout}`,
-        method: 'POST',
-        withCredentials: true,
-      })
-      localStorage.removeItem('accessToken')
-      setToken('')
-    } catch (error: any) {
-      console.log(error)
-      throw Error(error)
-    }
-  }
+}
+
 useEffect(() => {
   const token = localStorage.getItem('accessToken')
   if(token !== null) {
     setToken(token)
+  } else {
+      refresh()
   }
   setLoading(false);
 }, [])
   return (
-    <AuthContext.Provider value={{login, getToken, logout, loading}}>
+    <AuthContext.Provider value={{loading, token, setToken, account, setAccount}}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
+  const context = useContext( AuthContext);
   if (!context) {
     throw new Error('useAuth must be used within a AuthProvider');
   }

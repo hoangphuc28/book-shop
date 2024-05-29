@@ -1,6 +1,5 @@
 export default function SidebarProducts() {
   return(
-      <div className="col-span-1 bg-white px-4 pb-6 shadow rounded overflow-hiddenb hidden md:block">
       <div className="divide-y divide-gray-200 space-y-5">
         <div>
           <h3 className="text-xl text-gray-800 mb-3 uppercase font-medium">Categories</h3>
@@ -61,6 +60,5 @@ export default function SidebarProducts() {
           </div>
         </div>
       </div>
-    </div>
   )
 }

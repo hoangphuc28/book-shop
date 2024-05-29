@@ -1,7 +1,7 @@
 // lib/apolloClient.js
 import { ApolloClient, InMemoryCache, HttpLink, from, Observable } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { refreshToken } from '../rest/refreshToken';
+import { refreshToken } from '../rest/auth/refreshToken';
 import { onError } from '@apollo/client/link/error';
 const httpLink = new HttpLink({
   uri: process.env.NEXT_PUBLIC_URL_SERVER_GRAPHQL, // Replace with your GraphQL endpoint
@@ -16,7 +16,6 @@ const authLink = setContext((_, { headers }) => {
     }
   }
 });
-
 export const onErrorCustom = onError(({ graphQLErrors, networkError, operation, forward }) => {
   console.log(graphQLErrors)
   if (graphQLErrors) {

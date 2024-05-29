@@ -1,7 +1,9 @@
+
 import axios from "axios"
 import { baseUrl, authApi } from "../.."
 
-export const Logout = async () => {
+
+export const LogoutApi = async () => {
   try {
     await axios({
       url: `${baseUrl + authApi.logout}`,
@@ -11,5 +13,6 @@ export const Logout = async () => {
     localStorage.removeItem('accessToken')
   } catch (error: any) {
     console.log(error)
+    throw Error(error)
   }
 }

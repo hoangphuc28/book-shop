@@ -3,9 +3,11 @@ import SidebarProducts from "../../components/sidebarProduct";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 export default function Index() {
   return (
-    <div className="container grid md:grid-cols-4 grid-cols-2 gap-6 pt-4 pb-16 items-start mt-5">
+    <div className="container grid md:grid-cols-5 grid-cols-5 gap-6 pt-4 pb-16 items-start mt-5">
+      <div className="col-span-1 bg-white px-4 pb-6 shadow rounded overflow-hiddenb hidden md:block">
       <SidebarProducts />
-      <div className="col-span-3">
+      </div>
+      <div className="col-span-4">
         <div className="flex items-center mb-4">
           <select
             name="sort"
@@ -36,7 +38,7 @@ export default function Index() {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-3 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-5 md:grid-cols-2 gap-5">
           <CardItem />
           <CardItem />
           <CardItem />
