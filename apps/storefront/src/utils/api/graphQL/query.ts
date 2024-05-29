@@ -7,6 +7,7 @@ query Information {
       address
       phone
       email
+      avatar
   }
 }`;
 

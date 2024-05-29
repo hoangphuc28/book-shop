@@ -5,12 +5,14 @@ import * as bcrypt from 'bcrypt'
 import { Account } from '../../common/index';
 import { Express } from 'express';
 import {Multer} from 'multer'
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AccountService {
   constructor(
     @InjectRepository(Account)
-    private accountRepository: Repository<Account>
+    private accountRepository: Repository<Account>,
+    private configService: ConfigService
   ) {}
   async save(
     email: string,
@@ -46,6 +48,11 @@ export class AccountService {
     return this.accountRepository.findOne({where: {email}})
   }
   async findUserById(id: string): Promise<Account | null> {
-    return this.accountRepository.findOne({where: {id}})
+    const user = await this.accountRepository.findOne({where: {id}})
+    const bucketName = this.configService.get<string>('AWS.SERVICES.S3.BUCKET_NAME')
+    if(user) {
+      user.avatar = `https://${bucketName}.s3.amazonaws.com/users/${user?.id}.jpeg`
+    }
+    return user
   }
 }

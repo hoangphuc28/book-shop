@@ -3,7 +3,6 @@ import { ApolloClient, InMemoryCache, HttpLink, from, Observable } from '@apollo
 import { setContext } from '@apollo/client/link/context';
 import { refreshToken } from '../rest/refreshToken';
 import { onError } from '@apollo/client/link/error';
-import { useSession } from '../../providers/auth';
 const httpLink = new HttpLink({
   uri: process.env.NEXT_PUBLIC_URL_SERVER_GRAPHQL, // Replace with your GraphQL endpoint
 });
@@ -26,7 +25,9 @@ export const onErrorCustom = onError(({ graphQLErrors, networkError, operation, 
         return new Observable(observer => {
           (async () => {
             try {
-              await refreshToken();
+              const res = await refreshToken();
+              console.log(res)
+              localStorage.setItem('accessToken', res.accessToken)
               const subscriber = {
                 next: observer.next.bind(observer),
                 error: observer.error.bind(observer),

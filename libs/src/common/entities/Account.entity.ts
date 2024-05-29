@@ -40,6 +40,10 @@ export class Account extends BaseEntity {
   @Exclude()
   password: string;
 
+  @Field()
+  avatar: string;
+
+
   @Column({nullable: true})
   @Exclude()
   isActive: boolean;

@@ -5,9 +5,13 @@ export const authApi = {
   logout: "/auth/logout",
   refreshToken: '/auth/refresh',
   resetPassword: '/auth/password-reset',
-  verifyResetPassword: '/auth/verify-password-reset'
+  verifyResetPassword: '/auth/verify-password-reset',
+
 }
 export const accountApi = {
-  getInformation: "/account/information"
+  getInformation: "/account/information",
+}
+export const resource = {
+  uploadAvatar: '/resource/avatar'
 }
 

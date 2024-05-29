@@ -7,7 +7,9 @@ import { AccountService } from '@book-shop/libs';
 
 @Resolver()
 export class AccountResolver {
-  constructor(private readonly accountService: AccountService) { }
+  constructor(
+    private readonly accountService: AccountService)
+     { }
   @UseGuards(GaphAuth)
   @Query(() => GetAccountInformationDto)
   async information(@Context() context) {

@@ -5,3 +5,49 @@
 .custom-timeline .MuiTimelineItem-positionRight::before{
     flex:none !important;
   }
+
+  .resource .preview {
+    width: 250px;
+    height: 250px;
+    background: gray;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+
+}
+.resource .preview button {
+   width: 120px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: none;
+    background-color: #0077FF;
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 0;
+    transition: all .2s;
+    z-index: 9;
+    font-size: 14px;
+}
+.resource .preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.resource .preview:hover button {
+    opacity: 1;
+}
+.resource .preview button:first-child {
+  transform: translate(-50%,-100%)
+}
+.resource .preview button:nth-child(2) {
+  transform: translate(-50%,50%)
+}
+
+.resource .preview:hover img {
+    filter: opacity(.8);
+}
+

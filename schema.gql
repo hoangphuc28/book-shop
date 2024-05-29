@@ -8,6 +8,7 @@ type Account {
   address: String!
   phone: String!
   email: String!
+  avatar: String!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -22,6 +23,7 @@ type GetAccountInformationDto {
   address: String!
   phone: String!
   email: String!
+  avatar: String!
 }
 
 type Query {

@@ -13,4 +13,7 @@ export class GetAccountInformationDto {
 
   @Field()
   email: string;
+
+  @Field()
+  avatar: string
 }
