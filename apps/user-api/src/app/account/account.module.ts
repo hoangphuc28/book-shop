@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
 import { AccountController } from './account.controller';
-import { Account, ServicesModule } from '@book-shop/libs';
+import { Account, AwsModule, ServicesModule } from '@book-shop/libs';
 import { AccountResolver } from './account.resolver';
 import { JwtModule } from '@nestjs/jwt';
-
-
 
 @Module({
   imports: [ServicesModule, JwtModule.register({})],

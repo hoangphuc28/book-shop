@@ -3,17 +3,19 @@ import { BooksModule } from './books/books.module';
 import { AboutModule } from './about/about.module';
 import { OrderModule } from './order/order.module';
 import { CartModule } from './cart/cart.module';
-import {CoreModule, ProviderModule} from '@book-shop/libs'
+import { CoreModule, ProviderModule } from '@book-shop/libs';
 import { AuthModule } from './auth/auth.module';
 import { AccountModule } from './account/account.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
+import { ResourceModule } from './resource/resource.module';
+import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join('schema.gql')
+      autoSchemaFile: join('schema.gql'),
     }),
     ProviderModule,
     CoreModule,
@@ -23,6 +25,7 @@ import { join } from 'path';
     CartModule,
     AuthModule,
     AccountModule,
+    ResourceModule,
   ],
 })
 export class AppModule {}

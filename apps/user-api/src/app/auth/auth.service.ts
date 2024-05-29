@@ -156,7 +156,7 @@ export class AuthService {
     phone?: string,
     fullName?: string,
     address?: string,
-    password?: string
+    password?: string,
   ): Promise<any> {
     const expireIn = this.configService.get(
       'APPS.SERVER.CUSTOMER.JWT.VERIFY.EXPIRES_IN'

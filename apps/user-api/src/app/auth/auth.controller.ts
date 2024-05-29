@@ -8,17 +8,22 @@ import {
   Query,
   UseGuards,
   Req,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { Request, Response } from 'express';
-import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
+
 import { RefreshTokenGuard } from '../../common/guards/refreshToken.guard';
+
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService,
+
+  ) { }
 
   @Post('login')
   async login(
@@ -119,4 +124,5 @@ export class AuthController {
         1000
     }
   }
+
 }

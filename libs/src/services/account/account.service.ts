@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
 import * as bcrypt from 'bcrypt'
-import { Account } from 'libs/src/common';
+import { Account } from '../../common/index';
+import { Express } from 'express';
+import {Multer} from 'multer'
 
 @Injectable()
 export class AccountService {
@@ -32,6 +33,12 @@ export class AccountService {
   }
   async update(id: string, account: Partial<Account>) {
     await this.accountRepository.update(id, account);
+  }
+
+  async uploadAvatar(userId: string,
+    image: Express.Multer.File,
+  ) {
+    image
   }
 
 
