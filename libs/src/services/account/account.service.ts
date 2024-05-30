@@ -42,8 +42,6 @@ export class AccountService {
   ) {
     image
   }
-
-
   async findUserByEmail(email: string) {
     return this.accountRepository.findOne({where: {email}})
   }

@@ -2,6 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Category {
+  categoryID: String!
+  books: [Book!]!
+  name: String!
+}
+
 type Account {
   id: ID!
   fullName: String!
@@ -18,6 +24,29 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Review {
+  id: String!
+  book: Book!
+  rating: Float!
+  content: String!
+}
+
+type Book {
+  id: String!
+  category: Category!
+  title: String!
+  thumbnail: String!
+  description: String!
+  price: String!
+  author: String!
+  packingDemestration: String!
+  weight: String!
+  pageCount: Float!
+  publishDate: DateTime!
+  rating: Float!
+  reviews: [Review!]!
+}
+
 type GetAccountInformationDto {
   fullName: String!
   address: String!
@@ -26,8 +55,22 @@ type GetAccountInformationDto {
   avatar: String!
 }
 
+type BooksPagination {
+  items: [Book!]!
+  totalPage: Float!
+  totalItem: Float!
+  currentPage: Float!
+  itemsPerPage: Float!
+}
+
 type Query {
+  getBooks(limit: Float!, page: Float!, condition: BookSearchCondition): BooksPagination!
   information: GetAccountInformationDto!
+}
+
+input BookSearchCondition {
+  searchTitle: String
+  category: String
 }
 
 type Mutation {

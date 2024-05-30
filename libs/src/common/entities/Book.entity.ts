@@ -11,40 +11,56 @@ import {
 import { Category } from './Category.entity';
 import { Review } from './Review.entity';
 import { OrderItem } from './OrderItem.entity';
+import { Field, ObjectType } from '@nestjs/graphql';
 
+@ObjectType()
 @Entity('books')
-export class Book extends BaseEntity {
+export class Book {
+  @Field()
   @PrimaryGeneratedColumn('uuid')
   id: string
 
+  @Field(() => Category)
   @ManyToOne(() => Category, (category) => category.books)
   category: Category;
 
+  @Field()
   @Column()
   title: string;
 
-  @Column()
+  @Field()
   thumbnail: string;
 
+  @Field()
   @Column()
   description: string;
 
+  @Field()
   @Column()
   price: string;
 
+  @Field()
+  @Column({nullable: true})
+  author: string
+
+  @Field()
   @Column()
   packingDemestration: string;
 
+  @Field()
   @Column()
   weight: string;
 
+  @Field()
   @Column()
   pageCount: number;
 
+  @Field()
   @Column()
   publishDate: Date;
 
-  @Column('decimal')
+  @Field()
+  @Column('decimal', {nullable: true})
   rating: number;
 
   @Column()
@@ -56,6 +72,7 @@ export class Book extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Field(() => [Review])
   @OneToMany(() => Review, (review) => review.book)
   reviews: Review[];
 

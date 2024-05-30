@@ -13,6 +13,6 @@ export const LogoutApi = async () => {
     localStorage.removeItem('accessToken')
   } catch (error: any) {
     console.log(error)
-    throw Error(error)
+
   }
 }

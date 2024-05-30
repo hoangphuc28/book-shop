@@ -16,8 +16,9 @@ export class AccountResolver {
     const { user } = context;
     return this.accountService.findUserById(user.sub);
   }
+
   @UseGuards(GaphAuth)
-  @Mutation(returns => Account)
+  @Mutation(() => Account)
   async saveAccount(@Context() context,
     @Args('fullName', {nullable: true}) fullName: string,
     @Args('phone') phone: string,

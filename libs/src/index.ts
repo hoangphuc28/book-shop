@@ -7,4 +7,5 @@ export * from './services/account/account.service'
 export * from './core/mail/mail.service'
 export * from './core/mail/mail.module'
 export * from './core/aws/aws.module'
+export * from './services/book/book.service'
 
