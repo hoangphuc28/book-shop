@@ -2,9 +2,7 @@
 import { baseUrl, resource } from "../../../utils/api";
 import { Input } from "../../../components/input";
 import { Fragment, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import axios from "axios";
-import { useAuth } from "../../../utils/providers/auth";
 import { useLoading } from "../../../utils/providers/loading";
 interface Props {
   accountAvatar: string
@@ -14,7 +12,6 @@ export default function Avatar({accountAvatar}: Props) {
   const [image, setImage] = useState<string | ArrayBuffer | null>(null);
   const [avatar, setAvatar] = useState<File | undefined>(undefined)
   const { setLoading }: any = useLoading()
-  const { getToken } = useAuth()
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     setAvatar(file)
@@ -33,10 +30,11 @@ export default function Avatar({accountAvatar}: Props) {
       if (avatar) {
         const formData = new FormData();
         formData.append('image', avatar);
+        const token = localStorage.getItem('accessToken')
         const res = await axios.post(`${baseUrl + resource.uploadAvatar}`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
-            'Authorization': `Bearer ${getToken()}`
+            'Authorization': `Bearer ${token}`
           },
         })
         console.log(res)

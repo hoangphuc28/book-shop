@@ -4,7 +4,6 @@ import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { MailService } from '@book-shop/libs';
-
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import * as ejs from 'ejs';
@@ -113,6 +112,7 @@ export class AuthService {
       return error;
     }
   }
+
   async getTokens(userId: string, email: string) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(

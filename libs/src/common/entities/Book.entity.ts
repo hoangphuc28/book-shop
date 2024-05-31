@@ -6,7 +6,7 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
-  BaseEntity,
+  JoinColumn,
 } from 'typeorm';
 import { Category } from './Category.entity';
 import { Review } from './Review.entity';
@@ -22,7 +22,11 @@ export class Book {
 
   @Field(() => Category)
   @ManyToOne(() => Category, (category) => category.books)
+  @JoinColumn({ name: 'categoryId' })
   category: Category;
+
+  @Column()
+  categoryId: string;
 
   @Field()
   @Column()
@@ -37,23 +41,11 @@ export class Book {
 
   @Field()
   @Column()
-  price: string;
+  price: number;
 
   @Field()
   @Column({nullable: true})
   author: string
-
-  @Field()
-  @Column()
-  packingDemestration: string;
-
-  @Field()
-  @Column()
-  weight: string;
-
-  @Field()
-  @Column()
-  pageCount: number;
 
   @Field()
   @Column()
@@ -78,4 +70,7 @@ export class Book {
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.book)
   orderItems: OrderItem[];
+  constructor(partial: Partial<Book>) {
+    Object.assign(this, partial)
+  }
 }

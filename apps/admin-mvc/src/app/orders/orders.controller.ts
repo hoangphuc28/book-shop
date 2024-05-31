@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Render,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -21,8 +22,9 @@ export class OrdersController {
   }
 
   @Get()
+  @Render('orders')
   findAll() {
-    return this.ordersService.findAll();
+    return
   }
 
   @Get(':id')

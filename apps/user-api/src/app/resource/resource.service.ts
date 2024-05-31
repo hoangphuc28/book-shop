@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ManagedUpload } from 'aws-sdk/clients/s3'
-import { FileInterceptor } from '@nestjs/platform-express';
 import { S3 } from 'aws-sdk'
 import { InjectAwsService } from 'nest-aws-sdk';
 import { ConfigService } from '@nestjs/config';

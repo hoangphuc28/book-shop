@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { BooksService } from './books.service';
 import { BooksController } from './books.controller';
+import { AwsModule, ServicesModule } from '@book-shop/libs';
 
 @Module({
+  imports: [AwsModule, ServicesModule],
   controllers: [BooksController],
-  providers: [BooksService],
 })
 export class BooksModule {}

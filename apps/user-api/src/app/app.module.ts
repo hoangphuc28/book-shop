@@ -17,7 +17,9 @@ import { JwtModule } from '@nestjs/jwt';
       driver: ApolloDriver,
       autoSchemaFile: join('schema.gql'),
     }),
+    //database
     ProviderModule,
+
     CoreModule,
     BooksModule,
     AboutModule,

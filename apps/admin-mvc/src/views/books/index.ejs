@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head.ejs'); %>
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css"
+    />
+    <style>
+      .paginate_button {
+        background: transparent;
+        padding: 5px 15px !important;
+      }
+      .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background: rgba(249, 250, 251) !important;
+        color: #374151 !important;
+      }
+      .paginate_button.current {
+        background: transparent !important;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 font-sans leading-normal tracking-normal">
+    <div class="flex">
+      <%- include('../partials/sidebar.ejs'); %>
+      <div class="flex-grow bg-gray-100 p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h1 class="text-2xl font-semibold text-gray-900">Books</h1>
+          <button
+            class="px-4 py-2 bg-green-500 text-white rounded-lg mr-2 text-sm"
+          >
+            <a href="/books/create">+ Add Book</a>
+          </button>
+        </div>
+        <div class="bg-white shadow rounded-lg p-4">
+          <table id="booksTable" class="display">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Create At</th>
+                <th>Update At</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $('#booksTable').DataTable({
+          processing: true,
+          serverSide: true,
+          ajax: function (data, callback, settings) {
+            const page = data.start / data.length + 1;
+            const limit = data.length;
+
+            axios
+              .get(`/books/api/books?page=${page}&limit=${limit}`)
+              .then((response) => {
+                const { items, totalItem } = response.data;
+                callback({
+                  draw: data.draw,
+                  recordsTotal: totalItem,
+                  recordsFiltered: totalItem,
+                  data: items,
+                });
+              })
+              .catch((error) => {
+                console.error('Error fetching data:', error);
+                alert('An error occurred while loading data.');
+                callback({
+                  draw: data.draw,
+                  recordsTotal: 0,
+                  recordsFiltered: 0,
+                  data: [],
+                });
+              });
+          },
+          columns: [
+            {
+              data: 'thumbnail',
+              render: function (data) {
+                return (
+                  '<img src="' +
+                  data +
+                  '" alt="Thumbnail" class="object-cover h-32 w-20 rounded">'
+                );
+              },
+            },
+            { data: 'title' },
+            {
+              data: 'description',
+              render: function (data) {
+                return truncateDescription(data, 50); // Adjust the maxLength as needed
+              },
+            },
+            { data: 'price' },
+            {
+              data: 'createdAt',
+              render: function (data) {
+                return formatDate(data);
+              },
+            },
+            {
+              data: 'updatedAt',
+              render: function (data) {
+                return formatDate(data);
+              },
+            },
+            { data: 'isActive' },
+            {
+              data: null,
+              render: function (data, type, row) {
+                return (
+                  '<button onclick="editAction(this)" class="edit-button" data-id="' +
+                  row.id +
+                  '">Edit</button>'
+                );
+              },
+            },
+          ],
+        });
+      });
+      function truncateDescription(description, maxLength) {
+        if (description.length <= maxLength) {
+          return description;
+        } else {
+          return description.slice(0, maxLength) + '...';
+        }
+      }
+      const editAction = (e) => {
+        const id = e.getAttribute('data-id');
+        window.location.href = `/books/edit?id=${id}`;
+      };
+
+      function formatDate(dateString) {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      }
+    </script>
+  </body>
+</html>

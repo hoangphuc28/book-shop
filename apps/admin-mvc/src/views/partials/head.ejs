@@ -1,0 +1,81 @@
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+  <style>
+    input {
+      padding: 5px;
+      outline: none !important;
+      box-shadow: none !important;
+      border: solid 1px #dcdcdc;
+    }
+    textarea {
+      padding: 5px;
+      outline: none !important;
+      box-shadow: none !important;
+      border: solid 1px #dcdcdc;
+    }
+    select {
+      padding: 5px;
+      outline: none !important;
+      box-shadow: none !important;
+      border: solid 1px #dcdcdc;
+    }
+     .preview {
+        width: 250px;
+        height: 350px;
+        position: relative;
+        overflow: hidden;
+        padding: 5px;
+        border: 2px #d1d5db;
+        border-style: dashed;
+      }
+       .preview button {
+        width: 120px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        border: none;
+        background-color: #0077ff;
+        color: #fff;
+        padding: 10px 14px;
+        border-radius: 5px;
+        cursor: pointer;
+        opacity: 0;
+        transition: all 0.2s;
+        z-index: 9;
+        font-size: 14px;
+      }
+       .preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        inset: 0;
+      }
+
+       .preview:hover button {
+        opacity: 1;
+      }
+       .preview button {
+        transform: translate(-50%, -50%);
+      }
+       .preview:hover img {
+        filter: opacity(0.8);
+      }
+  </style>
+</head>

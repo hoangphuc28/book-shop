@@ -1,0 +1,43 @@
+    <div class="flex">
+      <!-- Sidebar -->
+      <div class="flex flex-col w-64 bg-white h-screen px-4 py-8 border-r">
+        <div class="text-xl font-semibold text-gray-900 mb-6">
+          Admin Dashboard
+        </div>
+        <nav class="flex flex-col mt-6" id="menu">
+
+        </nav>
+      </div>
+    </div>
+    <script>
+      const menu = [
+        { title: 'Orders', icon: '<i class="fa-solid fa-box"></i>' },
+        { title: 'Accounts', icon: '<i class="fa-solid fa-user"></i>' },
+        { title: 'Categories', icon: '<i class="fa-solid fa-tag"></i>' },
+        { title: 'Books', icon: '<i class="fa-solid fa-book"></i>' },
+        {
+          title: 'Promotion',
+          icon: '<i class="fa-solid fa-calendar-days"></i>',
+        },
+      ];
+      const pathname = window.location.pathname;
+      const path = pathname.startsWith('/') ? pathname.substring(1) : pathname;
+
+      const menuContainer = document.getElementById('menu');
+
+      menu.forEach((item) => {
+        const menuItem = document.createElement('a');
+        const itemPath = item.title.toLowerCase();
+        const isActive = path === itemPath;
+
+        menuItem.href = `/${itemPath}`;
+        menuItem.className = `flex items-center my-2 px-4 py-2 text-gray-700 rounded-lg ${
+          isActive ? 'bg-gray-100' : ''
+        }`;
+        menuItem.innerHTML = `
+              ${item.icon}
+              <span class="mx-4 font-medium">${item.title}</span>
+          `;
+        menuContainer.appendChild(menuItem);
+      });
+    </script>

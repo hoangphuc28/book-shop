@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head.ejs'); %>
+  </head>
+
+  <body class="bg-gray-100">
+    <div class="flex">
+      <%- include('../partials/sidebar.ejs'); %>
+      <div class="w-full p-10">
+        <form id="updateBookForm" enctype="multipart/form-data">
+          <% if (book) { %>
+            <input type="hidden" name="id" value="<%= book.id %>">
+          <div class="flex justify-between items-center">
+            <a href="/books" class="text-blue-500 mb-4 inline-block">&larr; Back to product listing</a>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-green-500 text-white rounded-lg mr-2 text-sm w-24"
+            >
+              Save
+            </button>
+          </div>
+          <div class="flex mt-7">
+            <div class="bg-white p-6 rounded-lg w-4/6">
+              <h2 class="text-2xl font-bold mb-6">Basic information</h2>
+              <div class="grid grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Product title</label>
+                  <input
+                    value="<%= book.title %>"
+                    required
+                    type="text"
+                    name="title"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                    placeholder="Product title"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Product category</label>
+                  <select name="categoryId" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                    <% categories.forEach(category => { %>
+                      <option value="<%= category.categoryID %>" <%= (book.categoryId == category.categoryID) && 'selected' %>><%= category.name %></option>
+                    <% }) %>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Price</label>
+                  <input
+                    value="<%= book.price %>"
+                    required
+                    type="number"
+                    name="price"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                    placeholder="Enter price"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Publish Date</label>
+                  <input
+                    value="<%= book.publishDate ? new Date(book.publishDate).toISOString().split('T')[0] : '' %>"
+                    required
+                    type="date"
+                    name="publishDate"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Status</label>
+                  <select
+                    required
+                    name="isActive"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                  >
+                    <option value="true" <%= (book.isActive === true) && 'selected' %>>Active</option>
+                    <option value="false" <%= (book.isActive === false) && 'selected' %>>Inactive</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Author</label>
+                  <input
+                    value="<%= book.author %>"
+                    required
+                    type="text"
+                    name="author"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                    placeholder="Author"
+                  />
+                </div>
+              </div>
+              <div class="mt-6">
+                <label class="block text-sm font-medium text-gray-700">Description</label>
+                <textarea
+                  required
+                  name="description"
+                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                  rows="4"
+                  placeholder="Write something to describe your product..."
+                ><%= book.description %></textarea>
+              </div>
+            </div>
+            <div class="bg-transparent shadow-none w-2/6 ml-5 flex justify-center h-full">
+              <div class="flex justify-center items-center">
+                <div class="p-8 bg-white rounded-lg shadow-md">
+                  <h2 class="text-2xl font-bold mb-6">Thumbnail</h2>
+                  <div class="preview bg-white">
+                    <div class="flex items-center justify-center h-full">
+                      <img id="preview" src="<%= book.thumbnail %>" alt="Preview" class="<%= book.thumbnail ? '' : 'hidden' %> w-48 h-48 object-cover"/>
+                    </div>
+                    <button
+                      class="button_upload"
+                      type="button"
+                      onclick="openInput()"
+                    >
+                      Upload
+                    </button>
+                    <input
+                      name="thumbnail"
+                      type="file"
+                      id="uploadImage"
+                      style="display: none"
+                      onchange="handleChange(event)"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% } %>
+        </form>
+      </div>
+    </div>
+  </body>
+  <script>
+    function openInput() {
+      document.getElementById('uploadImage').click();
+    }
+    function handleChange(event) {
+      const file = event.target.files[0];
+      const preview = document.getElementById('preview');
+      if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.classList.remove('hidden');
+      } else {
+        preview.src = '';
+        preview.classList.add('hidden');
+      }
+    }
+
+    document.getElementById('updateBookForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const formData = new FormData(this);
+      const bookId = formData.get('id');
+      try {
+        const response = await axios.put(`/books?id=${bookId}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+       console.log(response)
+       alert('Book updated successfully')
+       window.location.href = '/books'
+      } catch (error) {
+        console.error('Error updating book:', error);
+        alert('Failed to update book');
+      }
+    });
+  </script>
+</html>

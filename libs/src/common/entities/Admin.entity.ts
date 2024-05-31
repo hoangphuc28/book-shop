@@ -17,19 +17,10 @@ export class Admin extends BaseEntity {
   id: string
 
   @Column()
-  avatar: string;
-
-  @Column()
   name: string;
 
-  @Column()
-  address: string;
-
-  @Column()
-  phone: string;
-
-  @Column()
-  email: string;
+  @Column({unique: true})
+  userName: string;
 
   @Column()
   password: string;
@@ -42,6 +33,9 @@ export class Admin extends BaseEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column({nullable: true})
+  refreshToken: string;
 
   constructor(partial: Partial<Admin>) {
     super()
