@@ -1,15 +1,28 @@
     <div class="flex">
       <!-- Sidebar -->
-      <div class="flex flex-col w-64 bg-white h-screen px-4 py-8 border-r">
+      <div class="flex flex-col w-64 bg-white h-screen px-4 py-8 border-r justify-between">
+       <div>
         <div class="text-xl font-semibold text-gray-900 mb-6">
           Admin Dashboard
         </div>
         <nav class="flex flex-col mt-6" id="menu">
 
         </nav>
+       </div>
+        <button onclick="logout()">Logout</button>
       </div>
     </div>
     <script>
+  const logout = async () => {
+  try {
+    const response = await axios.post('/logout');
+    localStorage.removeItem('accessToken_admin')
+    window.location.href = '/';
+  } catch (error) {
+    console.error('Error logging out:', error);
+  }
+};
+
       const menu = [
         { title: 'Orders', icon: '<i class="fa-solid fa-box"></i>' },
         { title: 'Accounts', icon: '<i class="fa-solid fa-user"></i>' },

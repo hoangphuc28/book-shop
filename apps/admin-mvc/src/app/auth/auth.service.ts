@@ -22,53 +22,47 @@ export class AuthService {
       if (!passwordMatches)
         throw new BadRequestException('Email or password is incorrect');
       const tokens = await this.getTokens(admin.id, admin.userName);
-      admin.refreshToken = tokens.refreshToken;
-      await this.adminService.update(admin.id, { refreshToken: admin.refreshToken });
+      console.log(tokens)
+      admin.session = tokens.session;
+      await this.adminService.update(admin.id, { session: admin.session });
       return {
         tokens,
       };
     } catch (error) {
+      console.log(error)
       if (error instanceof BadRequestException) {
         throw error;
       }
       throw new InternalServerErrorException();
     }
   }
-
+  async logout(session: string) {
+    try {
+      const { sub } =
+        await this.jwtService.verify(session);
+      this.adminService.update(sub, { session: null })
+    } catch (error) {
+      console.log(error)
+      return {
+        message: 'Internal server error',
+        status: 500,
+      };
+    }
+  }
   async getTokens(userId: string, email: string) {
-    const [accessToken, refreshToken] = await Promise.all([
-      this.jwtService.signAsync(
-        {
-          sub: userId,
-          email,
-        },
-        {
-          secret: this.configService.get<string>(
-            'APPS.SERVER.ADMIN.JWT.ACCESS.SECRET'
-          ),
-          expiresIn: this.configService.get(
-            'APPS.SERVER.ADMIN.JWT.ACCESS.EXPIRES_IN'
-          ),
-        }
-      ),
-      this.jwtService.signAsync(
-        {
-          sub: userId,
-          email,
-        },
-        {
-          secret: this.configService.get<string>(
-            'APPS.SERVER.ADMIN.JWT.REFRESH.SECRET'
-          ),
-          expiresIn: this.configService.get(
-            'APPS.SERVER.ADMIN.JWT.REFRESH.EXPIRES_IN'
-          ),
-        }
-      ),
-    ]);
+    const session = await this.jwtService.signAsync(
+      {
+        sub: userId,
+        email,
+      },
+      {
+        expiresIn: this.configService.get(
+          'APPS.SERVER.ADMIN.JWT.SESSION.EXPIRES_IN'
+        ),
+      }
+    )
     return {
-      accessToken,
-      refreshToken,
+      session,
     };
   }
 }

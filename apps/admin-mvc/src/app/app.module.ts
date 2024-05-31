@@ -7,8 +7,11 @@ import { OrdersModule } from './orders/orders.module';
 import { PaymentsModule } from './payments/payments.module';
 import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
+import { JWTModule } from '../jwt/jwt.module';
 @Module({
   imports: [
+    //guard
+    JWTModule,
     //database
     ProviderModule,
     AuthModule,

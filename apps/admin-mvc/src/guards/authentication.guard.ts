@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class RefreshTokenGuard implements CanActivate {
+export class Authentication implements CanActivate {
   constructor(
     private configService: ConfigService,
     private jwtService: JwtService
@@ -12,17 +12,16 @@ export class RefreshTokenGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     try {
       const req = context.switchToHttp().getRequest()
-      const refreshToken = req.cookies.refresh;
-      console.log(refreshToken)
-      const { sub, email } = this.jwtService.verify(refreshToken, {
+      const session = req.cookies.session;
+      const { sub, email } = this.jwtService.verify(session, {
         secret: this.configService.get<string>(
-          'APPS.SERVER.ADMIN.JWT.REFRESH.SECRET'
+          'APPS.SERVER.ADMIN.JWT.SESSION.SECRET'
         ),
       })
-      req.user = {sub, email, refreshToken}
+      req.user = {sub, email, session}
       return true;
     } catch (error) {
-      throw new ForbiddenException('Unauthorized')
+      context.switchToHttp().getResponse().redirect('/');
     }
   }
 }

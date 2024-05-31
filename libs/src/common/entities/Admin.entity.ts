@@ -35,7 +35,7 @@ export class Admin extends BaseEntity {
   updatedAt: Date;
 
   @Column({nullable: true})
-  refreshToken: string;
+  session: string;
 
   constructor(partial: Partial<Admin>) {
     super()

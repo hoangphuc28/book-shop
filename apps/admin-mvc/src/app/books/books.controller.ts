@@ -12,11 +12,14 @@ import {
   Res,
   Query,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { BookService, CategoryService, BookInputDto } from '@book-shop/libs';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Authentication } from '../../guards/authentication.guard';
 
+@UseGuards(Authentication)
 @Controller('books')
 export class BooksController {
   constructor(

@@ -7,10 +7,12 @@ import {
   Param,
   Delete,
   Render,
+  UseGuards,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { Authentication } from '../../guards/authentication.guard';
 
 @Controller('orders')
 export class OrdersController {
@@ -21,6 +23,7 @@ export class OrdersController {
     return this.ordersService.create(createOrderDto);
   }
 
+  @UseGuards(Authentication)
   @Get()
   @Render('orders')
   findAll() {

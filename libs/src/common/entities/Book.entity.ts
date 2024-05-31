@@ -12,6 +12,7 @@ import { Category } from './Category.entity';
 import { Review } from './Review.entity';
 import { OrderItem } from './OrderItem.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
+import { Author } from './Author.entity';
 
 @ObjectType()
 @Entity('books')
@@ -28,6 +29,14 @@ export class Book {
   @Column()
   categoryId: string;
 
+  @Field(() => Author)
+  @ManyToOne(() => Author, (author) => author.books)
+  @JoinColumn({ name: 'authorId' })
+  author: Author;
+
+  @Column()
+  authorId: string;
+
   @Field()
   @Column()
   title: string;
@@ -42,10 +51,6 @@ export class Book {
   @Field()
   @Column()
   price: number;
-
-  @Field()
-  @Column({nullable: true})
-  author: string
 
   @Field()
   @Column()

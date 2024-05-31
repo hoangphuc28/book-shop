@@ -58,7 +58,7 @@ export class BookService {
     title: string,
     description: string,
     price: number,
-    author: string,
+    authorId: string,
     categoryId: string,
     publishDate: Date,
     isActive: boolean,
@@ -77,7 +77,7 @@ export class BookService {
         book.title = title;
         book.description = description;
         book.price = price;
-        book.author = author;
+        book.authorId = authorId;
         book.categoryId = categoryId;
         book.publishDate = publishDate;
         book.isActive = isActive;
@@ -87,7 +87,7 @@ export class BookService {
           title,
           description,
           price,
-          author,
+          authorId,
           categoryId,
           publishDate,
           isActive

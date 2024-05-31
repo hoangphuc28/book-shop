@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Post, Render, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Render, Req, Res } from '@nestjs/common';
 import { LoginDto } from './Dto/login.dto';
 import { AuthService } from './auth.service';
-import {Response} from 'express'
+import {Response, Request} from 'express'
 @Controller('')
 export class AuthController {
   constructor(
@@ -18,21 +18,17 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
     @Body() data: LoginDto
   ) {
-    console.log(data)
     const res = await this.authService.login(data.userName, data.password);
-    response.cookie('refresh', res.tokens.refreshToken, {
+    response.cookie('session', res.tokens.session, {
       httpOnly: true,
     });
-
-    return {
-      accessToken: res.tokens.accessToken,
-      expiredAt:
-        Date.now() +
-        this.authService.configService.get(
-          'APPS.SERVER.ADMIN.JWT.ACCESS.EXPIRES_IN'
-        ) *
-        1000,
-    };
+  }
+  @Post('logout')
+  async logout(@Res({ passthrough: true }) response: Response, @Req() req: Request) {
+    const {session} = req.cookies
+    console.log()
+    this.authService.logout(session)
+    response.clearCookie('session');
   }
 }
 
