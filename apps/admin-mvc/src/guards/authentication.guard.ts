@@ -13,14 +13,11 @@ export class Authentication implements CanActivate {
     try {
       const req = context.switchToHttp().getRequest()
       const session = req.cookies.session;
-      const { sub, email } = this.jwtService.verify(session, {
-        secret: this.configService.get<string>(
-          'APPS.SERVER.ADMIN.JWT.SESSION.SECRET'
-        ),
-      })
+      const { sub, email } = this.jwtService.verify(session)
       req.user = {sub, email, session}
       return true;
     } catch (error) {
+      console.log(error)
       context.switchToHttp().getResponse().redirect('/');
     }
   }

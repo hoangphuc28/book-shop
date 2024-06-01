@@ -15,32 +15,37 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { BookService, CategoryService, BookInputDto } from '@book-shop/libs';
+import { BookService, CategoryService, BookInputDto, AuthorService } from '@book-shop/libs';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Authentication } from '../../guards/authentication.guard';
+
 
 @UseGuards(Authentication)
 @Controller('books')
 export class BooksController {
   constructor(
     private readonly booksService: BookService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private authorService: AuthorService,
   ) {}
 
   @Get()
   @Render('books/index')
-  async findAll() {
-    return;
-  }
-  @Get('api/books')
-  async findBooks(
+  async listBooks(
     @Query('page') page = 1,
     @Query('limit') limit = 5,
     @Res() res: Response
   ) {
     try {
+      if (typeof page === "string") {
+        page = parseInt(page);
+      }
+      if (typeof limit === "string") {
+        limit = parseInt(limit);
+      }
       const booksPagination = await this.booksService.find(limit, page, true);
-      return res.json(booksPagination);
+      console.log(booksPagination)
+      return {data: booksPagination}
     } catch (error) {
       console.error('Error occurred while fetching books:', error);
       return res.status(500).json({ error: 'Internal Server Error' });
@@ -50,7 +55,8 @@ export class BooksController {
   @Render('books/create')
   async createForm() {
     const categories = await this.categoryService.find();
-    return { categories, errors: {}, formData: {} };
+    const authors = await this.authorService.find()
+    return { categories, authors, errors: {}, formData: {} };
   }
 
   @Post()
@@ -66,7 +72,7 @@ export class BooksController {
         title,
         description,
         price,
-        author,
+        authorId,
         categoryId,
         publishDate,
         isActive,
@@ -76,7 +82,7 @@ export class BooksController {
         title,
         description,
         price,
-        author,
+        authorId,
         categoryId,
         publishDate,
         (isActive === 'true'),
@@ -109,7 +115,7 @@ export class BooksController {
         title,
         description,
         price,
-        author,
+        authorId,
         categoryId,
         publishDate,
         isActive,
@@ -118,7 +124,7 @@ export class BooksController {
           title,
           description,
           price,
-          author,
+          authorId,
           categoryId,
           publishDate,
           (isActive === 'true'),

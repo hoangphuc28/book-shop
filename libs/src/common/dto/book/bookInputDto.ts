@@ -17,7 +17,7 @@ export class BookInputDto {
   categoryId: string;
 
   @IsNotEmpty()
-  author: string;
+  authorId: string;
 
   @IsNotEmpty()
   publishDate: Date;

@@ -28,6 +28,7 @@ export class BookService {
       take: limit,
       skip: offset,
       where: whereCondition,
+      relations: ['category', 'author'],
     });
 
     const bucketName = this.configService.get<string>('AWS.SERVICES.S3.BUCKET_NAME');

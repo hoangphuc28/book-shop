@@ -25,7 +25,7 @@ export class OrdersController {
 
   @UseGuards(Authentication)
   @Get()
-  @Render('orders')
+  @Render('orders/index')
   findAll() {
     return
   }

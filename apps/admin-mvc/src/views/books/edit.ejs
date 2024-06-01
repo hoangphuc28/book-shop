@@ -7,7 +7,7 @@
   <body class="bg-gray-100">
     <div class="flex">
       <%- include('../partials/sidebar.ejs'); %>
-      <div class="w-full p-10">
+      <div class="w-full p-10 ml-64">
         <form id="updateBookForm" enctype="multipart/form-data">
           <% if (book) { %>
             <input type="hidden" name="id" value="<%= book.id %>">

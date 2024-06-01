@@ -7,7 +7,7 @@
   <body class="bg-gray-100">
     <div class="flex">
       <%- include('../partials/sidebar.ejs'); %>
-      <div class="w-full p-10">
+      <div class="w-full p-10 ml-64">
         <form method="post" action="/books" enctype="multipart/form-data">
           <div class="flex justify-between items-center">
             <a href="/books" class="text-blue-500 mb-4 inline-block"
@@ -93,13 +93,17 @@
                   <label class="block text-sm font-medium text-gray-700"
                     >Author</label
                   >
-                  <input
+                  <select
                   required
-                    type="text"
-                    name="author"
+                    name="authorId"
                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                    placeholder="Author"
-                  />
+                  >
+                    <% authors.forEach(author => { %>
+                    <option value="<%= author.id%>">
+                      <%= author.name %>
+                    </option>
+                    <% }) %>
+                  </select>
                 </div>
               </div>
               <div class="mt-6">
