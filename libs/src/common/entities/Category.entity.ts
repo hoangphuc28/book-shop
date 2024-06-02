@@ -34,5 +34,8 @@ export class Category extends BaseEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
-
+  constructor(partial: Partial<Category>) {
+    super();
+    Object.assign(this, partial)
+  }
 }

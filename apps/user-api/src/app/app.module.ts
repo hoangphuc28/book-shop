@@ -11,6 +11,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { ResourceModule } from './resource/resource.module';
 import { JwtModule } from '@nestjs/jwt';
+import { CategoryModule } from './category/category.module';
+import { AuthorModule } from './author/author.module';
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -28,6 +30,8 @@ import { JwtModule } from '@nestjs/jwt';
     AuthModule,
     AccountModule,
     ResourceModule,
+    CategoryModule,
+    AuthorModule,
   ],
 })
 export class AppModule {}

@@ -51,11 +51,12 @@ export class BooksController {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   }
+
   @Get('create')
   @Render('books/create')
   async createForm() {
-    const categories = await this.categoryService.find();
-    const authors = await this.authorService.find()
+    const categories = await this.categoryService.find(true);
+    const authors = await this.authorService.find(true)
     return { categories, authors, errors: {}, formData: {} };
   }
 
@@ -98,9 +99,11 @@ export class BooksController {
   @Get('edit')
   @Render('books/edit')
   async editForm(@Query('id') id: string) {
-    const categories = await this.categoryService.find();
+    const categories = await this.categoryService.find(true);
+    const authors = await this.authorService.find(true)
+
     const book = await this.booksService.findById(id);
-    return { book, categories };
+    return { book,authors, categories };
   }
 
   @Put()

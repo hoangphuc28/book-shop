@@ -34,5 +34,9 @@ export class Author extends BaseEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
+  constructor(partial: Partial<Author>) {
+    super();
+    Object.assign(this, partial)
+  }
 
 }

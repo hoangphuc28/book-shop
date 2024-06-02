@@ -21,3 +21,45 @@ export const updateInformation = gql`
     }
   }
 `;
+export const getBooks = gql`
+query GetBooks($limit: Float!, $page: Float!, $condition: BookSearchCondition) {
+  getBooks(limit: $limit, page: $page, condition: $condition) {
+    items {
+      id
+      title
+      thumbnail
+      category {
+          categoryID
+          name
+      }
+      author {
+          id
+          name
+      }
+      description
+      price
+      publishDate
+      rating
+    }
+    currentPage
+    itemsPerPage
+    totalItem
+    totalPage
+  }
+}
+`;
+export const getCategories = gql`
+query GetCategories {
+  getCategories {
+      categoryID
+      name
+  }
+}`
+export const getAuthors = gql`
+query GetAuthors {
+  getAuthors {
+      id
+      name
+  }
+}
+`

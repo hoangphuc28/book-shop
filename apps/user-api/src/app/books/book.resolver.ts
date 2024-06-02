@@ -13,7 +13,9 @@ export class BookResolver {
     @Args('page') page: number,
     @Args('condition', { nullable: true }) condition?: BookSearchCondition
   ) {
-    return this.bookService.find(limit, page, condition)
+    const res = await this.bookService.find(limit, page, false, condition)
+    console.log(res)
+    return res
   }
 
 }

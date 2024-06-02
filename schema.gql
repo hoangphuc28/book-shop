@@ -31,19 +31,22 @@ type Review {
   content: String!
 }
 
+type Author {
+  id: String!
+  books: [Book!]!
+  name: String!
+}
+
 type Book {
   id: String!
   category: Category!
-  title: String!
-  thumbnail: String!
-  description: String!
-  price: String!
-  author: String!
-  packingDemestration: String!
-  weight: String!
-  pageCount: Float!
+  author: Author!
+  title: String
+  thumbnail: String
+  description: String
+  price: Float
   publishDate: DateTime!
-  rating: Float!
+  rating: Float
   reviews: [Review!]!
 }
 
@@ -66,11 +69,14 @@ type BooksPagination {
 type Query {
   getBooks(limit: Float!, page: Float!, condition: BookSearchCondition): BooksPagination!
   information: GetAccountInformationDto!
+  getCategories: [Category!]!
+  getAuthors: [Author!]!
 }
 
 input BookSearchCondition {
   searchTitle: String
-  category: String
+  category: [String!]
+  author: [String!]
 }
 
 type Mutation {

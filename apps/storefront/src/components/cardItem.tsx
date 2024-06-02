@@ -1,32 +1,45 @@
-import Image from "next/image";
+
+import { Book } from "../utils/interfaces/book";
+import { Card, CardActionArea, CardMedia, Typography, Rating, Button } from "@mui/material";
+import { formatVND } from "../utils/formatCurrency";
+import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 import Link from "next/link";
-export default function CardItem() {
-const src = 'https://cdn.shopify.com/s/files/1/0533/2089/files/design-books-the-design-of-everyday-things-book-cover.jpg?v=1587988106'
+interface Props {
+  product: Book
+}
+export default function CardItem({ product }: Props) {
   return (
-  <div className="col-lg-4 col-sm-6">
-  <div className="product-item">
-    <div className="pi-pic p-5">
-      <div className="flex justify-center">
-      <img width={150} height={100} src={src} alt="image"  className="object-cover"/>
-      </div>
-    </div>
-    <div className="pi-text">
-      <div className="catagory-name">Coat</div>
-      <a href="/products/1">
-        <h5 style={{color: '#5B5B5B'}}>Guangzhou sweater</h5>
-      </a>
-      <div className="product-price">
-        $13.00
-        <span>$35.00</span>
-      </div>
-      <div className="mt-2 mb-5">
-        <div className="flex justify-center">
-        <Link className="btn-style1 py-2 px-2 w-9/12 " href={'/cart'}>Add To Cart</Link>
+    <div className="col-lg-4 col-sm-4">
+      <Card sx={{ maxWidth: 300 }}>
+      <Link href={`/products/${product?.id}`}>
+        <CardActionArea>
+          <CardMedia
+            component="img"
+            sx={{ height: 250 }}
+            image={product?.thumbnail}
+            alt="green iguana"
+          />
+          <div className="px-4 mt-1">
+            <Typography fontSize={16} gutterBottom variant="h5" component="div">
+              {product?.title}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {product?.author?.name}
+            </Typography>
+            <Rating name="read-only" size="small" defaultValue={product?.rating} precision={0.5} readOnly />
+            </div>
+        </CardActionArea>
+        </Link>
+        <div className="flex justify-between items-center pl-4 pb-1">
+        <Typography>
+              {formatVND(product?.price)}
+            </Typography>
+            <Button>
+              <AddShoppingCartOutlinedIcon />
+            </Button>
         </div>
-      </div>
+      </Card>
     </div>
-  </div>
-</div>
 
   );
 }

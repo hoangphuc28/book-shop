@@ -8,6 +8,7 @@ import { PaymentsModule } from './payments/payments.module';
 import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
 import { JWTModule } from '../jwt/jwt.module';
+import { AuthorModule } from './author/author.module';
 @Module({
   imports: [
     //guard
@@ -22,6 +23,7 @@ import { JWTModule } from '../jwt/jwt.module';
     OrdersModule,
     PaymentsModule,
     AdminModule,
+    AuthorModule,
   ],
 })
 export class AppModule {}

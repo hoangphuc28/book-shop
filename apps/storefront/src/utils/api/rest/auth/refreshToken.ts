@@ -17,6 +17,5 @@ export const refreshToken = async () => {
     return res.data
   } catch (error) {
     LogoutApi()
-    console.log(error)
   }
 };

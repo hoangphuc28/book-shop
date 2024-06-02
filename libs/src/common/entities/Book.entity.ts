@@ -37,18 +37,18 @@ export class Book {
   @Column()
   authorId: string;
 
-  @Field()
+  @Field({nullable: true})
   @Column()
   title: string;
 
-  @Field()
+  @Field({nullable: true})
   thumbnail: string;
 
-  @Field()
+  @Field({nullable: true})
   @Column()
   description: string;
 
-  @Field()
+  @Field({nullable: true})
   @Column()
   price: number;
 
@@ -56,8 +56,8 @@ export class Book {
   @Column()
   publishDate: Date;
 
-  @Field()
-  @Column('decimal', {nullable: true})
+  @Field({nullable: true})
+  @Column({nullable: true, default: 0})
   rating: number;
 
   @Column()

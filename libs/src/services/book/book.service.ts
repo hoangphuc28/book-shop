@@ -2,7 +2,7 @@ import { Book } from '../../common/entities';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BookSearchCondition, BooksPagination } from '../../common';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { ResourceService } from '../resource/resource.service';
 
@@ -15,21 +15,50 @@ export class BookService {
     private resourceService: ResourceService
 
   ) { }
+  async findBooksByCategories(categories: string[]): Promise<Book[]> {
+    return this.bookRepository.createQueryBuilder('book')
+      .leftJoinAndSelect('book.category', 'category') // Kết hợp bảng category vào truy vấn
+      .where('category.categoryID IN (:...categoriesId)', { categoriesId: categories })
+      .getMany();
+  }
+
   async find(limit: number, page: number, includeInactive = false, condition?: BookSearchCondition): Promise<BooksPagination> {
     const result = new BooksPagination();
     const offset = limit * page - limit || 0;
-    const whereCondition: any = { category: { categoryID: condition?.category } };
+    const whereCondition: any = {}
+    // if (condition) {
+    //   if (condition.category && condition.category.length > 0) {
+    //     whereCondition.category = { categoryID: condition.category };
+    //   }
+    //   if (condition.searchTitle) {
+    //     whereCondition.title = Like(`%${condition.searchTitle}%`);
+    //   }
+    //   if (condition.author && condition.author.length > 0) {
+    //     whereCondition.author = { name: { in: condition.author } };
+    //   }
+    // }
 
     if (!includeInactive) {
       whereCondition.isActive = true;
     }
+    const categoryCondition = condition?.category || [];
+    const authorCondition = condition?.author || [];
+    let queryBuilder = this.bookRepository.createQueryBuilder('book')
+      .leftJoinAndSelect('book.category', 'category')
+      .leftJoinAndSelect('book.author', 'author');
 
-    const [items, totalCount] = await this.bookRepository.findAndCount({
-      take: limit,
-      skip: offset,
-      where: whereCondition,
-      relations: ['category', 'author'],
-    });
+    if (categoryCondition.length > 0) {
+      queryBuilder = queryBuilder
+        .where('category.categoryID IN (:...categoriesId)', { categoriesId: categoryCondition });
+    }
+    if (authorCondition.length > 0) {
+      queryBuilder = queryBuilder
+          .andWhere('author.id IN (:...authorIds)', { authorIds: authorCondition }); // Thêm điều kiện cho tác giả
+  }
+    const [items, totalCount] = await queryBuilder
+      .take(limit)
+      .skip(offset)
+      .getManyAndCount();
 
     const bucketName = this.configService.get<string>('AWS.SERVICES.S3.BUCKET_NAME');
 

@@ -25,7 +25,6 @@ export const onErrorCustom = onError(({ graphQLErrors, networkError, operation, 
           (async () => {
             try {
               const res = await refreshToken();
-              console.log(res)
               localStorage.setItem('accessToken', res.accessToken)
               const subscriber = {
                 next: observer.next.bind(observer),
@@ -34,7 +33,6 @@ export const onErrorCustom = onError(({ graphQLErrors, networkError, operation, 
               };
               forward(operation).subscribe(subscriber);
             } catch (error) {
-              console.log(error)
               observer.error(error);
             }
           })();

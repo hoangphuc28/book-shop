@@ -39,7 +39,7 @@
                   <label class="block text-sm font-medium text-gray-700">Product category</label>
                   <select name="categoryId" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                     <% categories.forEach(category => { %>
-                      <option value="<%= category.categoryID %>" <%= (book.categoryId == category.categoryID) && 'selected' %>><%= category.name %></option>
+                      <option value="<%= category.categoryID %>" <%= (book.categoryId == category.categoryID) && 'selected' %> ><%= category.name %></option>
                     <% }) %>
                   </select>
                 </div>
@@ -76,15 +76,21 @@
                   </select>
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-700">Author</label>
-                  <input
-                    value="<%= book.author %>"
-                    required
-                    type="text"
-                    name="author"
+                  <label class="block text-sm font-medium text-gray-700"
+                    >Author</label
+                  >
+                  <select
+                  required
+                    name="authorId"
                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                    placeholder="Author"
-                  />
+                  >
+                    <% authors.forEach(author => { %>
+                    <option value="<%= author.id%>" <%= (book.authorId === author.id) && 'selected' %>>
+                      <%= author.name %>
+                    </option>
+                    <% }) %>
+                  </select>
+
                 </div>
               </div>
               <div class="mt-6">

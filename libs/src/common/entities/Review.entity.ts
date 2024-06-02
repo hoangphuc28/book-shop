@@ -29,6 +29,7 @@ export class Review extends BaseEntity{
   @Field()
   @Column()
   rating: number;
+
   @Field()
   @Column()
   content: string;
