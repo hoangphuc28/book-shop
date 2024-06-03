@@ -1,4 +1,15 @@
+import { Skeleton } from "@mui/material";
+import { Fragment } from "react";
+
 export default function Loading() {
   // You can add any UI inside Loading, including a Skeleton.
-  return "Loading..."
+  return (
+    <div className="grid grid-cols-5 gap-4">
+      <div>
+      <Skeleton width="100%" sx={{ height: 190 }} animation="wave" variant="rectangular" />
+      <Skeleton  width="100%" animation="wave" height={10} style={{ marginBottom: 6 }} />
+      <Skeleton width="100%" animation="wave" height={10}  />
+      </div>
+    </div>
+  )
 }

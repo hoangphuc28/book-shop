@@ -42,8 +42,8 @@ export default function Pagination({ totalPage, totalItem, currentPage, itemsPer
   return (
     <Fragment>
 
-      <div className="grid grid-cols-2 gap-7">
-        <div className="flex items-center">
+      <div className="flex">
+        <div className="flex items-center mr-2">
           <p className="mr-2">Row per page: </p>
           <FormControl variant="standard" size="small">
             <Select
@@ -53,13 +53,13 @@ export default function Pagination({ totalPage, totalItem, currentPage, itemsPer
               value={itemsPerPage.toString()}
               onChange={handleChangeRowsPerPage}
             >
-              <MenuItem value={10}>10</MenuItem>
-              <MenuItem value={15}>15</MenuItem>
-              <MenuItem value={20}>20</MenuItem>
+              <MenuItem value={8}>8</MenuItem>
+              <MenuItem value={12}>12</MenuItem>
+              <MenuItem value={16}>16</MenuItem>
             </Select>
           </FormControl>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center ml-2">
           <div>
             {Math.min(itemsPerPage * currentPage - itemsPerPage + 1, totalItem)}-
             {Math.min(itemsPerPage * currentPage, totalItem)} of {totalItem}

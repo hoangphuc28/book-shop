@@ -74,7 +74,9 @@ type Query {
 }
 
 input BookSearchCondition {
-  searchTitle: String
+  query: String = ""
+  rating: String
+  sort: String
   category: [String!]
   author: [String!]
 }

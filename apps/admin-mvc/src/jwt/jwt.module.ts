@@ -1,6 +1,8 @@
 import { Global, Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
+import { AdminService } from "../app/admin/admin.service";
+import { AdminModule } from '../app/admin/admin.module';
 
 @Global()
 @Module({

@@ -43,8 +43,7 @@ export class BooksController {
       if (typeof limit === "string") {
         limit = parseInt(limit);
       }
-      const booksPagination = await this.booksService.find(limit, page, true);
-      console.log(booksPagination)
+      const booksPagination = await this.booksService.find(limit, page, false);
       return {data: booksPagination}
     } catch (error) {
       console.error('Error occurred while fetching books:', error);

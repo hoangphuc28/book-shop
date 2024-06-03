@@ -33,6 +33,7 @@ export class AdminService {
     await this.adminRepository.update(id, data);
   }
 
+
 }
 
 

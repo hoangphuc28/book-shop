@@ -9,9 +9,7 @@ export class AuthorResolver {
   ) { }
   @Query(() => [Author])
   async getAuthors() {
-    const res = await this.authorService.find(true)
-    console.log(res)
-    return res
+    return this.authorService.find(true)
   }
 
 }

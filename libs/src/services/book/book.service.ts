@@ -2,7 +2,7 @@ import { Book } from '../../common/entities';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BookSearchCondition, BooksPagination } from '../../common';
-import { Like, Repository } from 'typeorm';
+import { Like, Repository, SelectQueryBuilder } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { ResourceService } from '../resource/resource.service';
 
@@ -13,62 +13,48 @@ export class BookService {
     private bookRepository: Repository<Book>,
     private configService: ConfigService,
     private resourceService: ResourceService
-
   ) { }
   async findBooksByCategories(categories: string[]): Promise<Book[]> {
-    return this.bookRepository.createQueryBuilder('book')
+    return this.bookRepository
+      .createQueryBuilder('book')
       .leftJoinAndSelect('book.category', 'category') // Kết hợp bảng category vào truy vấn
-      .where('category.categoryID IN (:...categoriesId)', { categoriesId: categories })
+      .where('category.categoryID IN (:...categoriesId)', {
+        categoriesId: categories,
+      })
       .getMany();
   }
 
-  async find(limit: number, page: number, includeInactive = false, condition?: BookSearchCondition): Promise<BooksPagination> {
+  async find(
+    limit: number,
+    page: number,
+    includeIsActive = true,
+    condition?: BookSearchCondition
+  ): Promise<BooksPagination> {
     const result = new BooksPagination();
     const offset = limit * page - limit || 0;
-    const whereCondition: any = {}
-    // if (condition) {
-    //   if (condition.category && condition.category.length > 0) {
-    //     whereCondition.category = { categoryID: condition.category };
-    //   }
-    //   if (condition.searchTitle) {
-    //     whereCondition.title = Like(`%${condition.searchTitle}%`);
-    //   }
-    //   if (condition.author && condition.author.length > 0) {
-    //     whereCondition.author = { name: { in: condition.author } };
-    //   }
-    // }
 
-    if (!includeInactive) {
-      whereCondition.isActive = true;
-    }
-    const categoryCondition = condition?.category || [];
-    const authorCondition = condition?.author || [];
-    let queryBuilder = this.bookRepository.createQueryBuilder('book')
+    let queryBuilder = this.bookRepository
+      .createQueryBuilder('book')
       .leftJoinAndSelect('book.category', 'category')
-      .leftJoinAndSelect('book.author', 'author');
-
-    if (categoryCondition.length > 0) {
-      queryBuilder = queryBuilder
-        .where('category.categoryID IN (:...categoriesId)', { categoriesId: categoryCondition });
+      .leftJoinAndSelect('book.author', 'author')
+    queryBuilder = await this.queryBuilderCondition(queryBuilder, condition, includeIsActive)
+    if(condition?.sort) {
+    queryBuilder = await this.sortBy(queryBuilder, condition?.sort)
     }
-    if (authorCondition.length > 0) {
-      queryBuilder = queryBuilder
-          .andWhere('author.id IN (:...authorIds)', { authorIds: authorCondition }); // Thêm điều kiện cho tác giả
-  }
     const [items, totalCount] = await queryBuilder
       .take(limit)
       .skip(offset)
       .getManyAndCount();
 
-    const bucketName = this.configService.get<string>('AWS.SERVICES.S3.BUCKET_NAME');
-
+    const bucketName = this.configService.get<string>(
+      'AWS.SERVICES.S3.BUCKET_NAME'
+    );
     result.items = items.map((book) => {
       return {
         ...book,
         thumbnail: `https://${bucketName}.s3.amazonaws.com/products/${book?.id}.jpeg`,
       };
     });
-
     result.currentPage = page;
     result.itemsPerPage = limit;
     result.totalItem = totalCount;
@@ -76,13 +62,14 @@ export class BookService {
     return result;
   }
   async findById(id: string) {
-    const book = await this.bookRepository.findOne({ where: { id: id } })
-    const bucketName = this.configService.get<string>('AWS.SERVICES.S3.BUCKET_NAME');
+    const book = await this.bookRepository.findOne({ where: { id: id } });
+    const bucketName = this.configService.get<string>(
+      'AWS.SERVICES.S3.BUCKET_NAME'
+    );
     if (book) {
-      book.thumbnail = `https://${bucketName}.s3.amazonaws.com/products/${book?.id}.jpeg`
-
+      book.thumbnail = `https://${bucketName}.s3.amazonaws.com/products/${book?.id}.jpeg`;
     }
-    return book
+    return book;
   }
   async save(
     title: string,
@@ -95,7 +82,6 @@ export class BookService {
     thumbnail: Express.Multer.File,
     id?: string
   ) {
-
     try {
       let book: Book | null;
       if (id) {
@@ -120,10 +106,9 @@ export class BookService {
           authorId,
           categoryId,
           publishDate,
-          isActive
+          isActive,
         });
       }
-      console.log(book)
       const savedBook = await this.bookRepository.save(book);
 
       if (thumbnail) {
@@ -131,48 +116,64 @@ export class BookService {
       }
 
       return {
-        message: id ? 'Book is updated successfully' : 'Book is created successfully',
-        status: 201
+        message: id
+          ? 'Book is updated successfully'
+          : 'Book is created successfully',
+        status: 201,
       };
     } catch (error) {
       console.error(error);
-      throw new BadRequestException(id ? 'Cannot update book' : 'Cannot create book');
+      throw new BadRequestException(
+        id ? 'Cannot update book' : 'Cannot create book'
+      );
     }
   }
-  // async save(
-  //   title: string,
-  //   description: string,
-  //   price: number,
-  //   author: string,
-  //   categoryId: string,
-  //   publishDate: Date,
-  //   isActive: boolean,
-  //   thumbnail: Express.Multer.File,
-  //   id?: string
-  // ) {
-  //   try {
-  //     const res = await this.bookRepository.save(
-  //       new Book({
-  //         title,
-  //         description,
-  //         price,
-  //         author,
-  //         categoryId,
-  //         isActive,
-  //         publishDate,
-  //       })
-  //     );
-  //     if (thumbnail !== undefined) {
-  //       await this.resourceService.upload(thumbnail, res.id, 'products')
+  async queryBuilderCondition(queryBuilder: any, condition?: BookSearchCondition, includeIsActive?: boolean): Promise<SelectQueryBuilder<Book>> {
+    const categoryCondition = condition?.category || [];
+    const authorCondition = condition?.author || [];
+    if (condition?.query) {
+      const trimmedQuery = (condition?.query || '').trim();
+      queryBuilder = queryBuilder.where('LOWER(book.title) LIKE LOWER(:query)', { query: `%${trimmedQuery}%` });
+    }
+    if (condition?.rating) {
+      console.log(condition.rating)
+      console.log(condition?.query)
+      queryBuilder = queryBuilder.where('book.rating = :rating', { rating: parseInt(condition?.rating) });
+    }
+    if (categoryCondition.length > 0) {
+      queryBuilder = queryBuilder.andWhere(
+        'category.categoryID IN (:...categoriesId)',
+        { categoriesId: categoryCondition }
+      );
+    }
+    if (authorCondition.length > 0) {
+      queryBuilder = queryBuilder.andWhere('author.id IN (:...authorIds)', {
+        authorIds: authorCondition,
+      });
+    }
+    if (includeIsActive) {
+      queryBuilder = queryBuilder
+        .andWhere('book.isActive = :isActive', { isActive: true })
+        .andWhere('category.isActive = :isActive', { isActive: true });
+    }
+    return queryBuilder
+  }
+  async sortBy(queryBuilder: SelectQueryBuilder<Book>, sort: string): Promise<SelectQueryBuilder<Book>>{
+    switch (parseInt(sort)) {
+      case 1:
+        queryBuilder = queryBuilder.orderBy('book.price', 'ASC');
+        break;
+      case 2:
+        queryBuilder = queryBuilder.orderBy('book.price', 'DESC');
+        break;
+      case 3:
+        queryBuilder = queryBuilder.orderBy('book.rating', 'DESC');
+        break;
+      default:
+        queryBuilder = queryBuilder.orderBy('book.createdAt', 'DESC'); // Default sorting by creation date
+        break;
+    }
+    return queryBuilder
 
-  //     }
-  //     return {
-  //       message: "Book is created successfully",
-  //       sataus: 201
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     throw new BadRequestException('Can not create book');
-  //   }
-  // }
+  }
 }
