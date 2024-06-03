@@ -12,6 +12,7 @@ import {
 import { Order } from './Order.entity';
 import { Review } from './Review.entity';
 import { Exclude } from 'class-transformer';
+import { Cart } from './Cart.entity';
 
 @ObjectType()
 @Entity()
@@ -60,8 +61,12 @@ export class Account extends BaseEntity {
   @Exclude()
   refreshToken: string;
 
-  @OneToOne(() => Order, (order) => order.account)
-  order: Order;
+  @OneToMany(() => Order, (order) => order.account)
+  order: Order[];
+
+  @OneToOne(() => Cart, (cart) => cart.account )
+  cart: Cart
+
 
   @OneToMany(() => Review, (review) => review.accounts)
   reviews: Review[];

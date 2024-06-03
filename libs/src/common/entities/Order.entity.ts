@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
   OneToOne,
   BaseEntity,
+  ManyToOne,
 } from 'typeorm';
 import { OrderItem } from './OrderItem.entity';
 import { OrderStatus, PaymentStatus } from '../constants';
@@ -48,7 +49,7 @@ export class Order extends BaseEntity {
   updatedAt: Date;
 
 
-  @OneToOne(() => Account, (account) => account.order)
+  @ManyToOne(() => Account, (account) => account.order)
   account: Account;
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order)

@@ -8,6 +8,27 @@ type Category {
   name: String!
 }
 
+type CartItem {
+  id: String!
+  book: Book!
+  cart: Cart!
+  quantity: Float!
+}
+
+type Cart {
+  id: String!
+  account: Account!
+  accountId: String!
+  cartItem: [CartItem!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Account {
   id: ID!
   fullName: String!
@@ -18,11 +39,6 @@ type Account {
   createdAt: DateTime!
   updatedAt: DateTime!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type Review {
   id: String!
@@ -68,6 +84,7 @@ type BooksPagination {
 
 type Query {
   getBooks(limit: Float!, page: Float!, condition: BookSearchCondition): BooksPagination!
+  getCart: Cart!
   information: GetAccountInformationDto!
   getCategories: [Category!]!
   getAuthors: [Author!]!
@@ -82,5 +99,7 @@ input BookSearchCondition {
 }
 
 type Mutation {
+  updateCart(bookId: String!, quantity: Float!): Cart!
+  clearCart: Cart!
   saveAccount(fullName: String, phone: String!, address: String!): Account!
 }

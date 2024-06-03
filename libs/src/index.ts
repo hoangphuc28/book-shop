@@ -11,4 +11,5 @@ export * from './services/book/book.service'
 export * from './services/resource/resource.service'
 export * from './services/category/category.service'
 export * from './services/author/author.service'
+export * from './services/cart/cart.service'
 

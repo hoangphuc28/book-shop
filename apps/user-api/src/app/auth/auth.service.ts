@@ -1,5 +1,5 @@
 import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { AccountService } from '@book-shop/libs';
+import { AccountService, CartService } from '@book-shop/libs';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -14,7 +14,8 @@ export class AuthService {
     private accountService: AccountService,
     private jwtService: JwtService,
     public configService: ConfigService,
-    private mailService: MailService
+    private mailService: MailService,
+    private cartService: CartService,
   ) { }
   async login(email: string, password: string) {
     try {
@@ -54,6 +55,7 @@ export class AuthService {
       };
     }
   }
+  //send verify email
   async registry(registerDto: RegisterDto): Promise<any> {
     const userExists = await this.accountService.findUserByEmail(
       registerDto.email
@@ -87,7 +89,7 @@ export class AuthService {
       throw new BadRequestException('An error occurred');
     }
   }
-
+//store user data
   async verifyRegistry(token: string): Promise<any> {
     try {
       const { email, password, phone, address, fullName } =
@@ -100,7 +102,7 @@ export class AuthService {
       if (userExists) {
         return;
       }
-      return await this.accountService.save(
+      const res = await this.accountService.save(
         email,
         password,
         fullName,
@@ -108,6 +110,8 @@ export class AuthService {
         address,
         true
       );
+      this.cartService.initital(res)
+      return res
     } catch (error) {
       return error;
     }

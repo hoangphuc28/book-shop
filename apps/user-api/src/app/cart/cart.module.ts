@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
-import { CartService } from './cart.service';
-import { CartController } from './cart.controller';
+import { CartResolver } from './cart.resolver';
+import { ServicesModule } from '@book-shop/libs';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  controllers: [CartController],
-  providers: [CartService],
+  imports: [ServicesModule,  JwtModule.register({})],
+  providers: [CartResolver]
+
 })
 export class CartModule {}

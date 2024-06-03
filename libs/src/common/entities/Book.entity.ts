@@ -2,10 +2,10 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
   JoinColumn,
 } from 'typeorm';
 import { Category } from './Category.entity';
@@ -13,13 +13,14 @@ import { Review } from './Review.entity';
 import { OrderItem } from './OrderItem.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Author } from './Author.entity';
+import { CartItem } from './CartItem.entity';
 
 @ObjectType()
 @Entity('books')
 export class Book {
   @Field()
   @PrimaryGeneratedColumn('uuid')
-  id: string
+  id: string;
 
   @Field(() => Category)
   @ManyToOne(() => Category, (category) => category.books)
@@ -29,6 +30,9 @@ export class Book {
   @Column()
   categoryId: string;
 
+  @OneToMany(() => CartItem, (cartItem) => cartItem.book)
+  cartItem: CartItem[];
+
   @Field(() => Author)
   @ManyToOne(() => Author, (author) => author.books)
   @JoinColumn({ name: 'authorId' })
@@ -37,18 +41,19 @@ export class Book {
   @Column()
   authorId: string;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   @Column()
   title: string;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
+  // @Column()
   thumbnail: string;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   @Column()
   description: string;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   @Column()
   price: number;
 
@@ -56,8 +61,8 @@ export class Book {
   @Column()
   publishDate: Date;
 
-  @Field({nullable: true})
-  @Column({nullable: true, default: 0})
+  @Field({ nullable: true })
+  @Column({ nullable: true, default: 0 })
   rating: number;
 
   @Column()
@@ -75,7 +80,8 @@ export class Book {
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.book)
   orderItems: OrderItem[];
+
   constructor(partial: Partial<Book>) {
-    Object.assign(this, partial)
+    Object.assign(this, partial);
   }
 }
