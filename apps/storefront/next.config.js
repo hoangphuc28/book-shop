@@ -13,6 +13,16 @@ const nextConfig = {
     svgr: false,
 
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'nhp-asia-vn.s3.amazonaws.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
   env: {
     'API_BASE_URL': 'http://localhost:3000/api',
   },

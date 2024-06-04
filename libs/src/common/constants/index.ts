@@ -15,3 +15,7 @@ export enum PaymentStatus {
   Paid = 'PAID',
   Refunded = 'REFUNDED'
 }
+export enum PromotionLevel {
+  Level_Order = 'ORDER_LEVEL',
+  Level_Product = 'PRODUCT_LEVEL'
+}

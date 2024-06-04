@@ -1,44 +1,34 @@
 'use client'
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 
-import { useState } from 'react';
-import NumberInput from '../../components/numberInput';
+import { Fragment, useEffect, useState } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
+import { getCart, updateCart } from '../../utils/api/graphQL/query';
+import CartItem from './cartItem';
+
+import { CartItems } from '../../utils/interfaces/cart';
+import { formatVND } from '../../utils/formatCurrency';
 
 export default function Cart() {
-  const src = "https://cdn.shopify.com/s/files/1/0533/2089/files/design-books-the-design-of-everyday-things-book-cover.jpg?v=1587988106";
-
+  const [cart, setCart] = useState<CartItems[]>([])
+  const [amount, setAmount] = useState(0)
+  const { data } = useQuery(getCart, {
+    // fetchPolicy: 'network-only', // Always fetch fresh data
+  });
+  useEffect(() => {
+    setCart(data?.getCart?.cartItem)
+    setAmount(data?.getCart?.amount)
+    console.log(data?.getCart)
+  }, [data])
   return (
     <div className="container grid grid-cols-12 items-start pb-16 pt-4 gap-6 mt-5">
       <div className="col-span-7 space-y-4">
-
-        <div className="flex items-center justify-between border gap-6 p-4 border-gray-200 rounded">
-          <div className="w-28">
-            <img
-              src={src}
-              width={100}
-              height={100}
-              style={{ width: 100, height: 100, objectFit: "contain" }}
-              alt="product 6"
-            />
-          </div>
-          <div className="w-1/3">
-            <h2 className="text-gray-800 text-xl font-medium uppercase">
-              Sofa
-            </h2>
-            <p className="text-gray-500 text-sm">
-              Availability: <span className="text-green-600">In Stock</span>
-            </p>
-          </div>
-          <div className="text-primary text-lg font-semibold">$320.00</div>
-          <div className='ml-5'>
-            <NumberInput
-            />
-          </div>
-          <CloseOutlinedIcon fontSize='large' sx={{ color: 'red' }} className='cursor-pointer' />
-          <div className="text-gray-600 cursor-pointer hover:text-primary">
-            <i className="fa-solid fa-trash" />
-          </div>
-        </div>
+        {cart?.map((item: any, index: number) => {
+          return (
+            <Fragment key={index}>
+              <CartItem updateAction={() => setCart} cartItem={item} />
+            </Fragment>
+          )
+        })}
         <div>
           <div className="flex">
             <input placeholder="Enter coupon code" type="text" name="first-name" id="first-name" className="mr-5 input-style w-8/12" />
@@ -54,42 +44,22 @@ export default function Cart() {
           order summary
         </h4>
         <div className="space-y-2">
-          <div className="flex justify-between">
-            <div>
-              <h5 className="text-gray-800 font-medium">Italian shape sofa</h5>
-              <p className="text-sm text-gray-600">Size: M</p>
-            </div>
-            <p className="text-gray-600">x3</p>
-            <p className="text-gray-800 font-medium">$320</p>
-          </div>
-          <div className="flex justify-between">
-            <div>
-              <h5 className="text-gray-800 font-medium">Italian shape sofa</h5>
-              <p className="text-sm text-gray-600">Size: M</p>
-            </div>
-            <p className="text-gray-600">x3</p>
-            <p className="text-gray-800 font-medium">$320</p>
-          </div>
-          <div className="flex justify-between">
-            <div>
-              <h5 className="text-gray-800 font-medium">Italian shape sofa</h5>
-              <p className="text-sm text-gray-600">Size: M</p>
-            </div>
-            <p className="text-gray-600">x3</p>
-            <p className="text-gray-800 font-medium">$320</p>
-          </div>
-          <div className="flex justify-between">
-            <div>
-              <h5 className="text-gray-800 font-medium">Italian shape sofa</h5>
-              <p className="text-sm text-gray-600">Size: M</p>
-            </div>
-            <p className="text-gray-600">x3</p>
-            <p className="text-gray-800 font-medium">$320</p>
-          </div>
+          {cart?.map((item: CartItems, index: number) => {
+            return (
+              <div className="flex justify-between" key={index}>
+                <div>
+                  <h5 className="text-gray-800 font-medium">{item?.book?.title}</h5>
+                  <p className="text-sm text-gray-600">{item?.book?.author?.name}</p>
+                </div>
+                <p className="text-gray-600">x{item?.quantity}</p>
+                <p className="text-gray-800 font-medium">{formatVND((item?.quantity*parseFloat(item?.book?.price)).toString())}</p>
+              </div>
+            )
+          })}
         </div>
         <div className="flex justify-between border-b border-gray-200 mt-1 text-gray-800 font-medium py-3 uppercas">
           <p>subtotal</p>
-          <p>$1280</p>
+          <p>{formatVND(amount?.toString())}</p>
         </div>
         <div className="flex justify-between border-b border-gray-200 mt-1 text-gray-800 font-medium py-3 uppercas">
           <p>shipping</p>
@@ -97,7 +67,7 @@ export default function Cart() {
         </div>
         <div className="flex justify-between text-gray-800 font-medium py-3 uppercas">
           <p className="font-semibold">Total</p>
-          <p>$1280</p>
+          <p>{formatVND(amount?.toString())}</p>
         </div>
         <div className="flex items-center mb-4 mt-2">
           <input

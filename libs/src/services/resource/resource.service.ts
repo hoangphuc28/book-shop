@@ -31,5 +31,6 @@ export class ResourceService {
         );
       }
     );
+    return resourceUploaded.Location
   }
 }

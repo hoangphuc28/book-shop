@@ -46,7 +46,7 @@ export class Book {
   title: string;
 
   @Field({ nullable: true })
-  // @Column()
+  @Column({nullable: true})
   thumbnail: string;
 
   @Field({ nullable: true })

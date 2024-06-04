@@ -13,7 +13,6 @@ export class CartResolver {
   @Query(() => Cart)
   async getCart(@Context() context): Promise<Cart> {
     const { user } = context;
-
     return this.cartService.getCartByAccountId(user.sub);
   }
   @UseGuards(GaphAuth)
@@ -22,10 +21,10 @@ export class CartResolver {
     @Context() context,
     @Args('bookId') bookId: string,
     @Args('quantity') quantity: number,
+    @Args('isReplace') isReplace: boolean
   ): Promise<Cart> {
     const { user } = context;
-
-    return this.cartService.updateCart(user.sub, bookId, quantity);
+    return this.cartService.updateCart(user.sub, bookId, quantity, isReplace);
   }
   @UseGuards(GaphAuth)
   @Mutation(() => Cart)

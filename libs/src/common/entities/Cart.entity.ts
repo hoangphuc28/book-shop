@@ -34,6 +34,7 @@ export class Cart extends BaseEntity {
   @OneToMany(() => CartItem, (cartItem) => cartItem.cart)
   cartItem: CartItem[];
 
+  @Field()
   @Column({nullable: true, default: 0})
   amount: number;
 

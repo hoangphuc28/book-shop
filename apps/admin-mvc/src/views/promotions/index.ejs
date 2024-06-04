@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head.ejs'); %>
+    <style>
+      .paginate_button {
+        background: transparent;
+        padding: 5px 15px !important;
+      }
+
+      .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background: rgba(249, 250, 251) !important;
+        color: #374151 !important;
+      }
+
+      .paginate_button.current {
+        background: transparent !important;
+      }
+    </style>
+
+</head>
+
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+  <div class="flex">
+    <%- include('../partials/sidebar'); %>
+
+      <div class="flex-grow bg-gray-100 p-6 ml-64">
+        <div class="flex justify-between items-center mb-6">
+          <h1 class="text-2xl font-semibold text-gray-900">Promotion</h1>
+          <div class="relative">
+            <div class="flex items-center">
+              <button class="px-4 py-2 text-white bg-green-500 rounded-lg mr-2">
+                <a href="/promotions/create">Create</a>
+              </button>
+            </div>
+            <!-- end create -->
+          </div>
+        </div>
+        <div class="bg-white shadow rounded-lg p-4">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Code
+                </th>
+
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Start
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  End
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% data.forEach(item=> { %>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900">
+                          <%= item.code %>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <span
+                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                      <%= item.isActive %>
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= new Intl.DateTimeFormat('en-GB', { year: 'numeric' , month: 'long' , day: '2-digit' ,
+                      }).format(new Date(item.startDate)); %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= new Intl.DateTimeFormat('en-GB', { year: 'numeric' , month: 'long' , day: '2-digit' ,
+                      }).format(new Date(item.endDate)); %>
+                  </td>
+                  <td>
+                    <a href="/promotions/edit?id=<%= item.id %>">
+                      <i class="fa-solid fa-pen"></i>
+                    </a>
+                  </td>
+                </tr>
+                <% }) %>
+
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+  </div>
+</body>
+
+</html>

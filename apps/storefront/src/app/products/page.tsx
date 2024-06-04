@@ -6,7 +6,7 @@ import Pagination from './pagination';
 import Loading from '../../components/loading';
 import Search from './search';
 import Sort from './sort';
-import { loadAuthors, loadBooks, loadCategories } from './getData';
+import { loadAuthors, loadBooks, loadCategories } from './fetchData';
 
 export default function Index({
   searchParams,

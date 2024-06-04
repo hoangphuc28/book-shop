@@ -2,7 +2,7 @@ import { Fragment, Suspense } from "react";
 import CardItem from "../../components/cardItem";
 import { Book } from "../../utils/interfaces/book";
 
-import { loadBooks } from "./getData";
+import { loadBooks } from "./fetchData";
 import Pagination from "./pagination";
 interface Props {
   page: string,

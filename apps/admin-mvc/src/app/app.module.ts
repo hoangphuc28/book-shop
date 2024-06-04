@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
 import { JWTModule } from '../jwt/jwt.module';
 import { AuthorModule } from './author/author.module';
+import { PromotionModule } from './promotion/promotion.module';
 @Module({
   imports: [
     //guard
@@ -24,6 +25,7 @@ import { AuthorModule } from './author/author.module';
     PaymentsModule,
     AdminModule,
     AuthorModule,
+    PromotionModule,
   ],
 })
 export class AppModule {}

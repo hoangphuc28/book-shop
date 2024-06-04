@@ -5,6 +5,8 @@ import {
   ManyToOne,
   BaseEntity,
   JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Book } from './Book.entity';
 import { Cart } from './Cart.entity';
@@ -36,6 +38,14 @@ export class CartItem extends BaseEntity {
   @Field()
   @Column()
   quantity: number;
+
+  @Field()
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Field()
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   constructor(partial: Partial<CartItem>) {
     super();

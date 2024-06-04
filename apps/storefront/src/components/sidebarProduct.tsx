@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Rating } from "@mui/material";
 import React from "react";
 import { getCategories } from "../utils/api/graphQL/query";
-import { loadAuthors, loadCategories } from "../app/products/getData";
+import { loadAuthors, loadCategories } from "../app/products/fetchData";
 
 interface Props {
   categories: Category[],

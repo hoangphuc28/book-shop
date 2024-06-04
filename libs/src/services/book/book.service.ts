@@ -45,16 +45,7 @@ export class BookService {
       .take(limit)
       .skip(offset)
       .getManyAndCount();
-
-    const bucketName = this.configService.get<string>(
-      'AWS.SERVICES.S3.BUCKET_NAME'
-    );
-    result.items = items.map((book) => {
-      return {
-        ...book,
-        thumbnail: `https://${bucketName}.s3.amazonaws.com/products/${book?.id}.jpeg`,
-      };
-    });
+    result.items = items;
     result.currentPage = page;
     result.itemsPerPage = limit;
     result.totalItem = totalCount;
@@ -63,12 +54,12 @@ export class BookService {
   }
   async findById(id: string) {
     const book = await this.bookRepository.findOne({ where: { id: id } });
-    const bucketName = this.configService.get<string>(
-      'AWS.SERVICES.S3.BUCKET_NAME'
-    );
-    if (book) {
-      book.thumbnail = `https://${bucketName}.s3.amazonaws.com/products/${book?.id}.jpeg`;
-    }
+    // const bucketName = this.configService.get<string>(
+    //   'AWS.SERVICES.S3.BUCKET_NAME'
+    // );
+    // if (book) {
+    //   book.thumbnail = `https://${bucketName}.s3.amazonaws.com/products/${book?.id}.jpeg`;
+    // }
     return book;
   }
   async save(
@@ -112,9 +103,10 @@ export class BookService {
       const savedBook = await this.bookRepository.save(book);
 
       if (thumbnail) {
-        await this.resourceService.upload(thumbnail, savedBook.id, 'products');
+       const thumbnailUrl =  await this.resourceService.upload(thumbnail, savedBook.id, 'products');
+       book.thumbnail = thumbnailUrl
+       await this.bookRepository.save(book);
       }
-
       return {
         message: id
           ? 'Book is updated successfully'

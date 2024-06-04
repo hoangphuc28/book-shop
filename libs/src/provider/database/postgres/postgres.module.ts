@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
-import * as libs from '@book-shop/libs'
+import * as entities from '../../../common/entities'
 
 @Module({
   imports: [
@@ -20,7 +19,7 @@ import * as libs from '@book-shop/libs'
         // schema: configService.get('DATABASE.POSTGRES.SCHEMA'),
         synchronize: configService.get('DATABASE.POSTGRES.SYNCHRONIZE'),
         autoLoadEntities: true,
-        entities: [...Object.values(libs)],
+        entities: [...Object.values(entities)],
       }),
     }),
   ],

@@ -33,15 +33,16 @@ export class CartService {
   async getCartByAccountId(accountId: string): Promise<Cart> {
     const cart = await this.cartRepository.findOne({
       where: { accountId: accountId },
-      relations: ['cartItem', 'cartItem.book'],
+      relations: ['cartItem', 'cartItem.book', 'cartItem.book.author'],
     });
     if (!cart) {
       throw new NotFoundException(`Cart not found for account ID: ${accountId}`);
     }
+    cart.cartItem =  cart.cartItem.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
     return cart;
   }
 
-  async updateCart(accountId: string, bookId: string, quantity: number): Promise<Cart> {
+  async updateCart(accountId: string, bookId: string, quantity: number, isReplace: boolean): Promise<Cart> {
     const cart = await this.getCartByAccountId(accountId);
 
     const book = await this.bookRepository.findOne({ where: { id: bookId } });
@@ -51,14 +52,26 @@ export class CartService {
 
     let cartItem = cart.cartItem.find(item => item.bookId === bookId);
     if (cartItem) {
-      cartItem.quantity = quantity
-      // cartItem.quantity += quantity;
-      // if (cartItem.quantity <= 0) {
-      //   await this.cartItemRepository.remove(cartItem);
-      //   cart.cartItem = cart.cartItem.filter(item => item.id !== cartItem?.id);
-      // } else {
-      //   await this.cartItemRepository.save(cartItem);
-      // }
+      switch (isReplace) {
+        case true:
+        cartItem.quantity = quantity
+        if (cartItem.quantity <= 0) {
+          await this.cartItemRepository.remove(cartItem);
+          cart.cartItem = cart.cartItem.filter(item => item.id !== cartItem?.id);
+        } else {
+          await this.cartItemRepository.save(cartItem);
+        }
+        break;
+        case false:
+        cartItem.quantity += quantity;
+        if (cartItem.quantity <= 0) {
+          await this.cartItemRepository.remove(cartItem);
+          cart.cartItem = cart.cartItem.filter(item => item.id !== cartItem?.id);
+        } else {
+          await this.cartItemRepository.save(cartItem);
+        }
+        break;
+      }
     } else {
       if (quantity > 0) {
         cartItem = this.cartItemRepository.create({ cart, book, quantity });
@@ -69,6 +82,7 @@ export class CartService {
 
     cart.amount = this.calculateTotalAmount(cart);
     await this.cartRepository.save(cart);
+    console.log(cart)
     return cart;
   }
 

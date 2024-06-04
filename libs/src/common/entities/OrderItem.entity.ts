@@ -8,7 +8,6 @@ import {
   BaseEntity,
 } from 'typeorm';
 import { Book } from './Book.entity';
-import { Coupon } from './Coupon.entity';
 import { Order } from './Order.entity';
 
 @Entity()
@@ -19,8 +18,8 @@ export class OrderItem extends BaseEntity {
   @ManyToOne(() => Book, (book) => book.orderItems)
   book: Book;
 
-  @ManyToOne(() => Coupon, (coupon) => coupon.orderItems, { nullable: true })
-  coupon: Coupon;
+  // @ManyToOne(() => Coupon, (coupon) => coupon.orderItems, { nullable: true })
+  // coupon: Coupon;
 
   @ManyToOne(() => Order, (order) => order.orderItems)
   order: Order;
@@ -36,4 +35,5 @@ export class OrderItem extends BaseEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
 }

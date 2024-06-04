@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head.ejs'); %>
+</head>
+
+<body class="bg-gray-100">
+  <div class="flex">
+    <%- include('../partials/sidebar.ejs'); %>
+      <div class="w-full p-10 ml-64">
+        <form id="updateForm" enctype="multipart/form-data">
+          <% if (item) { %>
+            <input type="hidden" name="id" value="<%= item.id %>">
+            <div class="flex justify-between items-center">
+              <a href="/categories" class="text-blue-500 mb-4 inline-block">&larr; Back to category listing</a>
+              <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-lg mr-2 text-sm w-24">
+                Save
+              </button>
+            </div>
+            <div class="flex mt-7">
+              <div class="bg-white p-6 rounded-lg w-4/6">
+                <h2 class="text-2xl font-bold mb-6">Basic information</h2>
+                <div class="grid grid-cols-2 gap-6">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700">Author name</label>
+                    <input value="<%= item.name %>" required type="text" name="name"
+                      class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                      placeholder="Author name" />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700">Status</label>
+                    <select required name="isActive"
+                      class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                      <option value="true" <%=(item.isActive===true) && 'selected' %>>Active</option>
+                      <option value="false" <%=(item.isActive===false) && 'selected' %>>Inactive</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% } %>
+        </form>
+      </div>
+  </div>
+</body>
+<script>
+  document.getElementById('updateForm').addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const formData = new FormData(this);
+    const authorData = {};
+    formData.forEach((value, key) => {
+      authorData[key] = value;
+    });
+    try {
+      const response = await axios.put(`/authors?id=${authorData.id}`, authorData);
+      console.log(response)
+      alert('Category updated successfully')
+      window.location.href = '/authors'
+    } catch (error) {
+      console.error('Error updating book:', error);
+      alert('Failed to update book');
+    }
+  });
+</script>
+
+</html>

@@ -10,8 +10,6 @@ query Information {
       avatar
   }
 }`;
-
-
 export const updateInformation = gql`
   mutation SaveAccount($fullName: String!, $phone: String!, $address: String!) {
     saveAccount(fullName: $fullName, phone: $phone, address: $address) {
@@ -63,3 +61,58 @@ query GetAuthors {
   }
 }
 `
+export const updateCart = gql`
+mutation UpdateCart ($bookId: String!, $quantity: Float!, $isReplace: Boolean!){
+  updateCart(bookId: $bookId, quantity: $quantity, isReplace: $isReplace) {
+      id
+      accountId
+      createdAt
+      updatedAt
+      amount
+      cartItem {
+        id
+        quantity
+        createdAt
+        updatedAt
+        book {
+            id
+            title
+            thumbnail
+            description
+            price
+            publishDate
+            rating
+        }
+    }
+  }
+}
+`
+export const getCart = gql`
+query GetCart {
+  getCart {
+      amount
+      id
+      accountId
+      createdAt
+      updatedAt
+      cartItem {
+          quantity
+          book {
+              id
+              title
+              thumbnail
+              description
+              price
+              publishDate
+              rating
+              author {
+                  id
+                  name
+              }
+          }
+      }
+  }
+}
+
+`
+

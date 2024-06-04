@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Put, Query, Render, Res, UseGuards } from '@nestjs/common';
 import { Authentication } from '../../guards/authentication.guard';
-import { AuthorInputDto, AuthorService, CategoryInputDto } from '@book-shop/libs';
+import { AuthorInputDto, AuthorService } from '@book-shop/libs';
 import {Response} from 'express'
 @UseGuards(Authentication)
 
@@ -40,6 +40,7 @@ export class AuthorController {
       return res.redirect('/error');
     }
   }
+
   @Get('edit')
   @Render('authors/edit')
   async editForm(@Query('id') id: string) {
