@@ -54,6 +54,10 @@
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   End
                 </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Level
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
               </tr>
             </thead>
@@ -83,9 +87,17 @@
                     <%= new Intl.DateTimeFormat('en-GB', { year: 'numeric' , month: 'long' , day: '2-digit' ,
                       }).format(new Date(item.endDate)); %>
                   </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= item.level %>
+                  </td>
                   <td>
-                    <a href="/promotions/edit?id=<%= item.id %>">
+                    <a class="text-xs" href="/promotions/edit?id=<%= item.id %>">
                       <i class="fa-solid fa-pen"></i>
+                    </a>
+                  </td>
+                  <td>
+                    <a class="text-xs" href="/promotions/edit/condition?id=<%= item.id %>">
+                        Edit Condition
                     </a>
                   </td>
                 </tr>

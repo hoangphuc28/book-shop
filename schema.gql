@@ -69,6 +69,33 @@ type Book {
   reviews: [Review!]!
 }
 
+type Promotion {
+  id: String!
+  code: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  level: PromotionLevel!
+  validationRule: ValidationRule!
+}
+
+"""The levels at which a promotion can be applied"""
+enum PromotionLevel {
+  Level_Order
+  Level_Product
+}
+
+union ValidationRule = OrderLevelValidationRule | ProductLevelValidationRule
+
+type OrderLevelValidationRule {
+  limit: Float!
+  percentage: Float!
+}
+
+type ProductLevelValidationRule {
+  productIdList: [String!]!
+  discountValuePerProduct: Float!
+}
+
 type GetAccountInformationDto {
   fullName: String!
   address: String!
@@ -91,6 +118,7 @@ type Query {
   information: GetAccountInformationDto!
   getCategories: [Category!]!
   getAuthors: [Author!]!
+  getPromotions: [Promotion!]!
 }
 
 input BookSearchCondition {

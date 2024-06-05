@@ -13,6 +13,7 @@ import { ResourceModule } from './resource/resource.module';
 import { JwtModule } from '@nestjs/jwt';
 import { CategoryModule } from './category/category.module';
 import { AuthorModule } from './author/author.module';
+import { PromotionModule } from './promotion/promotion.module';
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -32,6 +33,7 @@ import { AuthorModule } from './author/author.module';
     ResourceModule,
     CategoryModule,
     AuthorModule,
+    PromotionModule,
   ],
 })
 export class AppModule {}

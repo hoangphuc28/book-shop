@@ -1,0 +1,24 @@
+<div class="grid grid-cols-2 gap-6">
+  <div>
+    <label class="block text-sm font-medium text-gray-700">Limit</label>
+    <input
+      value="<%= item.validationRule.limit %>"
+      required
+      type="text"
+      name="limit"
+      class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+      placeholder="Limit"
+    />
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-gray-700">Percentage</label>
+    <input
+      value="<%= item.validationRule.percentage %>"
+      required
+      type="number"
+      name="percentage"
+      class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+      placeholder="Percentage"
+    />
+  </div>
+</div>

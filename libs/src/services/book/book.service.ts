@@ -24,6 +24,9 @@ export class BookService {
       .getMany();
   }
 
+  async findAll() {
+    return this.bookRepository.find({where: {isActive: true}})
+  }
   async find(
     limit: number,
     page: number,

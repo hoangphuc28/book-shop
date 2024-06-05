@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../../partials/head.ejs'); %>
+</head>
+
+<body class="bg-gray-100">
+  <div class="flex">
+    <%- include('../../partials/sidebar.ejs'); %>
+      <div class="w-full p-10 ml-64">
+        <form method="post" action="/promotions/edit/condition">
+          <% if (item) { %>
+            <input type="hidden" name="id" value="<%= item.id %>" />
+            <input type="hidden" name="condition" value="<%= condition %>" />
+            <div class="flex justify-between items-center">
+              <a href="/promotions" class="text-blue-500 mb-4 inline-block">&larr; Back to promotion listing</a>
+              <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-lg mr-2 text-sm w-24">
+                Save
+              </button>
+            </div>
+            <div class="flex mt-7">
+              <div class="bg-white p-6 rounded-lg w-full">
+                <h2 class="text-2xl font-bold mb-6">Edit Condition</h2>
+                          <% if(condition === 1){ %>
+                            <%- include('./order-condition.ejs', {item: item}); %>
+                          <% } else{ %>
+                            <%- include('./product-condition.ejs', {products: products, promotion: item}); %>
+                         <% } %>
+              </div>
+            </div>
+            <% } %>
+        </form>
+      </div>
+  </div>
+</body>
+
+</html>

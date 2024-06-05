@@ -13,10 +13,18 @@
     crossorigin="anonymous"
     referrerpolicy="no-referrer"
   />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+    rel="stylesheet"
+  />
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+    integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  ></script>
 
   <style>
     input {
@@ -37,47 +45,47 @@
       box-shadow: none !important;
       border: solid 1px #dcdcdc;
     }
-     .preview {
-        width: 250px;
-        height: 350px;
-        position: relative;
-        overflow: hidden;
-        padding: 5px;
-        border: 2px #d1d5db;
-        border-style: dashed;
-      }
-       .preview button {
-        width: 120px;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        border: none;
-        background-color: #0077ff;
-        color: #fff;
-        padding: 10px 14px;
-        border-radius: 5px;
-        cursor: pointer;
-        opacity: 0;
-        transition: all 0.2s;
-        z-index: 9;
-        font-size: 14px;
-      }
-       .preview img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        position: absolute;
-        inset: 0;
-      }
+    .preview {
+      width: 250px;
+      height: 350px;
+      position: relative;
+      overflow: hidden;
+      padding: 5px;
+      border: 2px #d1d5db;
+      border-style: dashed;
+    }
+    .preview button {
+      width: 120px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      border: none;
+      background-color: #0077ff;
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      opacity: 0;
+      transition: all 0.2s;
+      z-index: 9;
+      font-size: 14px;
+    }
+    .preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      inset: 0;
+    }
 
-       .preview:hover button {
-        opacity: 1;
-      }
-       .preview button {
-        transform: translate(-50%, -50%);
-      }
-       .preview:hover img {
-        filter: opacity(0.8);
-      }
+    .preview:hover button {
+      opacity: 1;
+    }
+    .preview button {
+      transform: translate(-50%, -50%);
+    }
+    .preview:hover img {
+      filter: opacity(0.8);
+    }
   </style>
 </head>

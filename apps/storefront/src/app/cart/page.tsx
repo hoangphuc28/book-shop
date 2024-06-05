@@ -30,12 +30,13 @@ export default function Cart() {
           )
         })}
         <div>
-          <div className="flex">
+          <Ticket/>
+          {/* <div className="flex">
             <input placeholder="Enter coupon code" type="text" name="first-name" id="first-name" className="mr-5 input-style w-8/12" />
             <a href="#" className="btn-style1 px-4 py-2 w-4/12 block text-center">
               APPLY COUPON
             </a>
-          </div>
+          </div> */}
         </div>
       </div>
 

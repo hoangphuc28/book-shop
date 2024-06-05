@@ -6,15 +6,22 @@ export class CreatePromotionDto {
   startDate: Date;
   endDate: Date;
   level: PromotionLevel;
+  isActive: boolean;
+  percentage: number;
+  discountValue: number;
   validationRule: OrderLevelValidationRule | ProductLevelValidationRule;
 }
 
 export class UpdatePromotionDto {
-  code?: string;
-  startDate?: Date;
-  endDate?: Date;
-  level?: PromotionLevel;
-  validationRule?: OrderLevelValidationRule | ProductLevelValidationRule;
+  id: string;
+  code: string;
+  startDate: Date;
+  endDate: Date;
+  level: PromotionLevel;
+  isActive: boolean;
+  percentage: number;
+  discountValue: number;
+  validationRule: OrderLevelValidationRule | ProductLevelValidationRule;
 }
 
 export class ApplyPromotionDto {

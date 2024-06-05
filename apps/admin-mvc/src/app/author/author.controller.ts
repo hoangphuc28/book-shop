@@ -26,6 +26,7 @@ export class AuthorController {
   async createForm() {
     return {};
   }
+
   @Post()
   async create(
     @Body() author: AuthorInputDto,
