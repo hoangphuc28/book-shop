@@ -1,30 +1,32 @@
-export default function Ticket() {
+import { CheckPromotionLevel } from "../utils/checkLevelPromotion";
+import { formatVndTo1k } from "../utils/formatCurrency";
+import { PromotionLevel } from "../utils/interfaces/enum"
+import { Promotion } from "../utils/interfaces/promotion"
+import { useOrder } from "../utils/providers/order";
+import formatter from "../utils/timeFormat";
+
+
+interface Props {
+  promotion: Promotion
+}
+export default function Ticket({promotion}: Props) {
+  const {applyPromotion} = useOrder()
   return (
-    <section className="container">
-      <div className="row">
         <article className="card fl-left">
-          <section className="date">
-            <time dateTime="23th feb"> <span>23</span><span>feb</span> </time>
-          </section>
+          <div  className="date ">
+            <p className="text-xl text-black absolute inset-0 flex justify-center items-center">{
+              CheckPromotionLevel(promotion) === 1 ? promotion?.validationRule?.percentage + '%' :
+              formatVndTo1k(promotion?.validationRule?.discountValuePerProduct) +'k'
+            }</p>
+          </div>
           <section className="card-cont">
-            <small>dj khaled</small>
-            <h3>live in sydney</h3>
-            <div className="even-date">
-              <i className="fa fa-calendar" />
-              <time>
-                <span>wednesday 28 december 2014</span>
-                <span>08:55pm to 12:00 am</span>
-              </time>
+            <p className="text-black text-base">{promotion?.code}</p>
+            <div className="even-date text-xs">
+                <span>{formatter.format(new Date(promotion?.startDate))}</span> {' - '}
+                <span>{formatter.format(new Date(promotion?.endDate))}</span>
             </div>
-            <div className="even-info">
-              <i className="fa fa-map-marker" />
-              <p>nexen square for people australia, sydney</p>
-            </div>
-            <a href="#">tickets</a>
+            <button onClick={() => applyPromotion(promotion)} className="text-base rounded-sm">Apply</button>
           </section>
         </article>
-      </div>
-    </section>
-
   )
 }

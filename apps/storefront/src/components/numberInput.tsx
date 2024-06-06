@@ -5,52 +5,56 @@ import { useDebouncedCallback } from 'use-debounce';
 import { useLoading } from '../utils/providers/loading';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { CartItems } from '../utils/interfaces/cart';
+import { useOrder } from '../utils/providers/order';
 
 interface Props {
-  cartItems: CartItems
-  updateAction: (cartItem: CartItems[]) => void
-
+  cartItems: CartItems;
 }
-export default function CounterInput({ cartItems, updateAction }: Props) {
-  const [updateCartMutation] = useMutation(updateCart);
-  const { setLoading }: any = useLoading()
+export default function CounterInput({ cartItems }: Props) {
+  const {setLoading}: any = useLoading()
+  const { updateCart } = useOrder();
   const handleChange = async (event: any) => {
-    const value = event.target.value
+    const value = event.target.value;
     if (value <= 0 || value === null || isNaN(value) || value === '') {
-      return
+      return;
     }
     setLoading(true)
-    await debouncedUpdate(value.toString())
-  }
+    await debouncedUpdate(value.toString(), cartItems?.book?.id);
+
+  };
   const deleteHandler = async () => {
     setLoading(true)
-    await debouncedUpdate('0')
-  }
+    await debouncedUpdate('0', cartItems?.book?.id);
+  };
+  const debouncedUpdate = useDebouncedCallback(
+    async (quantity: string, productId: string) => {
+      try {
+        await updateCart(quantity, productId, true)
 
-  const debouncedUpdate = useDebouncedCallback(async (quantity: string) => {
-    console.log('quantity: ', quantity)
-    try {
-      const {data} = await updateCartMutation({
-        variables: {
-          bookId: cartItems?.book?.id,
-          quantity: parseInt(quantity),
-          isReplace: true
-        },
-      });
-      updateAction(data.updateCart.cartItem)
-      console.log(data.updateCart.cartItem)
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  }, 500);
+      } catch (error) {
+          console.log(error)
+          alert('Something error')
+      } finally {
+        setLoading(false)
+      }
+    },
+    200
+  );
   return (
-      <div>
-      <input value={cartItems?.quantity} onChange={handleChange} type="number" className="mr-5 w-8/12 input-style" />
+    <div>
+      <input
+        value={cartItems?.quantity}
+        onChange={handleChange}
+        type="number"
+        className="mr-5 w-8/12 input-style"
+      />
       <button onClick={deleteHandler}>
-                  <CloseOutlinedIcon fontSize='large' sx={{ color: 'red' }} className='cursor-pointer' />
-                </button>
+        <CloseOutlinedIcon
+          fontSize="large"
+          sx={{ color: 'red' }}
+          className="cursor-pointer"
+        />
+      </button>
     </div>
   );
 }

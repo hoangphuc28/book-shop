@@ -6,33 +6,48 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BaseEntity,
+  JoinColumn,
 } from 'typeorm';
 import { Book } from './Book.entity';
 import { Order } from './Order.entity';
+import { Field, ObjectType } from '@nestjs/graphql';
 
+@ObjectType()
 @Entity()
 export class OrderItem extends BaseEntity {
+  @Field()
   @PrimaryGeneratedColumn('uuid')
   orderItemID: string;
 
-  @ManyToOne(() => Book, (book) => book.orderItems)
+  @ManyToOne(() => Book, (book) => book.orderItems, { cascade: true })
+  @JoinColumn({ name: 'bookId' })
   book: Book;
 
-  // @ManyToOne(() => Coupon, (coupon) => coupon.orderItems, { nullable: true })
-  // coupon: Coupon;
+  @Field()
+  @Column()
+  bookId: string;
+
+  @Field({nullable: true})
+  @Column({nullable: true})
+  extendPrice: number
 
   @ManyToOne(() => Order, (order) => order.orderItems)
+  @JoinColumn({ name: 'orderID' })
   order: Order;
 
+  @Field()
+  @Column({nullable: true})
+  orderID: string;
+
+  @Field()
   @Column()
   quantity: number;
 
-  @Column('decimal')
-  totalItemPrice: number;
-
+  @Field()
   @CreateDateColumn()
   createdAt: Date;
 
+  @Field()
   @UpdateDateColumn()
   updatedAt: Date;
 

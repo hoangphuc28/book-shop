@@ -5,9 +5,10 @@ import Image from "next/image";
 import Logo from "../../images/logo2.png";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useAuth } from "../utils/providers/auth";
+import { useOrder } from "../utils/providers/order";
 export default function Nav() {
 const {token} = useAuth()
-
+const {count} = useOrder()
   return (
     <nav className="sticky top-0 z-30" style={{ background: '#040028' }}>
       <div className="container flex">
@@ -46,7 +47,7 @@ const {token} = useAuth()
                 <ShoppingCartOutlinedIcon sx={{ color: "white" }} />
               </div>
               <div className="absolute -right-3 -top-2 w-5 h-5 rounded-full flex items-center justify-center bg-primary text-white text-xs">
-                2
+                {count}
               </div>
             </Link>
             {token !== '' ? <Link href='/profile/information'>

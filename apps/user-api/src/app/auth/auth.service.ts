@@ -22,9 +22,13 @@ export class AuthService {
       const user = await this.accountService.findUserByEmail(email);
       if (!user)
         throw new BadRequestException('Email or password is incorrect');
+
       const passwordMatches = await bcrypt.compare(password, user.password);
       if (!passwordMatches)
         throw new BadRequestException('Email or password is incorrect');
+      if(!user.isActive) {
+        throw new BadRequestException('Account was blocked');
+      }
       const tokens = await this.getTokens(user.id, user.email);
       user.refreshToken = tokens.refreshToken;
       await this.accountService.update(user.id, { refreshToken: user.refreshToken });
@@ -236,6 +240,9 @@ export class AuthService {
   }
   async refreshTokens(id: string, refreshToken: string) {
     const user = await this.accountService.findUserById(id);
+    if(!user.isActive) {
+      throw new BadRequestException('Account was blocked');
+    }
     if (!user || !user.refreshToken)
       throw new ForbiddenException('Access Denied');
     if (user.refreshToken !== refreshToken) throw new ForbiddenException('Access Denied');

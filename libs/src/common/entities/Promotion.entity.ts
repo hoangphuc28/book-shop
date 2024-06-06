@@ -6,10 +6,12 @@ import {
   BeforeInsert,
   BeforeUpdate,
   Unique,
+  OneToMany,
 } from 'typeorm';
 import { OrderItem } from './OrderItem.entity';
 import { PromotionLevel } from '../constants';
 import { ObjectType, Field, registerEnumType, createUnionType } from '@nestjs/graphql';
+import { Order } from './Order.entity';
 
 registerEnumType(PromotionLevel, {
   name: 'PromotionLevel',
@@ -38,6 +40,10 @@ export class Promotion extends BaseEntity {
   @Field()
   @Column()
   endDate: Date;
+
+  @Field(() => [Order])
+  @OneToMany(() => Order, (order) => order.promotion)
+  orders: Order[];
 
   // @Column({nullable: true, default: 0})
   // percentage: number

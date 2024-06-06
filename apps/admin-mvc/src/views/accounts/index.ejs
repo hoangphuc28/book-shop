@@ -107,7 +107,7 @@
                   <span
                     class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800"
                   >
-                    <%= item.status %>
+                    <%= item.isActive %>
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -116,9 +116,10 @@
                   Date(item.createdAt)); %>
                 </td>
                 <td>
-                  <a href="/authors/edit?id=<%= item.id %>">
-                    <i class="fa-solid fa-pen"></i>
-                  </a>
+                  <button type="button" class="toggle-button" data-id="<%= item.id %>" data-status="<%= item.isActive ? 'unblock' : 'block' %>">
+                    <%= item.isActive ? 'Block' : 'UnBlock' %>
+                  </button>
+
                 </td>
               </tr>
               <% }) %>
@@ -127,5 +128,43 @@
         </div>
       </div>
     </div>
+    <script>
+      document.querySelectorAll('.toggle-button').forEach(button => {
+        button.addEventListener('click', function(event) {
+          event.preventDefault(); // Prevent any default action
+
+          // Get the current status and ID from the data attributes
+          const button = event.target;
+          const accountId = button.getAttribute('data-id');
+          const currentStatus = button.getAttribute('data-status');
+
+          // Determine the new status and label
+          const newStatus = currentStatus === 'block' ? 'unblock' : 'block';
+          const isActive = newStatus === 'block' ? 'false' : 'true'; // Adjust based on your logic
+
+          // Make the API call to update the account status
+          fetch('/accounts/edit', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: accountId, isActive })
+          })
+          .then(data => {
+            // Update the button state and label
+            button.setAttribute('data-status', newStatus);
+            button.textContent = newStatus === 'block' ? 'Block' : 'Unblock';
+            alert('Account updated successfully')
+            window.location.href = '/accounts'
+          })
+          .catch((error) => {
+            alert('Something error')
+            console.error('Error:', error);
+          });
+        });
+      });
+      </script>
+
+
   </body>
 </html>

@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { OrdersService } from './orders.service';
 import { OrdersController } from './orders.controller';
 import { JwtModule } from '@nestjs/jwt';
+import { ServicesModule } from '@book-shop/libs';
 
 @Module({
+  imports: [ServicesModule],
   controllers: [OrdersController],
-  providers: [OrdersService],
 })
 export class OrdersModule {}

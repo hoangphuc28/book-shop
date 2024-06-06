@@ -11,6 +11,7 @@ import ToastSuccess from "./toast/toastSuccess";
 import React from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { useLoading } from "../utils/providers/loading";
+import { useOrder } from "../utils/providers/order";
 interface Props {
   product: Book
 }
@@ -18,8 +19,8 @@ export default function CardItem({ product }: Props) {
   const { push } = useRouter()
   const [open, setOpen] = React.useState(false);
   const [mess, setMess] = React.useState('');
-  const [updateCartMutation] = useMutation(updateCart);
   const { setLoading }: any = useLoading()
+  const {updateCart} = useOrder()
 
   const debouncedUpdate = useDebouncedCallback(async () => {
     try {
@@ -29,14 +30,11 @@ export default function CardItem({ product }: Props) {
         push('/auth/login');
         return;
       }
-      const res = await updateCartMutation({
-        variables: {
-          bookId: product.id,
-          quantity: 1,
-          isReplace: false
-        },
-      });
-
+      const res = await updateCart(
+        '1',
+         product?.id,
+         false
+      )
       setMess('Product added successfully');
       setOpen(true);
       console.log(res);
@@ -45,7 +43,7 @@ export default function CardItem({ product }: Props) {
     } finally {
       setLoading(false);
     }
-  }, 1500);
+  }, 500);
   const updateCartHandler = async () => {
     setLoading(true);
     await debouncedUpdate();

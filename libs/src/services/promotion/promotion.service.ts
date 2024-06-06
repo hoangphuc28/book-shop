@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ApplyPromotionDto, CreatePromotionDto, Promotion, UpdatePromotionDto } from '../../common';
+import { ApplyPromotionDto, CreatePromotionDto, Order, OrderLevelValidationRule, ProductLevelValidationRule, Promotion, UpdatePromotionDto } from '../../common';
 import { Repository } from 'typeorm';
 import { PromotionLevel } from '../../common/constants';
 
@@ -12,8 +12,11 @@ export class PromotionService {
     private promotionRepository: Repository<Promotion>,
   ) {}
 
-  async findAll(): Promise<Promotion[]> {
-    return this.promotionRepository.find();
+  async findAll(includeActive: boolean): Promise<Promotion[]> {
+    if(includeActive)
+      return this.promotionRepository.find({where: {isActive: true}});
+    return this.promotionRepository.find()
+
   }
 
   async findOne(id: string): Promise<Promotion> {
@@ -35,17 +38,34 @@ export class PromotionService {
     return this.promotionRepository.save(promotion);
   }
 
-  async applyPromotion(applyPromotionDto: ApplyPromotionDto): Promise<any> {
-    const promotion = await this.findOne(applyPromotionDto.promotionId);
-    if (!promotion) {
-      throw new NotFoundException(`Promotion with id ${applyPromotionDto.promotionId} not found`);
-    }
-    if (promotion.level === PromotionLevel.Level_Order) {
-      // Apply order level promotion
-    } else if (promotion.level === PromotionLevel.Level_Product) {
-      // Apply product level promotion
-    }
+  async applyPromotion(order: Order): Promise<any> {
+    const promotion = await this.findOne(order.promotionId);
 
-    return { success: true, discount: 0 };
+    if (!promotion) {
+      throw new NotFoundException(`Promotion with id ${order.promotionId} not found`);
+    }
+    switch (promotion.level) {
+      case PromotionLevel.Level_Order: {
+        const orderRule = promotion.validationRule as OrderLevelValidationRule;
+          if(order.total < orderRule.limit) {
+            return {success: false, discount: 0}
+          }
+          return {success: true, discount: order.total*orderRule.percentage/100}
+      }
+      case PromotionLevel.Level_Product: {
+        const productRule = promotion.validationRule as ProductLevelValidationRule;
+        const doesCartContainPromotionProduct = order.orderItems.some(item =>
+          productRule.productIdList.includes(item?.book?.id)
+
+        );
+        if(!doesCartContainPromotionProduct) {
+          return {success: false, discount: 0}
+        }
+        return {success: true, discount: productRule.discountValuePerProduct}
+      }
+      default: {
+        return {success: false, discount: 0}
+      }
+    }
   }
 }

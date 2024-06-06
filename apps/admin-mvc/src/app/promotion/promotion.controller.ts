@@ -23,7 +23,7 @@ export class PromotionController {
   @Render('promotions/index')
   async list(@Res() res: Response) {
     try {
-      const promotions = await this.promotionService.findAll();
+      const promotions = await this.promotionService.findAll(false);
       return { data: promotions };
     } catch (error) {
       console.error('Error occurred while fetching books:', error);

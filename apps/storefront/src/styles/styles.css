@@ -74,8 +74,8 @@ h1 {
 
 .card {
   display: table-row;
-  width: 49%;
-  background-color: #fff;
+  width: 100%;
+  background-color: #dbdde6;
   color: #989898;
   margin-bottom: 10px;
   font-family: "Oswald", sans-serif;
@@ -84,13 +84,11 @@ h1 {
   position: relative;
 }
 
-.card + .card {
-  margin-left: 2%;
-}
+
 
 .date {
   display: table-cell;
-  width: 25%;
+  width: 40%;
   position: relative;
   text-align: center;
   border-right: 2px dashed #dadde6;
@@ -102,7 +100,7 @@ h1 {
   display: block;
   width: 30px;
   height: 30px;
-  background-color: #dadde6;
+  background-color: #ffffff;
   position: absolute;
   top: -15px;
   right: -15px;
@@ -144,8 +142,8 @@ h1 {
 .card-cont {
   display: table-cell;
   width: 75%;
-  font-size: 85%;
-  padding: 10px 10px 30px 50px;
+  padding: 10px;
+  padding-left:35px;
 }
 
 .card-cont h3 {
@@ -153,9 +151,7 @@ h1 {
   font-size: 130%;
 }
 
-.row:last-child .card:last-of-type .card-cont h3 {
-  text-decoration: line-through;
-}
+
 
 .card-cont > div {
   display: table-row;
@@ -181,7 +177,7 @@ h1 {
   display: block;
 }
 
-.card-cont a {
+.card-cont button{
   display: block;
   text-decoration: none;
   width: 80px;
@@ -196,11 +192,8 @@ h1 {
   bottom: 10px;
 }
 
-.row:last-child .card:first-child .card-cont a {
-  background-color: #037fdd;
-}
 
-.row:last-child .card:last-child .card-cont a {
+ .card-cont button {
   background-color: #f8504c;
 }
 

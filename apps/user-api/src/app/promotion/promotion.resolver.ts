@@ -10,8 +10,7 @@ export class PromotionResolver {
 
   @Query(() => [Promotion])
   async getPromotions() {
-    const res =  await this.promotionService.findAll();
-    console.log(res)
+    const res =  await this.promotionService.findAll(true);
     return res
   }
 }

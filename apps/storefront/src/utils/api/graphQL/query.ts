@@ -61,6 +61,7 @@ query GetAuthors {
   }
 }
 `
+
 export const updateCart = gql`
 mutation UpdateCart ($bookId: String!, $quantity: Float!, $isReplace: Boolean!){
   updateCart(bookId: $bookId, quantity: $quantity, isReplace: $isReplace) {
@@ -114,5 +115,55 @@ query GetCart {
   }
 }
 
+`
+export const getPromotion = gql`
+query GetPromotions {
+  getPromotions {
+      id
+      code
+      startDate
+      endDate
+      level
+      validationRule {
+          ... on OrderLevelValidationRule {
+              limit
+              percentage
+          }
+          ... on ProductLevelValidationRule {
+              productIdList
+              discountValuePerProduct
+          }
+      }
+  }
+}
+`
+
+export const createOrder = gql`
+mutation CreateOrder($fullName: String!, $address: String!, $phone: String!, $email: String!, $paymentMethod: PaymentMethod!, $orderItems: [OrderItemInput!]!, $promotionId: String) {
+  createOrder(
+      order: {
+          fullName: $fullName
+          address: $address
+          phone: $phone
+          email: $email
+          paymentMethod: $paymentMethod
+          orderItems: $orderItems,
+          promotionId: $promotionId
+      }
+  ) {
+      orderID
+  }
+}
+`
+export const clearCart = gql`
+mutation ClearCart {
+  clearCart {
+      id
+      accountId
+      amount
+      createdAt
+      updatedAt
+  }
+}
 `
 

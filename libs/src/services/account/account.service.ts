@@ -14,6 +14,9 @@ export class AccountService {
     private accountRepository: Repository<Account>,
     private configService: ConfigService
   ) {}
+  async findAll() {
+    return this.accountRepository.find()
+  }
   async save(
     email: string,
     password: string,

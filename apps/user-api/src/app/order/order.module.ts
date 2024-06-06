@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { OrderService } from './order.service';
-import { OrderController } from './order.controller';
+import { ServicesModule } from '@book-shop/libs';
+import { OrderResolver } from './order.resolver';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  controllers: [OrderController],
-  providers: [OrderService],
+  imports:[ServicesModule, JwtModule.register({})],
+  providers: [OrderResolver],
 })
 export class OrderModule {}

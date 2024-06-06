@@ -1,11 +1,7 @@
 import Image from "next/image";
 import NumberInput from "../../components/numberInput";
-import { Book } from "../../utils/interfaces/book";
 import { formatVND } from "../../utils/formatCurrency";
-import { useMutation } from "@apollo/client";
-import { updateCart } from "../../utils/api/graphQL/query";
-import { useDebouncedCallback } from "use-debounce";
-import { useLoading } from "../../utils/providers/loading";
+
 import { CartItems } from "../../utils/interfaces/cart";
 
 interface Props {
@@ -34,7 +30,7 @@ export default function CartItem({ cartItem, updateAction }: Props) {
       </div>
       <div className="text-primary text-lg font-semibold">{formatVND(cartItem?.book?.price)}</div>
       <div className='ml-5'>
-        <NumberInput updateAction={updateAction} cartItems={cartItem}/>
+        <NumberInput cartItems={cartItem}/>
       </div>
 
       <div className="text-gray-600 cursor-pointer hover:text-primary">
