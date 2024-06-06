@@ -1,0 +1,62 @@
+<div class="bg-white shadow rounded-lg p-4">
+
+  <!-- end tool bar -->
+  <table class="min-w-full divide-y divide-gray-200">
+    <thead class="bg-gray-50">
+      <tr>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Product
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Category
+        </th>
+
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Author
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Quantity
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Extend Price
+        </th>
+      </tr>
+    </thead>
+    <tbody class="bg-white divide-y divide-gray-200">
+      <% orderItems.forEach(orderItem=> { %>
+        <tr>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <img src="<%= orderItem.book.thumbnail %>" alt="<%= orderItem.book.title %> thumbnail" width="75" height="120"
+                class="object-cover" />
+              <div class="ml-4">
+                <div class="text-sm font-medium text-gray-900">
+                  <%= orderItem.book.title %>
+                </div>
+                <div class="text-sm text-gray-500">
+                  <%= orderItem.book.price %> VND
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <%= orderItem.book.category.name %>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <%= orderItem.book.author.name %>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <%= orderItem.quantity %>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <%= orderItem.extendPrice %>VND
+          </td>
+
+
+        </tr>
+        <% }) %>
+          <!-- Repeat similar rows as needed -->
+    </tbody>
+  </table>
+
+</div>

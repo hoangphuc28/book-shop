@@ -13,7 +13,7 @@ export class BookService {
     private bookRepository: Repository<Book>,
     private configService: ConfigService,
     private resourceService: ResourceService
-  ) { }
+  ) {}
   async findBooksByCategories(categories: string[]): Promise<Book[]> {
     return this.bookRepository
       .createQueryBuilder('book')
@@ -25,7 +25,7 @@ export class BookService {
   }
 
   async findAll() {
-    return this.bookRepository.find({where: {isActive: true}})
+    return this.bookRepository.find({ where: { isActive: true } });
   }
   async find(
     limit: number,
@@ -39,10 +39,14 @@ export class BookService {
     let queryBuilder = this.bookRepository
       .createQueryBuilder('book')
       .leftJoinAndSelect('book.category', 'category')
-      .leftJoinAndSelect('book.author', 'author')
-    queryBuilder = await this.queryBuilderCondition(queryBuilder, condition, includeIsActive)
-    if(condition?.sort) {
-    queryBuilder = await this.sortBy(queryBuilder, condition?.sort)
+      .leftJoinAndSelect('book.author', 'author');
+    queryBuilder = await this.queryBuilderCondition(
+      queryBuilder,
+      condition,
+      includeIsActive
+    );
+    if (condition?.sort) {
+      queryBuilder = await this.sortBy(queryBuilder, condition?.sort);
     }
     const [items, totalCount] = await queryBuilder
       .take(limit)
@@ -55,15 +59,35 @@ export class BookService {
     result.totalPage = Math.ceil(result.totalItem / limit);
     return result;
   }
-  async findById(id: string) {
-    const book = await this.bookRepository.findOne({ where: { id: id } });
-    // const bucketName = this.configService.get<string>(
-    //   'AWS.SERVICES.S3.BUCKET_NAME'
-    // );
-    // if (book) {
-    //   book.thumbnail = `https://${bucketName}.s3.amazonaws.com/products/${book?.id}.jpeg`;
-    // }
+  async findById(id: string, limit?: number, page?: number) {
+    const book = await this.bookRepository.findOne({
+      where: { id: id },
+      relations: [
+        'category',
+        'author',
+        'reviews.accounts',
+      ],
+    });
+    if(!book) {
+      throw new Error('Can not find book')
+    }
+    const bucketName = this.configService.get<string>(
+      'AWS.SERVICES.S3.BUCKET_NAME'
+    );
+    for(let i = 0; i < book.reviews.length; i++) {
+      book.reviews[i].accounts.avatar =  `https://${bucketName}.s3.amazonaws.com/users/${book.reviews[i].accounts.id}.jpeg`;
+    }
     return book;
+  }
+  async calculateRating(productId: string) {
+    const product = await this.findById(productId);
+    if (!product)
+        throw new Error('Can not find product');
+    for(let i = 0; i < product.reviews.length; i++) {
+        product.rating +=product.reviews[i].rating
+    }
+    product.rating = Math.round(product.rating/product.reviews.length)
+    this.bookRepository.save(product)
   }
   async save(
     title: string,
@@ -106,9 +130,13 @@ export class BookService {
       const savedBook = await this.bookRepository.save(book);
 
       if (thumbnail) {
-       const thumbnailUrl =  await this.resourceService.upload(thumbnail, savedBook.id, 'products');
-       book.thumbnail = thumbnailUrl
-       await this.bookRepository.save(book);
+        const thumbnailUrl = await this.resourceService.upload(
+          thumbnail,
+          savedBook.id,
+          'products'
+        );
+        book.thumbnail = thumbnailUrl;
+        await this.bookRepository.save(book);
       }
       return {
         message: id
@@ -123,17 +151,26 @@ export class BookService {
       );
     }
   }
-  async queryBuilderCondition(queryBuilder: any, condition?: BookSearchCondition, includeIsActive?: boolean): Promise<SelectQueryBuilder<Book>> {
+  async queryBuilderCondition(
+    queryBuilder: any,
+    condition?: BookSearchCondition,
+    includeIsActive?: boolean
+  ): Promise<SelectQueryBuilder<Book>> {
     const categoryCondition = condition?.category || [];
     const authorCondition = condition?.author || [];
     if (condition?.query) {
       const trimmedQuery = (condition?.query || '').trim();
-      queryBuilder = queryBuilder.where('LOWER(book.title) LIKE LOWER(:query)', { query: `%${trimmedQuery}%` });
+      queryBuilder = queryBuilder.where(
+        'LOWER(book.title) LIKE LOWER(:query)',
+        { query: `%${trimmedQuery}%` }
+      );
     }
     if (condition?.rating) {
-      console.log(condition.rating)
-      console.log(condition?.query)
-      queryBuilder = queryBuilder.where('book.rating = :rating', { rating: parseInt(condition?.rating) });
+      console.log(condition.rating);
+      console.log(condition?.query);
+      queryBuilder = queryBuilder.where('book.rating = :rating', {
+        rating: parseInt(condition?.rating),
+      });
     }
     if (categoryCondition.length > 0) {
       queryBuilder = queryBuilder.andWhere(
@@ -151,9 +188,12 @@ export class BookService {
         .andWhere('book.isActive = :isActive', { isActive: true })
         .andWhere('category.isActive = :isActive', { isActive: true });
     }
-    return queryBuilder
+    return queryBuilder;
   }
-  async sortBy(queryBuilder: SelectQueryBuilder<Book>, sort: string): Promise<SelectQueryBuilder<Book>>{
+  async sortBy(
+    queryBuilder: SelectQueryBuilder<Book>,
+    sort: string
+  ): Promise<SelectQueryBuilder<Book>> {
     switch (parseInt(sort)) {
       case 1:
         queryBuilder = queryBuilder.orderBy('book.price', 'ASC');
@@ -168,7 +208,6 @@ export class BookService {
         queryBuilder = queryBuilder.orderBy('book.createdAt', 'DESC'); // Default sorting by creation date
         break;
     }
-    return queryBuilder
-
+    return queryBuilder;
   }
 }

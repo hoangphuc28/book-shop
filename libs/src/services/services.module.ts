@@ -10,6 +10,7 @@ import {
   Order,
   OrderItem,
   Promotion,
+  Review,
 } from '../common';
 import { AccountService } from './account/account.service';
 import { BookService } from './book/book.service';
@@ -20,6 +21,7 @@ import { AuthorService } from './author/author.service';
 import { CartService } from './cart/cart.service';
 import { PromotionService } from './promotion/promotion.service';
 import { OrdersService } from './orders/orders.service';
+import { ReviewService } from './review/review.service';
 
 @Module({
   imports: [
@@ -33,7 +35,8 @@ import { OrdersService } from './orders/orders.service';
       CartItem,
       Promotion,
       Order,
-      OrderItem
+      OrderItem,
+      Review,
     ]),
   ],
   providers: [
@@ -46,6 +49,8 @@ import { OrdersService } from './orders/orders.service';
     CartService,
     PromotionService,
     OrdersService,
+    ReviewService,
+    ReviewService
   ],
   exports: [
     AccountService,
@@ -54,7 +59,8 @@ import { OrdersService } from './orders/orders.service';
     AuthorService,
     CartService,
     PromotionService,
-    OrdersService
+    OrdersService,
+    ReviewService
   ],
 })
 export class ServicesModule {}

@@ -14,4 +14,5 @@ export * from './services/author/author.service'
 export * from './services/cart/cart.service'
 export * from './services/promotion/promotion.service'
 export * from './services/orders/orders.service'
+export * from './services/review/review.service'
 

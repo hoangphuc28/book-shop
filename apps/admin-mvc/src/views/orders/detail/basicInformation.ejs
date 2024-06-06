@@ -1,0 +1,96 @@
+<div class="container mx-auto mb-5">
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-300">
+      <!-- <thead>
+        <tr class="bg-gray-200 text-gray-700">
+          <th class="py-2 px-4 border-b">Field</th>
+          <th class="py-2 px-4 border-b">Value</th>
+        </tr>
+      </thead> -->
+      <tbody>
+        <tr>
+          <td class="py-2 px-4 border-b">Full Name</td>
+          <td class="py-2 px-4 border-b">
+            <%= data.fullName %>
+
+          </td>
+        </tr>
+        <tr>
+          <td class="py-2 px-4 border-b">Address</td>
+          <td class="py-2 px-4 border-b">
+            <%= data.address %>
+          </td>
+        </tr>
+        <tr>
+          <td class="py-2 px-4 border-b">Phone</td>
+          <td class="py-2 px-4 border-b">
+            <%= data.phone %>
+
+          </td>
+        </tr>
+        <tr>
+          <td class="py-2 px-4 border-b">Email</td>
+          <td class="py-2 px-4 border-b">
+            <%= data.email %>
+          </td>
+        </tr>
+        <tr>
+          <td class="py-2 px-4 border-b">Total</td>
+          <td class="py-2 px-4 border-b">
+            <%= data.total %>
+
+          </td>
+        </tr>
+        <tr>
+          <td class="py-2 px-4 border-b">Status</td>
+          <td class="py-2 px-4 border-b">
+            <select id="orderStatus" class="border border-gray-300 rounded px-2 py-1">
+              <% statuses.forEach(status => { %>
+                <option value="<%= status %>" <%= data.status === status ? 'selected' : '' %>><%= status.replace('_', ' ') %></option>
+              <% }) %>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td class="py-2 px-4 border-b">Payment Method</td>
+          <td class="py-2 px-4 border-b">
+            <%= data.paymentMethod %>
+          </td>
+        </tr>
+        <tr>
+          <td class="py-2 px-4 border-b">Discount</td>
+          <td class="py-2 px-4 border-b">
+            <% if (data.promotion) { %>
+              <%= data.promotion.code %> - <%= data.promotionValue %>VND
+            <% } else { %>
+              No discount
+            <% } %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+  document.getElementById('orderStatus').addEventListener('change', function() {
+    const selectedStatus = this.value;
+    const orderId = '<%= data.orderID %>'; // Assuming the orderID is passed in the data object
+
+    fetch(`/orders/${orderId}/status`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ status: selectedStatus })
+    })
+    .then(data => {
+        console.log(data)
+        alert('Order status updated successfully');
+    })
+    .catch(error => {
+      console.error('Error:', error)
+      alert('Can not change order status')
+    }
+    );
+  });
+</script>

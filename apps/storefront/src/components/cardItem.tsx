@@ -1,11 +1,9 @@
 
 import { Book } from "../utils/interfaces/book";
-import { Card, CardActionArea, CardMedia, Typography, Rating, Button, Alert, Stack } from "@mui/material";
+import { Card, CardActionArea, CardMedia, Typography, Rating, Button } from "@mui/material";
 import { formatVND } from "../utils/formatCurrency";
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
 import Link from "next/link";
-import { updateCart } from "../utils/api/graphQL/query";
-import { useMutation } from "@apollo/client";
 import { useRouter } from "next/navigation";
 import ToastSuccess from "./toast/toastSuccess";
 import React from "react";

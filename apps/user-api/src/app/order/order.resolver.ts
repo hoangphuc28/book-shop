@@ -7,7 +7,6 @@ import { GaphAuth } from '../../common/guards/graph.guard';
 export class OrderResolver {
   constructor(private readonly orderService: OrdersService) {}
   @UseGuards(GaphAuth)
-
   @Mutation(() => Order)
   async createOrder(@Context() context, @Args('order') order: CreateOrderInput): Promise<Order> {
     const { user } = context;
@@ -15,13 +14,11 @@ export class OrderResolver {
     return this.orderService.createOrder(order);
   }
   @UseGuards(GaphAuth)
-
   @Query(() => [Order], { name: 'orders' })
   async findAllOrders(): Promise<Order[]> {
     return this.orderService.findAllOrders();
   }
   @UseGuards(GaphAuth)
-
   @Query(() => [Order], { name: 'ordersByAccount' })
   async findOrdersByAccountId(@Args('accountId') accountId: string): Promise<Order[]> {
     return this.orderService.findOrdersByAccountId(accountId);

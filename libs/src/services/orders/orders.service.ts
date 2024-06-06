@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateOrderInput, Order, OrderItem } from '../../common';
+import { CreateOrderInput, Order, OrderItem, OrderStatus } from '../../common';
 import { Repository } from 'typeorm';
 import { PromotionService } from '../promotion/promotion.service';
 import { BookService } from '../book/book.service';
@@ -70,5 +70,23 @@ export class OrdersService {
       where: { account: { id: accountId } },
       relations: ['orderItems', 'promotion'],
     });
+  }
+  async findById(id: string): Promise<Order | null> {
+    return this.orderRepository.findOne({
+      where: { orderID: id },
+      relations: ['orderItems.book.category', 'orderItems.book.author', 'promotion'],
+    })
+  }
+  async updateOrderStatus(id: string, status: OrderStatus) {
+   try {
+    const order = await this.findById(id);
+    if (order) {
+      order.status = status;
+      await this.orderRepository.save(order);
+      return order;
+    }
+   } catch (error) {
+    throw new Error('Can not change order status')
+   }
   }
 }

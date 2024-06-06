@@ -1,5 +1,6 @@
 import { Author } from "./author";
 import { Category } from "./category";
+import { Review } from "./review";
 
 export interface Book {
   id: string;
@@ -16,5 +17,6 @@ export interface Book {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
-  // reviews: Review[];
+
+  reviews: Review[];
 }

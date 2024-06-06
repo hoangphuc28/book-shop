@@ -39,7 +39,7 @@ export default function SummaryOrder({ action }: SummaryOrderProps) {
       </div>
       <div className="flex justify-between border-b border-gray-200 mt-1 text-gray-800 font-medium py-3 uppercas">
         <p>Subtotal</p>
-        <p>{}</p>
+        <p>{formatVND(amount?.toString())}</p>
       </div>
       <div className="flex justify-between border-b border-gray-200 mt-1 text-gray-800 font-medium py-3 uppercas">
         <p>Shipping</p>

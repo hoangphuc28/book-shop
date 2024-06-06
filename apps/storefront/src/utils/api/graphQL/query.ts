@@ -46,6 +46,37 @@ query GetBooks($limit: Float!, $page: Float!, $condition: BookSearchCondition) {
   }
 }
 `;
+export const getBook = gql`
+query GetBook($id: String!) {
+    getBook(id: $id) {
+         id
+        category {
+            categoryID
+            name
+        }
+        author {
+            id
+            name
+        }
+        title
+        thumbnail
+        description
+        price
+        publishDate
+        rating
+        reviews {
+            id
+            rating
+            content
+            accounts {
+                id
+                fullName
+                avatar
+            }
+        }
+    }
+}
+`
 export const getCategories = gql`
 query GetCategories {
   getCategories {
@@ -164,6 +195,23 @@ mutation ClearCart {
       createdAt
       updatedAt
   }
+}
+`
+export const createReview = gql`
+mutation CreateReview($productId: String!, $rating: Float!, $content: String!) {
+    createReview(
+        productId: $productId,
+        rating: $rating
+        content: $content
+    ) {
+        rating
+        content
+        id
+        accounts {
+            id
+            fullName
+        }
+    }
 }
 `
 

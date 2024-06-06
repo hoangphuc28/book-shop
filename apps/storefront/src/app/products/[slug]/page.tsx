@@ -1,116 +1,102 @@
 'use client'
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
-import { Tab } from "@mui/material";
-import { useState } from "react";
-import Review from "../../../components/review";
-import DescriptionProductDetail from "./descriptionProductDetail";
+import { Button, Rating } from "@mui/material";
+import { getBook } from "../../../utils/api/graphQL/query";
+import { useQuery } from "@apollo/client";
+import { Book } from "../../../utils/interfaces/book";
+import Image from "next/image";
+import { formatVND } from '../../../utils/formatCurrency';
+import { useOrder } from "../../../utils/providers/order";
+import { useDebouncedCallback } from "use-debounce";
+import { useRouter } from "next/navigation";
+import React from "react";
+import ToastSuccess from "../../../components/toast/toastSuccess";
+import { useLoading } from "../../../utils/providers/loading";
+import ReviewComponent from "../../../components/review";
 
 export default function Index({ params }: { params: { slug: string } }) {
-  const [value, setValue] = useState("1");
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
-  const src =
-    "https://cdn.shopify.com/s/files/1/0533/2089/files/design-books-the-design-of-everyday-things-book-cover.jpg?v=1587988106";
+  const [mess, setMess] = React.useState('');
+  const [open, setOpen] = React.useState(false);
+  const { setLoading }: any = useLoading()
 
+  const { data } = useQuery(getBook, { variables: { id: params.slug } })
+  const book: Book = data?.getBook as Book
+  const { updateCart } = useOrder()
+  const { push } = useRouter()
+  const debouncedUpdate = useDebouncedCallback(async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      if (!token) {
+        alert('Please sign in!');
+        push('/auth/login');
+        return;
+      }
+      const res = await updateCart(
+        '1',
+        params.slug,
+        false
+      )
+      setMess('Product added successfully');
+      setOpen(true);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }, 500);
+  const updateCartHandler = async () => {
+    setLoading(true);
+    await debouncedUpdate();
+  };
   return (
     <div className="mt-10">
+      <ToastSuccess message={mess} isOpen={open} setIsOpen={setOpen} />
       <div className="container grid grid-cols-2 gap-6">
         <div>
           <div className="flex justify-center items-center">
-            <img width={300} height={300} src={src} alt="product" />
+            <Image width={300} height={300} src={book?.thumbnail} alt="product" />
           </div>
         </div>
         <div>
           <h2 className="text-3xl font-medium uppercase mb-2">
-            Italian L Shape Sofa
+            {book?.title}
           </h2>
           <div className="flex items-center mb-4">
-            <div className="flex gap-1 text-sm text-yellow-400">
-              <span>
-                <i className="fa-solid fa-star" />
-              </span>
-              <span>
-                <i className="fa-solid fa-star" />
-              </span>
-              <span>
-                <i className="fa-solid fa-star" />
-              </span>
-              <span>
-                <i className="fa-solid fa-star" />
-              </span>
-              <span>
-                <i className="fa-solid fa-star" />
-              </span>
-            </div>
-            <div className="text-xs text-gray-500 ml-3">(150 Reviews)</div>
+            {/* <Rating name="read-only" size="small" defaultValue={book?.rating} precision={1} readOnly /> */}
+            {/* <div className="text-xs text-gray-500 ml-3">({book?.reviews?.length})</div> */}
           </div>
           <div className="space-y-2">
-            <p className="text-gray-800 font-semibold space-x-2">
+            {/* <p className="text-gray-800 font-semibold space-x-2">
               <span>Availability: </span>
               <span className="text-green-600">In Stock</span>
-            </p>
+            </p> */}
             <p className="space-x-2">
-              <span className="text-gray-800 font-semibold">Brand: </span>
-              <span className="text-gray-600">Apex</span>
+              <span className="text-gray-800 font-semibold">Author: </span>
+              <span className="text-gray-600">{book?.author?.name}</span>
             </p>
             <p className="space-x-2">
               <span className="text-gray-800 font-semibold">Category: </span>
-              <span className="text-gray-600">Sofa</span>
-            </p>
-            <p className="space-x-2">
-              <span className="text-gray-800 font-semibold">SKU: </span>
-              <span className="text-gray-600">BE45VGRT</span>
+              <span className="text-gray-600">{book?.category?.name}</span>
             </p>
           </div>
           <div className="flex items-baseline mb-1 space-x-2 font-roboto mt-4">
-            <p className="text-xl text-primary font-semibold">$45.00</p>
-            <p className="text-base text-gray-400 line-through">$55.00</p>
+            <p className="text-xl text-primary font-semibold">{formatVND(book?.price)}</p>
+            {/* <p className="text-base text-gray-400 line-through">$55.00</p> */}
           </div>
           <p className="mt-4 text-gray-600">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos eius
-            eum reprehenderit dolore vel mollitia optio consequatur hic
-            asperiores inventore suscipit, velit consequuntur, voluptate
-            doloremque iure necessitatibus adipisci magnam porro.
+            {book?.description}
           </p>
-          <div className="mt-4">
-            <h3 className="text-sm text-gray-800 uppercase mb-1">Quantity</h3>
-            <div className="flex border border-gray-300 text-gray-600 divide-x divide-gray-300 w-max">
-              <div className="h-8 w-8 text-xl flex items-center justify-center cursor-pointer select-none">
-                -
-              </div>
-              <div className="h-8 w-8 text-base flex items-center justify-center">
-                4
-              </div>
-              <div className="h-8 w-8 text-xl flex items-center justify-center cursor-pointer select-none">
-                +
-              </div>
-            </div>
-          </div>
           <div className="mt-6 flex gap-3 pb-5 pt-5">
-            <a className="btn-style1 px-2 py-3 cursor-pointer">
+            <button
+              className="btn-style1 px-2 py-2 block text-center"
+              onClick={updateCartHandler}>
               Add To Cart
-            </a>
+            </button>
           </div>
         </div>
       </div>
-      <TabContext value={value}>
-          <TabList centered sx={{ justifyContent: 'center'}} onChange={handleChange} aria-label="lab API tabs example">
-            <Tab
-            label="Description" value="1" />
-            <Tab label="Reviews" value="2" />
-          </TabList>
-        <TabPanel value="1">
-        <DescriptionProductDetail/>
+      <ReviewComponent productId={params.slug} reviewsData={book?.reviews} />
 
-        </TabPanel>
-        <TabPanel value="2">
-        <Review/>
-
-        </TabPanel>
-      </TabContext>
     </div>
   );
 }

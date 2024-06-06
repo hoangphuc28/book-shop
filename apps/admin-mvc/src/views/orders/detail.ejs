@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head.ejs'); %>
+    <style>
+      .paginate_button {
+        background: transparent;
+        padding: 5px 15px !important;
+      }
+
+      .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background: rgba(249, 250, 251) !important;
+        color: #374151 !important;
+      }
+
+      .paginate_button.current {
+        background: transparent !important;
+      }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+  <div class="flex">
+    <%- include('../partials/sidebar'); %>
+
+      <div class="flex-grow bg-gray-100 p-6 ml-64">
+        <div class="flex justify-between items-center mb-6">
+          <h1 class="text-2xl font-semibold text-gray-900">Order Detail</h1>
+          <div class="relative">
+            <a href="/orders" class="text-blue-500 mb-4 inline-block">&larr; Back to orders listing</a>
+
+            <!-- end create -->
+          </div>
+        </div>
+        <div >
+            <%- include('./detail/basicInformation.ejs', {data: data});%>
+
+            <%- include('./detail/orderItems.ejs', {orderItems: data.orderItems});%>
+        </div>
+      </div>
+  </div>
+</body>
+
+</html>

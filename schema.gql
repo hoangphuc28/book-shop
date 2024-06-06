@@ -70,7 +70,6 @@ type Order {
 enum OrderStatus {
   Order_Placed
   Order_Confirmed
-  Order_Processing
   In_Transit
   Dilivered
   Cancelled
@@ -115,6 +114,7 @@ type Account {
 type Review {
   id: String!
   book: Book!
+  accounts: Account!
   rating: Float!
   content: String!
 }
@@ -156,6 +156,7 @@ type BooksPagination {
 
 type Query {
   getBooks(limit: Float!, page: Float!, condition: BookSearchCondition): BooksPagination!
+  getBook(id: String!): Book!
   orders: [Order!]!
   ordersByAccount(accountId: String!): [Order!]!
   getCart: Cart!
@@ -174,6 +175,7 @@ input BookSearchCondition {
 }
 
 type Mutation {
+  createReview(productId: String!, rating: Float!, content: String!): Review!
   createOrder(order: CreateOrderInput!): Order!
   updateCart(bookId: String!, quantity: Float!, isReplace: Boolean!): Cart!
   clearCart: Cart!

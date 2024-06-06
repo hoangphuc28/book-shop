@@ -23,6 +23,7 @@ export class Review extends BaseEntity{
   @ManyToOne(() => Book, (book) => book.reviews)
   book: Book;
 
+  @Field(() => Account)
   @ManyToOne(() => Account, (account) => account.reviews)
   accounts: Account;
 
