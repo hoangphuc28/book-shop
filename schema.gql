@@ -133,6 +133,7 @@ type Book {
   thumbnail: String
   description: String
   price: Float
+  salePrice: Float
   publishDate: DateTime!
   rating: Float
   reviews: [Review!]!
@@ -154,9 +155,24 @@ type BooksPagination {
   itemsPerPage: Float!
 }
 
+type BookDetailReviews {
+  items: [Review!]!
+  totalPages: Float!
+  totalItem: Float!
+  currentPage: Float!
+  itemsPerPage: Float!
+}
+
+type BookDetail {
+  book: Book!
+  reviews: BookDetailReviews!
+}
+
 type Query {
   getBooks(limit: Float!, page: Float!, condition: BookSearchCondition): BooksPagination!
-  getBook(id: String!): Book!
+  getBook(id: String!, limit: Float! = 5, page: Float! = 1): BookDetail!
+  getBookOnSale: [Book!]!
+  getAboutPage: String!
   orders: [Order!]!
   ordersByAccount(accountId: String!): [Order!]!
   getCart: Cart!

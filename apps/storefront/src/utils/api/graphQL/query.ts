@@ -26,6 +26,7 @@ query GetBooks($limit: Float!, $page: Float!, $condition: BookSearchCondition) {
       id
       title
       thumbnail
+      salePrice
       category {
           categoryID
           name
@@ -47,31 +48,40 @@ query GetBooks($limit: Float!, $page: Float!, $condition: BookSearchCondition) {
 }
 `;
 export const getBook = gql`
-query GetBook($id: String!) {
-    getBook(id: $id) {
-         id
-        category {
-            categoryID
-            name
-        }
-        author {
-            id
-            name
-        }
-        title
-        thumbnail
-        description
-        price
-        publishDate
-        rating
-        reviews {
-            id
-            rating
-            content
-            accounts {
+query GetBook($id: String!, $limit: Float, $page: Float,) {
+    getBook(id: $id, limit: $limit, page: $page) {
+         reviews {
+            totalPages
+            totalItem
+            currentPage
+            itemsPerPage
+            items {
                 id
-                fullName
-                avatar
+                rating
+                content
+                accounts {
+                    id
+                    fullName
+                    avatar
+                }
+            }
+        }
+        book {
+            id
+            title
+            thumbnail
+            description
+            price
+            salePrice
+            publishDate
+            rating
+            category {
+                categoryID
+                name
+            }
+            author {
+                id
+                name
             }
         }
     }
@@ -135,6 +145,7 @@ query GetCart {
               thumbnail
               description
               price
+              salePrice
               publishDate
               rating
               author {
@@ -212,6 +223,33 @@ mutation CreateReview($productId: String!, $rating: Float!, $content: String!) {
             fullName
         }
     }
+}
+`
+export const getBookOnSale = gql`
+query getBookOnSale {
+    getBookOnSale {
+        id
+      title
+      salePrice
+      thumbnail
+      category {
+          categoryID
+          name
+      }
+      author {
+          id
+          name
+      }
+      description
+      price
+      publishDate
+      rating
+    }
+}
+`
+export const getAboutPage = gql`
+query GetAboutPage {
+    getAboutPage
 }
 `
 

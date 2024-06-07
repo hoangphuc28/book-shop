@@ -11,6 +11,7 @@ import {
   OrderItem,
   Promotion,
   Review,
+  AboutPage
 } from '../common';
 import { AccountService } from './account/account.service';
 import { BookService } from './book/book.service';
@@ -22,6 +23,7 @@ import { CartService } from './cart/cart.service';
 import { PromotionService } from './promotion/promotion.service';
 import { OrdersService } from './orders/orders.service';
 import { ReviewService } from './review/review.service';
+import { AboutService } from './about/about.service';
 
 @Module({
   imports: [
@@ -37,6 +39,7 @@ import { ReviewService } from './review/review.service';
       Order,
       OrderItem,
       Review,
+      AboutPage
     ]),
   ],
   providers: [
@@ -50,7 +53,7 @@ import { ReviewService } from './review/review.service';
     PromotionService,
     OrdersService,
     ReviewService,
-    ReviewService
+    AboutService,
   ],
   exports: [
     AccountService,
@@ -60,7 +63,8 @@ import { ReviewService } from './review/review.service';
     CartService,
     PromotionService,
     OrdersService,
-    ReviewService
+    ReviewService,
+    AboutService
   ],
 })
 export class ServicesModule {}

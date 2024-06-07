@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ApplyPromotionDto, CreatePromotionDto, Order, OrderLevelValidationRule, ProductLevelValidationRule, Promotion, UpdatePromotionDto } from '../../common';
 import { Repository } from 'typeorm';
 import { PromotionLevel } from '../../common/constants';
+import { BookService } from '../book/book.service';
 
 
 @Injectable()
@@ -56,7 +57,6 @@ export class PromotionService {
         const productRule = promotion.validationRule as ProductLevelValidationRule;
         const doesCartContainPromotionProduct = order.orderItems.some(item =>
           productRule.productIdList.includes(item?.book?.id)
-
         );
         if(!doesCartContainPromotionProduct) {
           return {success: false, discount: 0}

@@ -71,7 +71,10 @@ export default function CardItem({ product }: Props) {
         </Link>
         <div className="flex justify-between items-center pl-4 pb-1">
           <Typography>
-            {formatVND(product?.price)}
+            {formatVND((parseInt(product?.price)-product?.salePrice).toString())} {'  '}
+            {product?.salePrice !== 0 &&
+            <span className="text-base text-gray-400 line-through">{formatVND(product?.price)}</span>
+            }
           </Typography>
           <Button onClick={updateCartHandler}>
             <AddShoppingCartOutlinedIcon />

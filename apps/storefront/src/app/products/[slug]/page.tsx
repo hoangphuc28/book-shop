@@ -12,14 +12,21 @@ import React from "react";
 import ToastSuccess from "../../../components/toast/toastSuccess";
 import { useLoading } from "../../../utils/providers/loading";
 import ReviewComponent from "../../../components/review";
-
+import { BookDetailReviews } from "../../../utils/interfaces/review";
+import { useSearchParams } from 'next/navigation'
 export default function Index({ params }: { params: { slug: string } }) {
+  const searchParam = useSearchParams()
+  const page = searchParam.get('page') || '1'
+  const limit = searchParam.get('limit') || '5'
+  console.log(page)
   const [mess, setMess] = React.useState('');
   const [open, setOpen] = React.useState(false);
   const { setLoading }: any = useLoading()
 
-  const { data } = useQuery(getBook, { variables: { id: params.slug } })
-  const book: Book = data?.getBook as Book
+  const { data } = useQuery(getBook, { variables: { id: params.slug, page: parseInt(page), limit: parseInt(limit) } })
+  console.log(data)
+  const book: Book = data?.getBook?.book as Book
+  const reviews = data?.getBook?.reviews as BookDetailReviews
   const { updateCart } = useOrder()
   const { push } = useRouter()
   const debouncedUpdate = useDebouncedCallback(async () => {
@@ -66,10 +73,6 @@ export default function Index({ params }: { params: { slug: string } }) {
             {/* <div className="text-xs text-gray-500 ml-3">({book?.reviews?.length})</div> */}
           </div>
           <div className="space-y-2">
-            {/* <p className="text-gray-800 font-semibold space-x-2">
-              <span>Availability: </span>
-              <span className="text-green-600">In Stock</span>
-            </p> */}
             <p className="space-x-2">
               <span className="text-gray-800 font-semibold">Author: </span>
               <span className="text-gray-600">{book?.author?.name}</span>
@@ -95,7 +98,7 @@ export default function Index({ params }: { params: { slug: string } }) {
           </div>
         </div>
       </div>
-      <ReviewComponent productId={params.slug} reviewsData={book?.reviews} />
+      <ReviewComponent productId={params.slug} reviewsData={reviews} />
 
     </div>
   );

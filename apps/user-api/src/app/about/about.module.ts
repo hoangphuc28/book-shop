@@ -1,9 +1,10 @@
+import { ServicesModule } from '@book-shop/libs';
 import { Module } from '@nestjs/common';
-import { AboutService } from './about.service';
-import { AboutController } from './about.controller';
+import { AboutPageResolver } from './about.resolver';
+
 
 @Module({
-  controllers: [AboutController],
-  providers: [AboutService],
+  imports: [ServicesModule],
+  providers: [AboutPageResolver],
 })
 export class AboutModule {}

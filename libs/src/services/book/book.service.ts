@@ -2,8 +2,7 @@ import { Book } from '../../common/entities';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BookSearchCondition, BooksPagination } from '../../common';
-import { Like, Repository, SelectQueryBuilder } from 'typeorm';
-import { ConfigService } from '@nestjs/config';
+import { Like, MoreThan, Repository, SelectQueryBuilder } from 'typeorm';
 import { ResourceService } from '../resource/resource.service';
 
 @Injectable()
@@ -11,8 +10,7 @@ export class BookService {
   constructor(
     @InjectRepository(Book)
     private bookRepository: Repository<Book>,
-    private configService: ConfigService,
-    private resourceService: ResourceService
+    private resourceService: ResourceService,
   ) {}
   async findBooksByCategories(categories: string[]): Promise<Book[]> {
     return this.bookRepository
@@ -23,7 +21,6 @@ export class BookService {
       })
       .getMany();
   }
-
   async findAll() {
     return this.bookRepository.find({ where: { isActive: true } });
   }
@@ -59,23 +56,17 @@ export class BookService {
     result.totalPage = Math.ceil(result.totalItem / limit);
     return result;
   }
-  async findById(id: string, limit?: number, page?: number) {
+  async findById(id: string) {
     const book = await this.bookRepository.findOne({
       where: { id: id },
       relations: [
         'category',
         'author',
-        'reviews.accounts',
+        'reviews'
       ],
     });
     if(!book) {
       throw new Error('Can not find book')
-    }
-    const bucketName = this.configService.get<string>(
-      'AWS.SERVICES.S3.BUCKET_NAME'
-    );
-    for(let i = 0; i < book.reviews.length; i++) {
-      book.reviews[i].accounts.avatar =  `https://${bucketName}.s3.amazonaws.com/users/${book.reviews[i].accounts.id}.jpeg`;
     }
     return book;
   }
@@ -209,5 +200,22 @@ export class BookService {
         break;
     }
     return queryBuilder;
+  }
+  async updateSalePrice(id: string, value: number) {
+    const book = await this.bookRepository.findOne({
+      where: { id: id }
+    });
+    if(!book) {
+      throw new Error('Can not find book')
+    }
+    book.salePrice = value
+    await this.bookRepository.save(book)
+  }
+  async getBooksOneSale() {
+    return this.bookRepository.find({ where: { salePrice: MoreThan(0) },  relations: [
+      'category',
+      'author',
+      'reviews.accounts',
+    ], });
   }
 }

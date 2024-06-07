@@ -2,11 +2,9 @@
 import SidebarProducts from '../../components/sidebarProduct';
 import { Suspense } from 'react';
 import Products from './products';
-import Pagination from './pagination';
 import Loading from '../../components/loading';
 import Search from './search';
 import Sort from './sort';
-import { loadAuthors, loadBooks, loadCategories } from './fetchData';
 
 export default function Index({
   searchParams,

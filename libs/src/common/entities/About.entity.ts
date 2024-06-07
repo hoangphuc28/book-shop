@@ -1,5 +1,4 @@
 import { BaseEntity, Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Admin } from "./Admin.entity";
 
 @Entity()
 export class AboutPage extends BaseEntity {
@@ -11,5 +10,9 @@ export class AboutPage extends BaseEntity {
 
   @Column()
   content: string
+  constructor(partial: Partial<AboutPage>) {
+    super()
+    Object.assign(this, partial)
+  }
 
 }

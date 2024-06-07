@@ -34,7 +34,7 @@ const {count} = useOrder()
             >
               Shop
             </Link>
-            <Link href="#" className="transition t-style1" style={{ letterSpacing: '3px' }}>
+            <Link href="/about" className="transition t-style1" style={{ letterSpacing: '3px' }}>
               About us
             </Link>
           </div>

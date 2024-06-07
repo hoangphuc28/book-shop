@@ -1,59 +1,62 @@
-    <div class="fixed w-64">
-    <div class="flex">
-      <!-- Sidebar -->
-      <div class="flex flex-col w-64 bg-white h-screen px-4 py-8 border-r justify-between">
-       <div>
+<div class="fixed w-64">
+  <div class="flex">
+    <!-- Sidebar -->
+    <div class="flex flex-col w-64 bg-white h-screen px-4 py-8 border-r justify-between">
+      <div>
         <div class="text-xl font-semibold text-gray-900 mb-6">
           Admin Dashboard
         </div>
         <nav class="flex flex-col mt-6" id="menu">
 
         </nav>
-       </div>
-        <button onclick="logout()">Logout</button>
       </div>
+      <button onclick="logout()" class="text-gray-700"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
     </div>
   </div>
-    <script>
+</div>
+<script>
   const logout = async () => {
-  try {
-    const response = await axios.post('/logout');
-    localStorage.removeItem('accessToken_admin')
-    window.location.href = '/';
-  } catch (error) {
-    console.error('Error logging out:', error);
-  }
-};
+    try {
+      const response = await axios.post('/logout');
+      localStorage.removeItem('accessToken_admin')
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
 
-      const menu = [
-        { title: 'Orders', icon: '<i class="fa-solid fa-box"></i>' },
-        { title: 'Accounts', icon: '<i class="fa-solid fa-user"></i>' },
-        { title: 'Books', icon: '<i class="fa-solid fa-book"></i>' },
-        { title: 'Categories', icon: '<i class="fa-solid fa-tag"></i>' },
-        { title: 'Authors', icon: '<i class="fa-solid fa-pen-nib"></i>' },
-        {
-          title: 'Promotions',
-          icon: '<i class="fa-solid fa-calendar-days"></i>',
-        },
-      ];
-      const pathname = window.location.pathname;
-      const path = pathname.startsWith('/') ? pathname.substring(1) : pathname;
+  const menu = [
+    { title: 'Orders', icon: '<i class="fa-solid fa-box"></i>' },
+    { title: 'Accounts', icon: '<i class="fa-solid fa-user"></i>' },
+    { title: 'Books', icon: '<i class="fa-solid fa-book"></i>' },
+    { title: 'Categories', icon: '<i class="fa-solid fa-tag"></i>' },
+    { title: 'Authors', icon: '<i class="fa-solid fa-pen-nib"></i>' },
+    {
+      title: 'Promotions',
+      icon: '<i class="fa-solid fa-calendar-days"></i>',
+    },
+    {
+      title: 'About',
+      icon: '<i class="fa-solid fa-address-card"></i>',
+    },
+  ];
+  const pathname = window.location.pathname;
+  const path = pathname.startsWith('/') ? pathname.substring(1) : pathname;
 
-      const menuContainer = document.getElementById('menu');
+  const menuContainer = document.getElementById('menu');
 
-      menu.forEach((item) => {
-        const menuItem = document.createElement('a');
-        const itemPath = item.title.toLowerCase();
-        const isActive = path === itemPath;
+  menu.forEach((item) => {
+    const menuItem = document.createElement('a');
+    const itemPath = item.title.toLowerCase();
+    const isActive = path === itemPath;
 
-        menuItem.href = `/${itemPath}`;
-        menuItem.className = `flex items-center my-2 px-4 py-2 text-gray-700 rounded-lg ${
-          isActive ? 'bg-gray-100' : ''
-        }`;
-        menuItem.innerHTML = `
+    menuItem.href = `/${itemPath}`;
+    menuItem.className = `flex items-center my-2 px-4 py-2 text-gray-700 rounded-lg ${isActive ? 'bg-gray-100' : ''
+      }`;
+    menuItem.innerHTML = `
               ${item.icon}
               <span class="mx-4 font-medium">${item.title}</span>
           `;
-        menuContainer.appendChild(menuItem);
-      });
-    </script>
+    menuContainer.appendChild(menuItem);
+  });
+</script>

@@ -96,7 +96,7 @@ export class CartService {
   }
 
   private calculateTotalAmount(cart: Cart): number {
-    return cart.cartItem.reduce((total, item) => total + item.book.price * item.quantity, 0);
+    return cart.cartItem.reduce((total, item) => total + (item.book.price-item.book.salePrice) * item.quantity, 0);
   }
 
 }

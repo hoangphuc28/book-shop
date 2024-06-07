@@ -28,7 +28,7 @@ export class OrdersService {
     for (const item of savedOrder.orderItems) {
       const product = await this.productService.findById(item.bookId);
       if (product?.price !== undefined) {
-        savedOrder.total += product.price * item.quantity;
+        savedOrder.total += (product.price-product.salePrice) * item.quantity;
       }
     }
     //apply promotion
@@ -46,7 +46,7 @@ export class OrdersService {
 
       //calculate extend price
       if (product?.price !== undefined) {
-        orderItem.extendPrice = product.price * orderItem.quantity;
+        orderItem.extendPrice = (product.price - product.salePrice) * orderItem.quantity;
       } else {
         orderItem.extendPrice = 0;
       }

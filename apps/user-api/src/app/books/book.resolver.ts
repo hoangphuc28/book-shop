@@ -1,10 +1,10 @@
 import {
   Book,
+  BookDetail,
+  BookDetailReviews,
   BookSearchCondition,
   BookService,
   BooksPagination,
-  CreateOrderInput,
-  CreateReviewInput,
   Review,
   ReviewService,
 } from '@book-shop/libs';
@@ -27,12 +27,25 @@ export class BookResolver {
     const res = await this.bookService.find(limit, page, true, condition);
     return res;
   }
-
-  @Query(() => Book)
-  async getBook(@Args('id') id: string) {
-    const res = await this.bookService.findById(id);
+  @Query(() => BookDetail)
+  async getBook(
+    @Args('id') id: string,
+    @Args('limit', { defaultValue: 5 }) limit?: number,
+    @Args('page', { defaultValue: 1 }) page?: number,
+  ) {
+    const book = await this.bookService.findById(id);
+    const paginatedReviews = await this.reviewService.getReviewByProduct(book.id, limit, page);
+    const res = new BookDetail()
+    res.book = book
+    res.reviews  = paginatedReviews
+    return res
+  }
+  @Query(() => [Book])
+  async getBookOnSale() {
+    const res = await this.bookService.getBooksOneSale();
     return res;
   }
+
 
   @UseGuards(GaphAuth)
   @Mutation(() => Review)

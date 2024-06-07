@@ -9,4 +9,16 @@ export interface Review {
   content: string;
   createdAt: Date;
   updatedAt: Date;
+
+}
+export interface BookDetailReviews {
+  items: Review[]
+
+  totalPages: number
+
+  totalItem: number
+
+  currentPage: number
+
+  itemsPerPage: number
 }

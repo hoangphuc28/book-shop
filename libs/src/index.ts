@@ -15,4 +15,5 @@ export * from './services/cart/cart.service'
 export * from './services/promotion/promotion.service'
 export * from './services/orders/orders.service'
 export * from './services/review/review.service'
+export * from './services/about/about.service'
 

@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BaseEntity,
+  JoinColumn,
 } from 'typeorm';
 import { Book } from './Book.entity';
 import { Account } from './Account.entity';
@@ -21,7 +22,11 @@ export class Review extends BaseEntity{
 
   @Field(() => Book)
   @ManyToOne(() => Book, (book) => book.reviews)
+  @JoinColumn({ name: 'bookId' })
   book: Book;
+
+  @Column()
+  bookId: string;
 
   @Field(() => Account)
   @ManyToOne(() => Account, (account) => account.reviews)

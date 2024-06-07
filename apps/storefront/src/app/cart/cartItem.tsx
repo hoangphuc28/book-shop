@@ -3,6 +3,7 @@ import NumberInput from "../../components/numberInput";
 import { formatVND } from "../../utils/formatCurrency";
 
 import { CartItems } from "../../utils/interfaces/cart";
+import { Typography } from "@mui/material";
 
 interface Props {
   cartItem: CartItems
@@ -28,7 +29,14 @@ export default function CartItem({ cartItem, updateAction }: Props) {
           {cartItem?.book?.author?.name}
         </p>
       </div>
-      <div className="text-primary text-lg font-semibold">{formatVND(cartItem?.book?.price)}</div>
+      <div className="text-primary text-lg font-semibold">
+      <Typography>
+            {formatVND((parseInt(cartItem?.book?.price)-cartItem?.book?.salePrice).toString())} {'  '}
+            {cartItem?.book?.salePrice !== 0 &&
+            <span className="text-base text-gray-400 line-through">{formatVND(cartItem?.book?.price)}</span>
+            }
+          </Typography>
+      </div>
       <div className='ml-5'>
         <NumberInput cartItems={cartItem}/>
       </div>

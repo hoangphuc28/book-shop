@@ -119,17 +119,17 @@ export class PromotionController {
             data.productIdList = [data.productIdList];
           }
           const { productIdList, discountValuePerProduct } = data
-
-          console.log(productIdList)
           const validationRule: ProductLevelValidationRule = {
             productIdList: productIdList,
             discountValuePerProduct: parseFloat(discountValuePerProduct)
           };
+          for(let i = 0; i < validationRule.productIdList.length; i++) {
+            this.productService.updateSalePrice(validationRule.productIdList[i], validationRule.discountValuePerProduct)
+          }
           promotion.validationRule = validationRule
           break;
         }
       }
-      console.log(promotion)
 
       const temp = new UpdatePromotionDto();
       Object.assign(temp, promotion)

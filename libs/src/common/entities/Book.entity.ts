@@ -57,6 +57,10 @@ export class Book {
   @Column()
   price: number;
 
+  @Field({nullable: true, defaultValue: 0})
+  @Column({nullable: true, default: 0})
+  salePrice: number
+
   @Field()
   @Column()
   publishDate: Date;

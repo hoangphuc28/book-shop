@@ -40,7 +40,6 @@ export default async function Products({page, limit, category, author, query, ra
           );
         })}
     </div>
-
       </div>
   )
 }

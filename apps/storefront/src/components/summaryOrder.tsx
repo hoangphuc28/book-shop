@@ -32,7 +32,7 @@ export default function SummaryOrder({ action }: SummaryOrderProps) {
                 <p className="text-sm text-gray-600">{item?.book?.author?.name}</p>
               </div>
               <p className="text-gray-600 w-1/5">x{item?.quantity}</p>
-              <p className="text-gray-800 font-medium w-1/5 text-right">{formatVND((item?.quantity * parseFloat(item?.book?.price)).toString())}</p>
+              <p className="text-gray-800 font-medium w-1/5 text-right">{formatVND((item?.quantity * (parseInt(item?.book?.price)-item?.book?.salePrice)).toString())}</p>
             </div>
           )
         })}

@@ -31,7 +31,6 @@ export default function RootLayout({
         <ApolloCustomProvider >
           <AuthProvider>
             <OrderProvider>
-
               <LoadingProvider>
                 <Nav />
                 {children}

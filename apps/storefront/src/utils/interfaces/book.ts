@@ -12,6 +12,7 @@ export interface Book {
   thumbnail: string;
   description: string;
   price: string;
+  salePrice: number;
   publishDate: Date;
   rating?: number;  // rating is nullable
   isActive: boolean;
