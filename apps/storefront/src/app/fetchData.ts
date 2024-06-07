@@ -1,13 +1,27 @@
 
 import clientWithoutAuth from "../utils/api/graphQL/apolloClientWithoutAuth";
-import { getBookOnSale
+import { getBookOnSale, getBooksWithCondition
 } from "../utils/api/graphQL/query";
 
 export const loadBookOnSale = async () => {
   const bookQuery = await clientWithoutAuth.query({
     query: getBookOnSale});
-    console.log(bookQuery)
   return {
     booksData: bookQuery.data.getBookOnSale
+  };
+};
+
+export const loadBooksWithCondition = async (condition: number, limit: number) => {
+  console.log(condition)
+  console.log(limit)
+  const bookQuery = await clientWithoutAuth.query({
+    query: getBooksWithCondition,
+    variables: {
+      condition: condition,
+      limit: limit,
+    }
+  });
+  return {
+    booksData: bookQuery.data.getBooksWithCondition
   };
 };

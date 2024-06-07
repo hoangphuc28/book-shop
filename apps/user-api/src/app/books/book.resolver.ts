@@ -45,7 +45,13 @@ export class BookResolver {
     const res = await this.bookService.getBooksOneSale();
     return res;
   }
-
+  @Query(() => [Book])
+  async getBooksWithCondition(
+    @Args('condition') condition: number,
+    @Args('limit') limit: number
+  ) {
+    return this.bookService.getBooksWithCondition(condition, limit)
+  }
 
   @UseGuards(GaphAuth)
   @Mutation(() => Review)

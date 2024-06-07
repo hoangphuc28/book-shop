@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { TextField, Rating, Avatar, Button } from "@mui/material";
 import { styled } from "@mui/system";
 import { BookDetailReviews, Review } from "../utils/interfaces/review";
@@ -45,22 +45,27 @@ const ReviewComponent = ({ reviewsData, productId }: Props) => {
   };
   return (
     <StyledContainer>
-      <h1 className="text-2xl font-bold mb-4">Đánh Giá Sản Phẩm</h1>
+      <h1 className="text-2xl font-bold mb-4">REVIEWS</h1>
       <div className="flex">
         <div className="w-8/12">
-          {reviews?.items?.map((review, index) => (
-            <StyledReview key={index}>
-              <Image width={50} height={50} style={{ borderRadius: '50%', objectFit: 'contain' }} src={review?.accounts?.avatar} alt={review?.accounts?.fullName} className="mr-4" />
-              <div>
-                <h3 className="font-semibold">{review?.accounts?.fullName}</h3>
-                <Rating name="read-only" value={review?.rating} readOnly />
-                <p>{review?.content}</p>
-              </div>
-            </StyledReview>
-          ))}
-          <ReviewPaginatoin reviewsData={reviewsData} />
-
+          {reviews?.items?.length !== 0 ? <Fragment>
+            {reviews?.items?.map((review, index) => (
+              <StyledReview key={index}>
+                <Image width={50} height={50} style={{ borderRadius: '50%', objectFit: 'contain' }} src={review?.accounts?.avatar} alt={review?.accounts?.fullName} className="mr-4" />
+                <div>
+                  <h3 className="font-semibold">{review?.accounts?.fullName}</h3>
+                  <Rating name="read-only" value={review?.rating} readOnly />
+                  <p>{review?.content}</p>
+                </div>
+              </StyledReview>
+            ))}
+            <ReviewPaginatoin reviewsData={reviewsData} />
+          </Fragment>
+            :
+            <p>No Reviews Yet</p>
+          }
         </div>
+
         <div className="w-4/12 ml-5">
           <form onSubmit={onSubmit} className="mb-8">
             <Rating

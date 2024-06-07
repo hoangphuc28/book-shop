@@ -6,5 +6,4 @@ export class AuthorInputDto {
   name: string;
   @IsNotEmpty()
   isActive: string;
-
 }

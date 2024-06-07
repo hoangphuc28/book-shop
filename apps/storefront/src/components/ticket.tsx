@@ -11,7 +11,9 @@ interface Props {
 }
 export default function Ticket({promotion}: Props) {
   const {applyPromotion} = useOrder()
+  console.log(promotion)
   return (
+
         <article className="card fl-left">
           <div  className="date ">
             <p className="text-xl text-black absolute inset-0 flex justify-center items-center">{

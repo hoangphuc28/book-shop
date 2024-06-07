@@ -26,6 +26,7 @@ export default function SidebarProducts() {
     const isChecked = event.target.checked;
     const params = new URLSearchParams(searchParams.toString());
     if (isChecked) {
+      params.set('page', '1')
       params.append('category', id);
     } else {
       params.delete('category', id)
@@ -38,6 +39,7 @@ export default function SidebarProducts() {
     const isChecked = event.target.checked;
     const params = new URLSearchParams(searchParams.toString());
     if (isChecked) {
+      params.set('page', '1')
       params.append('author', id);
     } else {
       params.delete('author', id)
@@ -48,6 +50,7 @@ export default function SidebarProducts() {
     const params = new URLSearchParams(searchParams.toString());
 
     const categoryParam = params.getAll('category')
+
     if (Array.isArray(categoryParam)) {
       return categoryParam.includes(categoryId);
     }

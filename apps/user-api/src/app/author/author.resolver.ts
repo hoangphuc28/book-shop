@@ -9,7 +9,7 @@ export class AuthorResolver {
   ) { }
   @Query(() => [Author])
   async getAuthors() {
-    return this.authorService.find(true)
+    return (await this.authorService.find(true)).items
   }
 
 }

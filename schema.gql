@@ -172,6 +172,7 @@ type Query {
   getBooks(limit: Float!, page: Float!, condition: BookSearchCondition): BooksPagination!
   getBook(id: String!, limit: Float! = 5, page: Float! = 1): BookDetail!
   getBookOnSale: [Book!]!
+  getBooksWithCondition(condition: Float!, limit: Float!): [Book!]!
   getAboutPage: String!
   orders: [Order!]!
   ordersByAccount(accountId: String!): [Order!]!

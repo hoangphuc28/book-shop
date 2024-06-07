@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, Put, Query, Render, Res, UseGuards } from 
 import { Authentication } from '../../guards/authentication.guard';
 import { AuthorInputDto, AuthorService } from '@book-shop/libs';
 import {Response} from 'express'
+
 @UseGuards(Authentication)
 
 @Controller('authors')
@@ -10,11 +11,15 @@ export class AuthorController {
 
   @Get()
   @Render('authors/index')
-  async list(@Res() res: Response
+  async list(@Res() res: Response,
+  @Query('page') page = 1,
+  @Query('limit') limit = 5,
+  @Query('search') search = '',
   ) {
     try {
-      const authors = await this.authorService.find(false);
-      return {data: authors}
+      const res = await this.authorService.find(false, page, limit, search);
+      console.log(res)
+      return {data: res}
     } catch (error) {
       console.error('Error occurred while fetching books:', error);
       return res.status(500).json({ error: 'Internal Server Error' });

@@ -83,6 +83,7 @@ export const OrderProvider = ({ children }: { children: React.ReactNode }) => {
     if (CheckPromotionLevel(promotion) === 1) {
       if (promotion?.validationRule?.limit !== undefined) {
         if (amount < promotion?.validationRule?.limit) {
+          alert('Not qualified')
           return false
         }
       }
@@ -91,9 +92,13 @@ export const OrderProvider = ({ children }: { children: React.ReactNode }) => {
       const doesCartContainPromotionProduct = cart.some(cartItem =>
         promotion?.validationRule?.productIdList?.includes(cartItem?.book?.id)
       );
-      if (!doesCartContainPromotionProduct)
+      if (!doesCartContainPromotionProduct) {
+        alert('Not qualified')
         return false
+
+      }
     }
+    alert('Coupon applied successfully')
 
     setPromotion(promotion)
     return true

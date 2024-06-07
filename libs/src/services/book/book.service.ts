@@ -1,4 +1,4 @@
-import { Book } from '../../common/entities';
+import { Book, OrderItem } from '../../common/entities';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BookSearchCondition, BooksPagination } from '../../common';
@@ -11,7 +11,10 @@ export class BookService {
     @InjectRepository(Book)
     private bookRepository: Repository<Book>,
     private resourceService: ResourceService,
-  ) {}
+    @InjectRepository(OrderItem)
+    private orderItemRepository: Repository<OrderItem>,
+
+  ) { }
   async findBooksByCategories(categories: string[]): Promise<Book[]> {
     return this.bookRepository
       .createQueryBuilder('book')
@@ -65,7 +68,7 @@ export class BookService {
         'reviews'
       ],
     });
-    if(!book) {
+    if (!book) {
       throw new Error('Can not find book')
     }
     return book;
@@ -73,11 +76,11 @@ export class BookService {
   async calculateRating(productId: string) {
     const product = await this.findById(productId);
     if (!product)
-        throw new Error('Can not find product');
-    for(let i = 0; i < product.reviews.length; i++) {
-        product.rating +=product.reviews[i].rating
+      throw new Error('Can not find product');
+    for (let i = 0; i < product.reviews.length; i++) {
+      product.rating += product.reviews[i].rating
     }
-    product.rating = Math.round(product.rating/product.reviews.length)
+    product.rating = Math.round(product.rating / product.reviews.length)
     this.bookRepository.save(product)
   }
   async save(
@@ -89,7 +92,8 @@ export class BookService {
     publishDate: Date,
     isActive: boolean,
     thumbnail: Express.Multer.File,
-    id?: string
+    id?: string,
+    salePrice?: number
   ) {
     try {
       let book: Book | null;
@@ -106,6 +110,8 @@ export class BookService {
         book.categoryId = categoryId;
         book.publishDate = publishDate;
         book.isActive = isActive;
+        if(salePrice)
+          book.salePrice = salePrice;
       } else {
         // Create a new book
         book = new Book({
@@ -205,17 +211,46 @@ export class BookService {
     const book = await this.bookRepository.findOne({
       where: { id: id }
     });
-    if(!book) {
+    if (!book) {
       throw new Error('Can not find book')
     }
     book.salePrice = value
     await this.bookRepository.save(book)
   }
   async getBooksOneSale() {
-    return this.bookRepository.find({ where: { salePrice: MoreThan(0) },  relations: [
-      'category',
-      'author',
-      'reviews.accounts',
-    ], });
+    return this.bookRepository.find({
+      where: { salePrice: MoreThan(0) }, relations: [
+        'category',
+        'author',
+        'reviews.accounts',
+      ],
+    });
+  }
+  async getBooksWithCondition(condition: number, limit: number) {
+    switch (condition) {
+      case 1: {
+        return this.bookRepository.find({
+          relations: [
+            'category',
+            'author',
+            'reviews'
+          ],
+          order: {
+            rating: 'DESC',
+          },
+          take: limit,
+        });
+      }
+      case 2: {
+        const query = this.orderItemRepository.createQueryBuilder('orderItem')
+        .select('orderItem.bookId', 'bookId')
+        .groupBy('orderItem.bookId')
+        .addSelect('SUM(orderItem.quantity)', 'total') // Thay COUNT bằng SUM để tính tổng số lượng mua
+        .orderBy('total', 'DESC') // Sắp xếp theo tổng số lượng giảm dần
+        .limit(limit);
+        const result = await query.getRawMany();
+        return result.map(item => this.findById(item.bookId));
+      }
+    }
   }
 }

@@ -23,10 +23,13 @@ export class CategoriesController {
 
   @Get()
   @Render('categories/index')
-  async listBooks(@Res() res: Response
+  async listBooks(@Res() res: Response,
+  @Query('page') page = 1,
+  @Query('limit') limit = 5,
+  @Query('search') search = '',
   ) {
     try {
-      const categories = await this.categoriesService.find(false);
+      const categories = await this.categoriesService.find(false, page, limit, search);
       return {data: categories}
     } catch (error) {
       console.error('Error occurred while fetching books:', error);

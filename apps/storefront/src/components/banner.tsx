@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import banner from '../../images/banner.jpg'
 export default function Banner() {
     return(
@@ -10,7 +11,7 @@ export default function Banner() {
       accusantium perspiciatis, sapiente
       magni eos dolorum ex quos dolores odio</p>
     <div className="mt-12">
-      <a href="#" className="py-4 px-3 btn-style1">Shop Now</a>
+      <Link href={'products'} className="py-4 px-3 btn-style1">Shop Now</Link>
     </div>
   </div>
 </div>

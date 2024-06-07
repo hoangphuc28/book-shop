@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Category } from '../../common';
+import { Category, PaginationResultDto } from '../../common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
@@ -12,13 +12,31 @@ export class CategoryService {
     private configService: ConfigService
   ) { }
 
-  async find(includeIsActive: boolean) {
-    const whereCondition: any = {}
+  async find(includeIsActive: boolean, page?: number, limit?: number, query = ''): Promise<PaginationResultDto<Category>> {
+    const queryBuilder = this.categoryRepo.createQueryBuilder('category');
+
+    // Apply isActive filter if needed
     if (includeIsActive) {
-      whereCondition.isActive = true;
+        queryBuilder.andWhere('category.isActive = :isActive', { isActive: true });
     }
-    return this.categoryRepo.find({where: whereCondition})
-  }
+
+    // Apply name search query if provided
+    if (query) {
+        queryBuilder.andWhere('LOWER(category.name) LIKE LOWER(:name)', { name: `%${query}%` });
+    }
+
+    // Apply pagination if both page and limit are provided
+    if (page !== undefined && limit !== undefined) {
+        const offset = (page - 1) * limit;
+        queryBuilder.offset(offset).limit(limit);
+    }
+
+    // Get the results and total count
+    const [categories, total] = await queryBuilder.getManyAndCount();
+
+    return new PaginationResultDto(categories, total, page, limit);
+}
+
   async findById(id: string){
     return this.categoryRepo.findOne({where: {categoryID: id}})
   }

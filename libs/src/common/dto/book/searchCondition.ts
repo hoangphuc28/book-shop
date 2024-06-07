@@ -9,7 +9,7 @@ export class BookSearchCondition {
   rating?: string;
 
   @Field({ nullable: true })
-  sort: string
+  sort?: string
 
   @Field(() => [String], { nullable: true }) // Define the type as an array of strings
   category?: string[];

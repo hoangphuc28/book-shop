@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Author } from '../../common';
-import { Repository } from 'typeorm';
+import { Author, PaginationResultDto } from '../../common';
+import { Like, Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -9,15 +9,26 @@ export class AuthorService {
   constructor(
     @InjectRepository(Author)
     private categoryRepo: Repository<Author>,
-    private configService: ConfigService
   ) { }
-  async find(includeIsActive: boolean) {
-    const whereCondition: any = {}
+  async find(includeIsActive: boolean, page?: number, limit?: number, query = ''): Promise<PaginationResultDto<Author>> {
+    const queryBuilder = this.categoryRepo.createQueryBuilder('author');
     if (includeIsActive) {
-      whereCondition.isActive = true;
+        queryBuilder.andWhere('author.isActive = :isActive', { isActive: true });
     }
-    return this.categoryRepo.find({where: whereCondition})
+    if (query) {
+        queryBuilder.andWhere('LOWER(author.name) LIKE LOWER(:name)', { name: `%${query}%` });
+    }
+    if (page !== undefined && limit !== undefined) {
+      const offset = (page - 1) * limit;
+      queryBuilder.offset(offset).limit(limit);
   }
+
+    // Get the results and total count
+    const [authors, total] = await queryBuilder.getManyAndCount();
+
+    return new PaginationResultDto(authors, total, page, limit);
+}
+
   async findById(id: string){
     return this.categoryRepo.findOne({where: {id: id}})
   }

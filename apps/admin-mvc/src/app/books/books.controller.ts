@@ -15,7 +15,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { BookService, CategoryService, BookInputDto, AuthorService } from '@book-shop/libs';
+import { BookService, CategoryService, BookInputDto, AuthorService, BookSearchCondition } from '@book-shop/libs';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Authentication } from '../../guards/authentication.guard';
 
@@ -34,16 +34,21 @@ export class BooksController {
   async listBooks(
     @Query('page') page = 1,
     @Query('limit') limit = 5,
+    @Query('search') search = '',
     @Res() res: Response
   ) {
     try {
+      const condition: BookSearchCondition = {
+        query: search,
+        sort: ''
+      }
       if (typeof page === "string") {
         page = parseInt(page);
       }
       if (typeof limit === "string") {
         limit = parseInt(limit);
       }
-      const booksPagination = await this.booksService.find(limit, page, false);
+      const booksPagination = await this.booksService.find(limit, page, false, condition);
       return {data: booksPagination}
     } catch (error) {
       console.error('Error occurred while fetching books:', error);
@@ -55,8 +60,9 @@ export class BooksController {
   @Render('books/create')
   async createForm() {
     const categories = await this.categoryService.find(true);
+    console.log(categories)
     const authors = await this.authorService.find(true)
-    return { categories, authors, errors: {}, formData: {} };
+    return { categories: categories.items, authors: authors.items, errors: {}, formData: {} };
   }
 
   @Post()
@@ -102,7 +108,7 @@ export class BooksController {
     const authors = await this.authorService.find(true)
 
     const book = await this.booksService.findById(id);
-    return { book,authors, categories };
+    return { book, authors: authors.items, categories: categories.items };
   }
 
   @Put()
@@ -121,6 +127,7 @@ export class BooksController {
         categoryId,
         publishDate,
         isActive,
+        salePrice
       } = bookInput;
         return await this.booksService.save(
           title,
@@ -131,7 +138,8 @@ export class BooksController {
           publishDate,
           (isActive === 'true'),
           thumbnail,
-          id
+          id,
+          salePrice
         );
     } catch (error) {
       console.error('Error occurred while saving book:', error);

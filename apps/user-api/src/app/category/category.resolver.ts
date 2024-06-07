@@ -9,7 +9,7 @@ export class CategoryResolver {
   ) { }
   @Query(() => [Category])
   async getCategories() {
-    return  this.categoryService.find(true)
+    return  (await this.categoryService.find(true)).items
   }
 
 }

@@ -123,9 +123,7 @@ export class PromotionController {
             productIdList: productIdList,
             discountValuePerProduct: parseFloat(discountValuePerProduct)
           };
-          for(let i = 0; i < validationRule.productIdList.length; i++) {
-            this.productService.updateSalePrice(validationRule.productIdList[i], validationRule.discountValuePerProduct)
-          }
+
           promotion.validationRule = validationRule
           break;
         }

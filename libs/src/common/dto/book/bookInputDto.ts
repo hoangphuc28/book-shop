@@ -25,4 +25,7 @@ export class BookInputDto {
   @IsNotEmpty()
   isActive: string;
 
+
+  salePrice: number;
+
 }

@@ -252,4 +252,26 @@ query GetAboutPage {
     getAboutPage
 }
 `
+export const getBooksWithCondition = gql`
+query GetBooksWithCondition($condition: Float!, $limit: Float!) {
+    getBooksWithCondition(condition: $condition, limit: $limit) {
+        id
+        title
+        thumbnail
+        description
+        price
+        salePrice
+        publishDate
+        rating
+        author {
+            id
+            name
+        }
+        category {
+            categoryID
+            name
+        }
+    }
+}
+`
 

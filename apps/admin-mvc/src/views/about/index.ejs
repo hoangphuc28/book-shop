@@ -27,45 +27,54 @@
     </script>
   </head>
   <body>
-    <div><%- include('../partials/sidebar'); %>
+    <div>
+      <%- include('../partials/sidebar'); %>
       <div class="ml-72">
+       <div class="flex justify-end my-5 mr-5">
+        <button
+        onclick="getContent()"
+        class="px-4 py-2 bg-green-500 text-white rounded-lg mr-2 text-sm w-24 "
+      >
+        Save
+      </button>
+       </div>
         <textarea id="mytextarea">
           <%= content %>
 
-      </textarea>
-        <button onclick="getContent()">Save</button>
+      </textarea
+        >
       </div>
     </div>
 
     <!-- Place the first <script> tag in your HTML's <head> -->
 
     <!-- Place the following <script> and <textarea> tags your HTML's <body> -->
-      <script>
-        const getContent = async () => {
-          var myContent = tinymce.activeEditor.getContent();
-          console.log(myContent);
+    <script>
+      const getContent = async () => {
+        var myContent = tinymce.activeEditor.getContent();
+        console.log(myContent);
 
-          // Send the content to the server
-          try {
-            const response = await fetch('/about', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ content: myContent })
-            });
+        // Send the content to the server
+        try {
+          const response = await fetch('/about', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ content: myContent }),
+          });
 
-            if (response.ok) {
-              const result = await response.json();
-              console.log('Content saved successfully:', result);
-              alert('Content saved successfully')
-            } else {
-              console.error('Failed to save content');
-            }
-          } catch (error) {
-            console.error('Error:', error);
+          if (response.ok) {
+            const result = await response.json();
+            console.log('Content saved successfully:', result);
+            alert('Content saved successfully');
+          } else {
+            console.error('Failed to save content');
           }
+        } catch (error) {
+          console.error('Error:', error);
         }
-      </script>
+      };
+    </script>
   </body>
 </html>

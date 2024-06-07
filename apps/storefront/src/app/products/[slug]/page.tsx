@@ -18,13 +18,11 @@ export default function Index({ params }: { params: { slug: string } }) {
   const searchParam = useSearchParams()
   const page = searchParam.get('page') || '1'
   const limit = searchParam.get('limit') || '5'
-  console.log(page)
   const [mess, setMess] = React.useState('');
   const [open, setOpen] = React.useState(false);
   const { setLoading }: any = useLoading()
 
   const { data } = useQuery(getBook, { variables: { id: params.slug, page: parseInt(page), limit: parseInt(limit) } })
-  console.log(data)
   const book: Book = data?.getBook?.book as Book
   const reviews = data?.getBook?.reviews as BookDetailReviews
   const { updateCart } = useOrder()

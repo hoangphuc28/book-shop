@@ -26,6 +26,7 @@ export default function Cart() {
           <div className="grid grid-cols-2 gap-2">
             {promotions?.map((item: Promotion, index: number) => {
               return (
+
                 <Fragment key={index}>
                   <Ticket promotion={item} />
                 </Fragment>
