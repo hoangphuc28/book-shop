@@ -16,4 +16,5 @@ export * from './services/promotion/promotion.service'
 export * from './services/orders/orders.service'
 export * from './services/review/review.service'
 export * from './services/about/about.service'
+export * from  './services/paypal/paypal.service'
 

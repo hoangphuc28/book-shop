@@ -26,7 +26,6 @@ export class CartService {
       cart.account = user
       return this.cartRepository.save(cart)
     } catch (error) {
-      console.log(error)
       throw Error('Internal server error')
     }
   }
@@ -82,7 +81,6 @@ export class CartService {
 
     cart.amount = this.calculateTotalAmount(cart);
     await this.cartRepository.save(cart);
-    console.log(cart)
     return cart;
   }
 

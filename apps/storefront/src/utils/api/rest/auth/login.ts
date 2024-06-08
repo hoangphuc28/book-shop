@@ -13,7 +13,6 @@ export const LoginApi = async (data: Login) => {
     localStorage.setItem('accessToken', res.data.accessToken)
     return res.data
   } catch (error) {
-    console.log(error)
     if (axios.isAxiosError(error)) {
       throw error;
     } else {

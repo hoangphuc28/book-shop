@@ -35,7 +35,6 @@ export default function CardItem({ product }: Props) {
       )
       setMess('Product added successfully');
       setOpen(true);
-      console.log(res);
     } catch (error) {
       console.log(error);
     } finally {

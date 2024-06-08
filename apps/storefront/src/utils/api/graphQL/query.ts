@@ -1,15 +1,16 @@
-import gql from "graphql-tag";
+import gql from 'graphql-tag';
 
 export const getInformation = gql`
-query Information {
-  information {
+  query Information {
+    information {
       fullName
       address
       phone
       email
       avatar
+    }
   }
-}`;
+`;
 export const updateInformation = gql`
   mutation SaveAccount($fullName: String!, $phone: String!, $address: String!) {
     saveAccount(fullName: $fullName, phone: $phone, address: $address) {
@@ -20,92 +21,101 @@ export const updateInformation = gql`
   }
 `;
 export const getBooks = gql`
-query GetBooks($limit: Float!, $page: Float!, $condition: BookSearchCondition) {
-  getBooks(limit: $limit, page: $page, condition: $condition) {
-    items {
-      id
-      title
-      thumbnail
-      salePrice
-      category {
+  query GetBooks(
+    $limit: Float!
+    $page: Float!
+    $condition: BookSearchCondition
+  ) {
+    getBooks(limit: $limit, page: $page, condition: $condition) {
+      items {
+        id
+        title
+        thumbnail
+        salePrice
+        category {
           categoryID
           name
-      }
-      author {
+        }
+        author {
           id
           name
+        }
+        description
+        price
+        publishDate
+        rating
       }
-      description
-      price
-      publishDate
-      rating
+      currentPage
+      itemsPerPage
+      totalItem
+      totalPage
     }
-    currentPage
-    itemsPerPage
-    totalItem
-    totalPage
   }
-}
 `;
 export const getBook = gql`
-query GetBook($id: String!, $limit: Float, $page: Float,) {
+  query GetBook($id: String!, $limit: Float, $page: Float) {
     getBook(id: $id, limit: $limit, page: $page) {
-         reviews {
-            totalPages
-            totalItem
-            currentPage
-            itemsPerPage
-            items {
-                id
-                rating
-                content
-                accounts {
-                    id
-                    fullName
-                    avatar
-                }
-            }
-        }
-        book {
+      reviews {
+        totalPages
+        totalItem
+        currentPage
+        itemsPerPage
+        items {
+          id
+          rating
+          content
+          accounts {
             id
-            title
-            thumbnail
-            description
-            price
-            salePrice
-            publishDate
-            rating
-            category {
-                categoryID
-                name
-            }
-            author {
-                id
-                name
-            }
+            fullName
+            avatar
+          }
         }
+      }
+      book {
+        id
+        title
+        thumbnail
+        description
+        price
+        salePrice
+        publishDate
+        rating
+        category {
+          categoryID
+          name
+        }
+        author {
+          id
+          name
+        }
+      }
     }
-}
-`
+  }
+`;
 export const getCategories = gql`
-query GetCategories {
-  getCategories {
+  query GetCategories {
+    getCategories {
       categoryID
       name
+    }
   }
-}`
+`;
 export const getAuthors = gql`
-query GetAuthors {
-  getAuthors {
+  query GetAuthors {
+    getAuthors {
       id
       name
+    }
   }
-}
-`
+`;
 
 export const updateCart = gql`
-mutation UpdateCart ($bookId: String!, $quantity: Float!, $isReplace: Boolean!){
-  updateCart(bookId: $bookId, quantity: $quantity, isReplace: $isReplace) {
+  mutation UpdateCart(
+    $bookId: String!
+    $quantity: Float!
+    $isReplace: Boolean!
+  ) {
+    updateCart(bookId: $bookId, quantity: $quantity, isReplace: $isReplace) {
       id
       accountId
       createdAt
@@ -117,161 +127,179 @@ mutation UpdateCart ($bookId: String!, $quantity: Float!, $isReplace: Boolean!){
         createdAt
         updatedAt
         book {
-            id
-            title
-            thumbnail
-            description
-            price
-            publishDate
-            rating
+          id
+          title
+          thumbnail
+          description
+          price
+          publishDate
+          rating
         }
+      }
     }
   }
-}
-`
+`;
 export const getCart = gql`
-query GetCart {
-  getCart {
+  query GetCart {
+    getCart {
       amount
       id
       accountId
       createdAt
       updatedAt
       cartItem {
-          quantity
-          book {
-              id
-              title
-              thumbnail
-              description
-              price
-              salePrice
-              publishDate
-              rating
-              author {
-                  id
-                  name
-              }
+        quantity
+        book {
+          id
+          title
+          thumbnail
+          description
+          price
+          salePrice
+          publishDate
+          rating
+          author {
+            id
+            name
           }
+        }
       }
+    }
   }
-}
-
-`
+`;
 export const getPromotion = gql`
-query GetPromotions {
-  getPromotions {
+  query GetPromotions {
+    getPromotions {
       id
       code
       startDate
       endDate
       level
       validationRule {
-          ... on OrderLevelValidationRule {
-              limit
-              percentage
-          }
-          ... on ProductLevelValidationRule {
-              productIdList
-              discountValuePerProduct
-          }
+        ... on OrderLevelValidationRule {
+          limit
+          percentage
+        }
+        ... on ProductLevelValidationRule {
+          productIdList
+          discountValuePerProduct
+        }
       }
+    }
   }
-}
-`
+`;
 
 export const createOrder = gql`
-mutation CreateOrder($fullName: String!, $address: String!, $phone: String!, $email: String!, $paymentMethod: PaymentMethod!, $orderItems: [OrderItemInput!]!, $promotionId: String) {
-  createOrder(
-      order: {
-          fullName: $fullName
-          address: $address
-          phone: $phone
-          email: $email
-          paymentMethod: $paymentMethod
-          orderItems: $orderItems,
-          promotionId: $promotionId
-      }
+  mutation CreateOrder(
+    $fullName: String!
+    $address: String!
+    $phone: String!
+    $email: String!
+    $paymentMethod: PaymentMethod!
+    $orderItems: [OrderItemInput!]!
+    $promotionId: String
+    $applicationContext: ApplicationContext
   ) {
-      orderID
+    createOrder(
+      order: {
+        fullName: $fullName
+        address: $address
+        phone: $phone
+        email: $email
+        paymentMethod: $paymentMethod
+        orderItems: $orderItems
+        promotionId: $promotionId
+        applicationContext: $applicationContext
+      }
+    ) {
+      order {
+        orderID
+        status
+        paymentMethod
+      }
+      link
+    }
   }
+`;
+export const captureOrder = gql`
+mutation CaptureOrder($token: String!) {
+    captureOrder(token: $token)
 }
 `
 export const clearCart = gql`
-mutation ClearCart {
-  clearCart {
+  mutation ClearCart {
+    clearCart {
       id
       accountId
       amount
       createdAt
       updatedAt
-  }
-}
-`
-export const createReview = gql`
-mutation CreateReview($productId: String!, $rating: Float!, $content: String!) {
-    createReview(
-        productId: $productId,
-        rating: $rating
-        content: $content
-    ) {
-        rating
-        content
-        id
-        accounts {
-            id
-            fullName
-        }
     }
-}
-`
-export const getBookOnSale = gql`
-query getBookOnSale {
-    getBookOnSale {
+  }
+`;
+export const createReview = gql`
+  mutation CreateReview(
+    $productId: String!
+    $rating: Float!
+    $content: String!
+  ) {
+    createReview(productId: $productId, rating: $rating, content: $content) {
+      rating
+      content
+      id
+      accounts {
         id
+        fullName
+      }
+    }
+  }
+`;
+export const getBookOnSale = gql`
+  query getBookOnSale {
+    getBookOnSale {
+      id
       title
       salePrice
       thumbnail
       category {
-          categoryID
-          name
+        categoryID
+        name
       }
       author {
-          id
-          name
+        id
+        name
       }
       description
       price
       publishDate
       rating
     }
-}
-`
+  }
+`;
 export const getAboutPage = gql`
-query GetAboutPage {
+  query GetAboutPage {
     getAboutPage
-}
-`
+  }
+`;
 export const getBooksWithCondition = gql`
-query GetBooksWithCondition($condition: Float!, $limit: Float!) {
+  query GetBooksWithCondition($condition: Float!, $limit: Float!) {
     getBooksWithCondition(condition: $condition, limit: $limit) {
+      id
+      title
+      thumbnail
+      description
+      price
+      salePrice
+      publishDate
+      rating
+      author {
         id
-        title
-        thumbnail
-        description
-        price
-        salePrice
-        publishDate
-        rating
-        author {
-            id
-            name
-        }
-        category {
-            categoryID
-            name
-        }
+        name
+      }
+      category {
+        categoryID
+        name
+      }
     }
-}
-`
-
+  }
+`;

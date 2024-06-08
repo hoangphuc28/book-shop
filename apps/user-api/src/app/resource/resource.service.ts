@@ -32,7 +32,6 @@ export class ResourceService {
           },
         )
       })
-      console.log(imageUploaded)
       return {
         message: 'Upload avatar successfully',
         code: 200

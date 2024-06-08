@@ -30,7 +30,6 @@ const refresh = async () => {
     const resData = await refreshToken()
     setToken(resData.accessToken)
   } catch (error) {
-    console.log(error)
     LogoutApi()
   }
 }

@@ -55,7 +55,6 @@
     });
     try {
       const response = await axios.put(`/authors?id=${authorData.id}`, authorData);
-      console.log(response)
       alert('Category updated successfully')
       window.location.href = '/authors'
     } catch (error) {

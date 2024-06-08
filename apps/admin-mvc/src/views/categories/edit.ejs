@@ -53,10 +53,8 @@
     formData.forEach((value, key) => {
       categoryData[key] = value;
     });
-    console.log(categoryData)
     try {
       const response = await axios.put(`/categories?id=${categoryData.id}`, categoryData);
-      console.log(response)
       alert('Category updated successfully')
       window.location.href = '/categories'
     } catch (error) {

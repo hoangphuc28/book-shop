@@ -1,50 +1,57 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { PaymentMethod } from '../../constants';
+import { ApplicationContext } from '../paypal/Paypal';
 
 @InputType()
 export class CreateOrderInput {
-  @Field({nullable: true})
+  @Field({ nullable: true })
   fullName: string;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
 
   address: string;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
 
   phone: string;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   email: string;
 
   @Field(() => PaymentMethod)
   paymentMethod: PaymentMethod;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
 
   accountId: string;
 
   @Field(() => [OrderItemInput])
   orderItems: OrderItemInput[]
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   promotionId: string
+
+  @Field(() => ApplicationContext, {nullable: true})
+  applicationContext: ApplicationContext
+
+
 }
+
 @InputType()
 export class OrderItemInput {
-  @Field({nullable: true})
+  @Field({ nullable: true })
 
   orderItemID: string;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
 
   bookId: string;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
 
   orderId: string;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
 
   quantity: number;
 }

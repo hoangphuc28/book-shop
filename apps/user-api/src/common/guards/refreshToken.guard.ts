@@ -13,7 +13,6 @@ export class RefreshTokenGuard implements CanActivate {
     try {
       const req = context.switchToHttp().getRequest()
       const refreshToken = req.cookies.refresh;
-      console.log(refreshToken)
       const { sub, email } = this.jwtService.verify(refreshToken, {
         secret: this.configService.get<string>(
           'APPS.SERVER.CUSTOMER.JWT.REFRESH.SECRET'

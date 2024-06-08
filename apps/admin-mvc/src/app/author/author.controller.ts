@@ -18,7 +18,6 @@ export class AuthorController {
   ) {
     try {
       const res = await this.authorService.find(false, page, limit, search);
-      console.log(res)
       return {data: res}
     } catch (error) {
       console.error('Error occurred while fetching books:', error);
@@ -38,7 +37,6 @@ export class AuthorController {
     @Res() res: Response
   ) {
     try {
-      console.log(author)
       this.authorService.save(author.name, (author.isActive === 'true'))
       return res.redirect('/authors');
     } catch (error) {
@@ -60,7 +58,6 @@ export class AuthorController {
     @Body() author: AuthorInputDto,
   ) {
     try {
-      console.log(id)
       this.authorService.save(author.name, (author.isActive === 'true'), id)
     } catch (error) {
       console.error('Error occurred while saving book:', error);

@@ -40,8 +40,6 @@ export default function CounterInput({ defaultValue, productId }: Props) {
           isReplace: true
         },
       });
-
-      console.log(res);
     } catch (error) {
       console.log(error);
     } finally {

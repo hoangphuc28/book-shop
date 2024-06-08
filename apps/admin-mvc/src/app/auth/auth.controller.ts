@@ -26,7 +26,6 @@ export class AuthController {
   @Post('logout')
   async logout(@Res({ passthrough: true }) response: Response, @Req() req: Request) {
     const {session} = req.cookies
-    console.log()
     this.authService.logout(session)
     response.clearCookie('session');
   }

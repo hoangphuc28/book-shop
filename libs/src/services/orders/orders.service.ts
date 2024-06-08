@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateOrderInput, Order, OrderItem, OrderStatus } from '../../common';
+import { CreateOrderInput, Order, OrderItem, OrderStatus, PaginationResultDto } from '../../common';
 import { Repository } from 'typeorm';
 import { PromotionService } from '../promotion/promotion.service';
 import { BookService } from '../book/book.service';
@@ -64,6 +64,33 @@ export class OrdersService {
       relations: ['orderItems', 'promotion'],
     });
   }
+  async find(page?: number, limit?: number, query = ''): Promise<PaginationResultDto<Order>> {
+    const queryBuilder = this.orderRepository.createQueryBuilder('order');
+
+    // Include relations
+    queryBuilder.leftJoinAndSelect('order.orderItems', 'orderItems')
+                .leftJoinAndSelect('order.promotion', 'promotion');
+
+    // Apply query filter if provided
+    if (query) {
+        queryBuilder
+        .andWhere('LOWER(order.fullName) LIKE LOWER(:fullName)', { fullName: `%${query}%` })
+        .orWhere('LOWER(order.phone) LIKE LOWER(:phone)', { phone: `%${query}%` })
+        .orWhere('LOWER(order.email) LIKE LOWER(:email)', { email: `%${query}%` });
+    }
+
+    // Apply pagination if both page and limit are provided
+    if (page !== undefined && limit !== undefined) {
+        const offset = (page - 1) * limit;
+        queryBuilder.offset(offset).limit(limit);
+    }
+
+    // Get the results and total count
+    const [orders, total] = await queryBuilder.getManyAndCount();
+
+    return new PaginationResultDto(orders, total, page, limit);
+}
+
 
   async findOrdersByAccountId(accountId: string): Promise<Order[]> {
     return this.orderRepository.find({

@@ -8,8 +8,8 @@ import Label from '../../components/label';
 import { useForm } from 'react-hook-form';
 
 import { Input } from '../../components/input';
-import { PaymentMethod } from '../../utils/interfaces/enum';
-import { getInformation } from '../../utils/api/graphQL/query';
+import { OrderStatus, PaymentMethod } from '../../utils/interfaces/enum';
+import { getInformation, createOrder } from '../../utils/api/graphQL/query';
 import { useMutation, useQuery } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { orderInformationSchema } from './checkoutSchema';
@@ -19,8 +19,8 @@ import { CreateOrderInput, OrderItemInput } from '../../utils/interfaces/order';
 import { createOrder as createOrderQuery } from '../../utils/api/graphQL/query'
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useLoading } from '../../utils/providers/loading';
 export default function Checkout() {
-  const { push, refresh } = useRouter()
   const { promotion, cart, resetOrder } = useOrder();
 
   const {
@@ -34,6 +34,7 @@ export default function Checkout() {
   });
   const { data } = useQuery(getInformation);
   const [createOrder] = useMutation(createOrderQuery);
+  const {setLoading}: any = useLoading()
 
   const useDefaultInformation = () => {
     const information = data?.information;
@@ -47,6 +48,7 @@ export default function Checkout() {
     });
   };
   const onSubmit = async (data: z.infer<typeof orderInformationSchema>) => {
+    setLoading(true)
     try {
       const order: CreateOrderInput = {
         orderItems: [],
@@ -55,7 +57,11 @@ export default function Checkout() {
         email: data.email,
         address: data.address,
         paymentMethod: data.paymentMethod,
-        promotionId: promotion?.id
+        promotionId: promotion?.id,
+        applicationContext: {
+          return_url: `${window.location.href}/success`,
+          cancel_url: `${window.location.href}/fail`,
+        }
       }
       for (let i = 0; i < cart.length; i++) {
         const orderItem: OrderItemInput = {
@@ -64,15 +70,21 @@ export default function Checkout() {
         }
         order.orderItems?.push(orderItem);
       }
-      await createOrder({
+      const res = await createOrder({
         variables: order
       })
+      const status = res?.data?.createOrder?.order?.paymentMethod as PaymentMethod
       await resetOrder()
-      alert('Order successfully')
-      window.location.href = '/products'
-      console.log(order);
+      if(status === PaymentMethod?.Paypal) {
+       window.location.href = res?.data?.createOrder?.link
+      } else {
+        alert('Order successfully')
+        window.location.href = '/products'
+      }
     } catch (error) {
       console.log(error)
+    } finally {
+      setLoading(false)
     }
 
   };

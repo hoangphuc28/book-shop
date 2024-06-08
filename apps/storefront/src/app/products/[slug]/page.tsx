@@ -42,7 +42,6 @@ export default function Index({ params }: { params: { slug: string } }) {
       )
       setMess('Product added successfully');
       setOpen(true);
-      console.log(res);
     } catch (error) {
       console.log(error);
     } finally {

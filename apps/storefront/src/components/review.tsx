@@ -36,7 +36,6 @@ const ReviewComponent = ({ reviewsData, productId }: Props) => {
           rating: rating
         }
       });
-      console.log(res);
       alert('Review successfully')
     } catch (error) {
       console.error('Error creating review:', error);

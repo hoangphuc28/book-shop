@@ -68,7 +68,6 @@ export class CategoriesController {
     @Body() category: CategoryInputDto,
   ) {
     try {
-      console.log(category)
       this.categoriesService.save(category.name, (category.isActive === 'true'), id)
     } catch (error) {
       console.error('Error occurred while saving book:', error);

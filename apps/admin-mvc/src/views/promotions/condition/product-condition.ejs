@@ -76,7 +76,6 @@
   $(document).ready(function () {
     $('input[name="productIdList"]').each(function() {
       const productId = $(this).val(); // Get the value of the input
-      console.log(promotion)
       // Check if productId is included in promotion.validationRule.productsId
       if (promotion.validationRule.productIdList.includes(productId)) {
         $(this).prop('checked', true); // Mark the checkbox as checked
@@ -89,7 +88,6 @@
       event.preventDefault();
       const index = $(this).closest('li').find('input[type="checkbox"]').val();
       const item = data.find(product => product.id == index);
-      console.log(item)
       updateContentDisplay(item);
     });
   });

@@ -60,7 +60,6 @@ export class BooksController {
   @Render('books/create')
   async createForm() {
     const categories = await this.categoryService.find(true);
-    console.log(categories)
     const authors = await this.authorService.find(true)
     return { categories: categories.items, authors: authors.items, errors: {}, formData: {} };
   }

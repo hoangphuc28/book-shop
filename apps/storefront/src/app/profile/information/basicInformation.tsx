@@ -18,7 +18,6 @@ export default function BasicInformation({accountData}: Props) {
       const res = await updateProfileMutation({
         variables: formData
       })
-      console.log(res)
       alert("Informatin updated successfully")
     } catch (error) {
       console.log(error)
@@ -27,7 +26,6 @@ export default function BasicInformation({accountData}: Props) {
   }
   useEffect(() => {
     reset(accountData)
-    console.log(accountData)
   }, [accountData, reset])
   return(
     <div>

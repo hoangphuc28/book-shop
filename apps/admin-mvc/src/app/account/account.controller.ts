@@ -14,7 +14,6 @@ export class AccountController {
   }
   @Post('edit')
   async updateAccount(@Body() body: { id: string, isActive: string }) {
-    console.log(body)
     try {
       return this.accountService.update(body.id, { isActive: (body.isActive === 'true') })
     } catch (error) {

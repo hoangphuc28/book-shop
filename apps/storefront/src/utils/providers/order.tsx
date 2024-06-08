@@ -72,8 +72,6 @@ export const OrderProvider = ({ children }: { children: React.ReactNode }) => {
           isReplace: isReplace,
         },
       });
-
-      console.log(data.updateCart.cartItem);
     } catch (error) {
       console.log(error)
     }
@@ -110,7 +108,6 @@ export const OrderProvider = ({ children }: { children: React.ReactNode }) => {
     setAmount(0);
     setCount(0);
     setPromotion(null);
-    console.log(cart)
   };
   return (
     <OrderContext.Provider

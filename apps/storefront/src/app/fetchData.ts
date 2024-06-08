@@ -12,8 +12,6 @@ export const loadBookOnSale = async () => {
 };
 
 export const loadBooksWithCondition = async (condition: number, limit: number) => {
-  console.log(condition)
-  console.log(limit)
   const bookQuery = await clientWithoutAuth.query({
     query: getBooksWithCondition,
     variables: {

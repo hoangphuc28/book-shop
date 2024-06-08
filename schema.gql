@@ -168,6 +168,11 @@ type BookDetail {
   reviews: BookDetailReviews!
 }
 
+type CreateOrderReponse {
+  order: Order!
+  link: String
+}
+
 type Query {
   getBooks(limit: Float!, page: Float!, condition: BookSearchCondition): BooksPagination!
   getBook(id: String!, limit: Float! = 5, page: Float! = 1): BookDetail!
@@ -193,7 +198,8 @@ input BookSearchCondition {
 
 type Mutation {
   createReview(productId: String!, rating: Float!, content: String!): Review!
-  createOrder(order: CreateOrderInput!): Order!
+  createOrder(order: CreateOrderInput!): CreateOrderReponse!
+  captureOrder(token: String!): String!
   updateCart(bookId: String!, quantity: Float!, isReplace: Boolean!): Cart!
   clearCart: Cart!
   saveAccount(fullName: String, phone: String!, address: String!): Account!
@@ -208,6 +214,7 @@ input CreateOrderInput {
   accountId: String
   orderItems: [OrderItemInput!]!
   promotionId: String
+  applicationContext: ApplicationContext
 }
 
 input OrderItemInput {
@@ -215,4 +222,9 @@ input OrderItemInput {
   bookId: String
   orderId: String
   quantity: Float
+}
+
+input ApplicationContext {
+  return_url: String
+  cancel_url: String
 }

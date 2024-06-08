@@ -52,7 +52,6 @@ export class AuthService {
         });
       this.accountService.update(sub, { refreshToken: null })
     } catch (error) {
-      console.log(error)
       return {
         message: 'Internal server error',
         status: 500,
@@ -200,7 +199,6 @@ export class AuthService {
       ':' +
       this.configService.get('APPS.STOREFRONT.PORT')
       }/auth/reset/verify`;
-      console.log(redirectUrl)
     if (!userExists) {
       throw new BadRequestException('User does not exists');
     }

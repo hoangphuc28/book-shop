@@ -10,7 +10,6 @@ export class AboutController {
   @Render('about/index')
   async loadAboutForm() {
     const res = await this.aboutPageService.getAboutPage()
-    console.log(res)
     return {content: res.content}
   }
   @Post()

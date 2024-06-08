@@ -163,8 +163,6 @@ export class BookService {
       );
     }
     if (condition?.rating) {
-      console.log(condition.rating);
-      console.log(condition?.query);
       queryBuilder = queryBuilder.where('book.rating = :rating', {
         rating: parseInt(condition?.rating),
       });

@@ -94,7 +94,6 @@ export class AuthController {
     @Body('password') password: string,
     @Body('passwordConfirm') passwordConfirm: string
   ) {
-    console.log(token);
     try {
       return this.authService.verifyPasswordUpdate(
         token,

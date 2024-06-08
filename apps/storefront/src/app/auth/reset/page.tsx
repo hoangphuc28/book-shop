@@ -29,7 +29,6 @@ export default function ResetPassword() {
           data: data
         })
         reset()
-        console.log(res)
       } catch (error) {
       setError('There is something error')
       }

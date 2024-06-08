@@ -18,6 +18,14 @@ export interface CreateOrderInput {
   orderItems?: OrderItemInput[];
 
   promotionId?: string;
+
+  applicationContext?: ApplicationContext
+}
+
+export interface ApplicationContext {
+  return_url: string;
+
+  cancel_url: string;
 }
 
 export interface OrderItemInput {

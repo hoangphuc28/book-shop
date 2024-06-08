@@ -37,7 +37,6 @@ export default function Avatar({accountAvatar}: Props) {
             'Authorization': `Bearer ${token}`
           },
         })
-        console.log(res)
         alert('Avatar updated successfully')
       }
     } catch (error) {

@@ -22,7 +22,6 @@ export class AuthService {
       if (!passwordMatches)
         throw new BadRequestException('Email or password is incorrect');
       const tokens = await this.getTokens(admin.id, admin.userName);
-      console.log(tokens)
       admin.session = tokens.session;
       await this.adminService.update(admin.id, { session: admin.session });
       return {

@@ -1,30 +1,37 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
-  Delete,
   Render,
   UseGuards,
   Query,
+  Res,
 } from '@nestjs/common';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 import { Authentication } from '../../guards/authentication.guard';
 import { OrderStatus, OrdersService } from '@book-shop/libs';
+import {Response} from 'express'
 
 @Controller('orders')
 export class OrdersController {
-  constructor(private readonly ordersService: OrdersService) {}
+  constructor(private readonly ordersService: OrdersService) { }
 
   @UseGuards(Authentication)
   @Get()
   @Render('orders/index')
-  async findAll() {
-    const orders = await this.ordersService.findAllOrders()
-    return {data: orders}
+  async findAll(@Res() res: Response,
+    @Query('page') page = 1,
+    @Query('limit') limit = 5,
+    @Query('search') search = '',
+  ) {
+    try {
+      const orders = await this.ordersService.find(page, limit, search)
+      return { data: orders }
+    } catch (error) {
+      console.error('Error occurred while fetching books:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
 
   }
 
@@ -32,12 +39,10 @@ export class OrdersController {
   @Render('orders/detail')
   async findOne(@Query('id') id: string) {
     const res = await this.ordersService.findById(id);
-    console.log(res);
     return { data: res, statuses: Object.values(OrderStatus) };
   }
   @Patch(':id/status')
-  async updateStatus(@Param('id') id: string, @Body() body: {status}) {
-    console.log(body)
+  async updateStatus(@Param('id') id: string, @Body() body: { status }) {
     const updatedOrder = await this.ordersService.updateOrderStatus(id, body.status);
     return { data: updatedOrder };
   }
