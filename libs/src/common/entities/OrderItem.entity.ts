@@ -44,6 +44,10 @@ export class OrderItem extends BaseEntity {
   quantity: number;
 
   @Field()
+  @Column()
+  price: number
+
+  @Field()
   @CreateDateColumn()
   createdAt: Date;
 

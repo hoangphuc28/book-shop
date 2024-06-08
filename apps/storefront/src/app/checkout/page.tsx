@@ -74,7 +74,8 @@ export default function Checkout() {
         variables: order
       })
       const status = res?.data?.createOrder?.order?.paymentMethod as PaymentMethod
-      await resetOrder()
+      resetOrder()
+      reset({})
       if(status === PaymentMethod?.Paypal) {
        window.location.href = res?.data?.createOrder?.link
       } else {
@@ -83,6 +84,7 @@ export default function Checkout() {
       }
     } catch (error) {
       console.log(error)
+      alert('An error occurred during payment, please try again')
     } finally {
       setLoading(false)
     }

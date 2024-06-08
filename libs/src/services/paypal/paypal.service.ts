@@ -64,7 +64,6 @@ export class PaypalService {
       const data = res.data as OrderResponse
       const link = data.links.find(link => link.rel === 'approve')?.href;
       return link
-
     } catch (error) {
       console.log(error)
       throw new Error('Error payment')
@@ -108,7 +107,7 @@ export class PaypalService {
         quantity: orderItem.quantity.toString(),
         unit_amount: {
           currency_code: 'USD', // Assume currency code is USD for all items
-          value: this.convertVNDToUSD( orderItem.extendPrice).toString(),
+          value: this.convertVNDToUSD( orderItem.price).toString(),
         },
       };
     });
@@ -117,11 +116,11 @@ export class PaypalService {
       items: items,
       amount: {
         currency_code: 'USD', // Assume currency code is USD for the order
-        value: this.convertVNDToUSD(order.total).toString(),
+        value: this.convertVNDToUSD(order.total+order.promotionValue).toString(),
         breakdown: {
           item_total: {
             currency_code: 'USD', // Assume currency code is USD for item total
-            value: this.convertVNDToUSD(order.total).toString(),
+            value: this.convertVNDToUSD(order.total+order.promotionValue).toString(),
           },
         },
       },
@@ -141,7 +140,7 @@ export class PaypalService {
     return orderDto;
   }
 
-  convertVNDToUSD(vnd: number, rate = 23000): number {
-    return Math.round(( vnd / rate) * 100) /100;
+  convertVNDToUSD(vnd: number, conversionRate = 0.000043): number {
+    return Math.round(vnd*conversionRate* 100) /100;
   }
 }

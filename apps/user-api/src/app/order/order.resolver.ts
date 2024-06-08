@@ -14,14 +14,8 @@ export class OrderResolver {
   async createOrder(@Context() context, @Args('order') orderCreateInput: CreateOrderInput): Promise<CreateOrderReponse> {
     const { user } = context;
     orderCreateInput.accountId = user.sub
-    const orderSaved = await this.orderService.createOrder(orderCreateInput);
-    const res = new CreateOrderReponse()
-    res.order = orderSaved
-    if (orderSaved.paymentMethod === PaymentMethod.Paypal) {
-      const order = await this.orderService.findById(orderSaved.orderID)
-      const orderDto = await this.paypalSerivce.convertOrderToOrderDto(order, orderCreateInput.applicationContext)
-      res.link  = await this.paypalSerivce.createOrder(orderDto)
-    }
+    const res = await this.orderService.createOrder(orderCreateInput);
+
     return res
   }
   @UseGuards(GaphAuth)

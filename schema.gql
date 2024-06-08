@@ -14,6 +14,7 @@ type OrderItem {
   extendPrice: Float
   orderID: String!
   quantity: Float!
+  price: Float!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
