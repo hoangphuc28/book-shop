@@ -18,7 +18,7 @@ export default async function Carousel() {
       </h2>
         <Swiper
         slidesPerView={4}
-        spaceBetween={50}
+        spaceBetween={40}
         // pagination={{
         //   clickable: true,
         // }}

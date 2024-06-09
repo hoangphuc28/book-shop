@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 /* Custom styles */
+.swiper {
+  padding: 5px !important;
+}
 .custom-timeline .MuiTimelineItem-positionRight::before{
     flex:none !important;
   }

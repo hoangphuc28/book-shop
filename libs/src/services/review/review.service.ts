@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Book, BookDetailReviews, Review } from '../../common';
+import { Book, BookDetailReviews, PaginationResultDto, Review } from '../../common';
 import { Repository } from 'typeorm';
 import { AccountService } from '../account/account.service';
 import { BookService } from '../book/book.service';
@@ -16,14 +16,34 @@ export class ReviewService {
     private configService: ConfigService,
 
   ) { }
+  async find(includeIsActive: boolean, page?: number, limit?: number, rating?: number): Promise<PaginationResultDto<Review>> {
+    const queryBuilder = this.reviewRepository.createQueryBuilder('review');
+    if (includeIsActive) {
+      queryBuilder.andWhere('review.isActive = :isActive', { isActive: true });
+    }
+    if (rating !== 0) {
+      queryBuilder.andWhere('review.rating = :rating', { rating: rating });
+    }
+    if (page !== undefined && limit !== undefined) {
+      const offset = (page - 1) * limit;
+      queryBuilder.offset(offset).limit(limit);
+    }
+    queryBuilder.leftJoinAndSelect('review.accounts', 'accounts');
+    queryBuilder.orderBy('review.createdAt', 'ASC');
+
+    // Get the results and total count
+    const [authors, total] = await queryBuilder.getManyAndCount();
+
+    return new PaginationResultDto(authors, total, page, limit);
+  }
   async createReview(accountId: string, productId: string, rating: number, content: string) {
     const account = await this.accountService.findUserById(accountId);
     if (!account)
-        throw new Error('Can not find account');
+      throw new Error('Can not find account');
 
     const product = await this.productService.findById(productId);
     if (!product)
-        throw new Error('Can not find product');
+      throw new Error('Can not find product');
 
     const review = new Review();
     review.rating = rating;
@@ -35,33 +55,33 @@ export class ReviewService {
 
     await this.productService.calculateRating(product.id);
     return savedReview;
-}
-async getReviewByProduct(productId: string, limit: number, page: number) {
-  const offset = (page - 1) * limit;
-
-  // Fetch reviews with pagination
-  const [reviews, total] = await this.reviewRepository.findAndCount({
-    where: { bookId: productId },
-    relations: ['accounts'],
-    skip: offset,
-    take: limit,
-  });
-
-  const bucketName = this.configService.get<string>('AWS.SERVICES.S3.BUCKET_NAME');
-  for (let i = 0; i < reviews.length; i++) {
-    reviews[i].accounts.avatar = `https://${bucketName}.s3.amazonaws.com/users/${reviews[i].accounts.id}.jpeg`;
   }
+  async getReviewByProduct(productId: string, limit: number, page: number) {
+    const offset = (page - 1) * limit;
+
+    // Fetch reviews with pagination
+    const [reviews, total] = await this.reviewRepository.findAndCount({
+      where: { bookId: productId },
+      relations: ['accounts'],
+      skip: offset,
+      take: limit,
+    });
+
+    const bucketName = this.configService.get<string>('AWS.SERVICES.S3.BUCKET_NAME');
+    for (let i = 0; i < reviews.length; i++) {
+      reviews[i].accounts.avatar = `https://${bucketName}.s3.amazonaws.com/users/${reviews[i].accounts.id}.jpeg`;
+    }
 
 
-  // Optional: Return pagination metadata
-  return {
-    items: reviews,
-    totalPages: Math.ceil(total / limit),
-    totalItem: total,
-    currentPage: page,
-    itemsPerPage: limit
+    // Optional: Return pagination metadata
+    return {
+      items: reviews,
+      totalPages: Math.ceil(total / limit),
+      totalItem: total,
+      currentPage: page,
+      itemsPerPage: limit
+    }
   }
-}
 
 
 }

@@ -7,6 +7,8 @@ import {
   BeforeUpdate,
   Unique,
   OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { OrderItem } from './OrderItem.entity';
 import { PromotionLevel } from '../constants';
@@ -44,6 +46,16 @@ export class Promotion extends BaseEntity {
   @Field(() => [Order])
   @OneToMany(() => Order, (order) => order.promotion)
   orders: Order[];
+
+
+  @Field()
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Field()
+  @UpdateDateColumn()
+  updatedAt: Date;
+
 
   // @Column({nullable: true, default: 0})
   // percentage: number

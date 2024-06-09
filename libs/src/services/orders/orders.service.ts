@@ -69,13 +69,13 @@ export class OrdersService {
 
 
       const res = new CreateOrderReponse();
+      res.order = savedOrder
       if (savedOrder.paymentMethod === PaymentMethod.Paypal) {
         const orderSavedTemp = await queryRunner.manager.findOne(Order, {
           where: { orderID: savedOrder.orderID },
           relations: ["orderItems.book", "promotion"]
         });
         if (orderSavedTemp) {
-        console.log(orderSavedTemp)
           res.order = orderSavedTemp;
           createOrderInput.applicationContext.return_url = `${createOrderInput.applicationContext.return_url}?orderId=${orderSavedTemp.orderID}`;
           const orderDto = await this.paypalSerivce.convertOrderToOrderDto(orderSavedTemp, createOrderInput.applicationContext);
@@ -121,6 +121,7 @@ export class OrdersService {
       const offset = (page - 1) * limit;
       queryBuilder.offset(offset).limit(limit);
     }
+    queryBuilder.orderBy('order.createdAt', 'ASC');
 
     // Get the results and total count
     const [orders, total] = await queryBuilder.getManyAndCount();

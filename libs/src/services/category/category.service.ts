@@ -30,7 +30,7 @@ export class CategoryService {
         const offset = (page - 1) * limit;
         queryBuilder.offset(offset).limit(limit);
     }
-
+    queryBuilder.orderBy('category.createdAt', 'ASC');
     // Get the results and total count
     const [categories, total] = await queryBuilder.getManyAndCount();
 

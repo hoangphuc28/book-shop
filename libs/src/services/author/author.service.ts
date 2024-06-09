@@ -22,6 +22,7 @@ export class AuthorService {
       const offset = (page - 1) * limit;
       queryBuilder.offset(offset).limit(limit);
   }
+  queryBuilder.orderBy('author.createdAt', 'ASC');
 
     // Get the results and total count
     const [authors, total] = await queryBuilder.getManyAndCount();

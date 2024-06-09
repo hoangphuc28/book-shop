@@ -22,7 +22,7 @@ export class OrdersController {
   @Render('orders/index')
   async findAll(@Res() res: Response,
     @Query('page') page = 1,
-    @Query('limit') limit = 5,
+    @Query('limit') limit = 10,
     @Query('search') search = '',
   ) {
     try {

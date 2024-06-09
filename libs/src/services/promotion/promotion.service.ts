@@ -15,7 +15,7 @@ export class PromotionService {
 
   async findAll(includeActive: boolean): Promise<Promotion[]> {
     if(includeActive)
-      return this.promotionRepository.find({where: {isActive: true}});
+      return this.promotionRepository.find({where: {isActive: true}, order: {createdAt: 'ASC'}});
     return this.promotionRepository.find()
 
   }

@@ -25,7 +25,7 @@ export class CategoriesController {
   @Render('categories/index')
   async listBooks(@Res() res: Response,
   @Query('page') page = 1,
-  @Query('limit') limit = 5,
+  @Query('limit') limit = 10,
   @Query('search') search = '',
   ) {
     try {
@@ -70,7 +70,7 @@ export class CategoriesController {
     try {
       this.categoriesService.save(category.name, (category.isActive === 'true'), id)
     } catch (error) {
-      console.error('Error occurred while saving book:', error);
+      console.error('Error occurred while saving category:', error);
       throw Error();
     }
   }

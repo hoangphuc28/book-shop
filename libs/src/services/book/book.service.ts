@@ -48,6 +48,8 @@ export class BookService {
     if (condition?.sort) {
       queryBuilder = await this.sortBy(queryBuilder, condition?.sort);
     }
+    queryBuilder.orderBy('book.createdAt', 'ASC');
+
     const [items, totalCount] = await queryBuilder
       .take(limit)
       .skip(offset)
@@ -60,19 +62,19 @@ export class BookService {
     return result;
   }
   async findById(id: string) {
-    const book = await this.bookRepository.findOne({
-      where: { id: id },
-      relations: [
-        'category',
-        'author',
-        'reviews'
-      ],
-    });
+    const book = await this.bookRepository.createQueryBuilder('book')
+        .leftJoinAndSelect('book.category', 'category')
+        .leftJoinAndSelect('book.author', 'author')
+        .leftJoinAndSelect('book.reviews', 'reviews', 'reviews.isActive = :isActive', { isActive: true })
+        .where('book.id = :id', { id })
+        .getOne();
+
     if (!book) {
-      throw new Error('Can not find book')
+        throw new Error('Can not find book');
     }
+
     return book;
-  }
+}
   async calculateRating(productId: string) {
     const product = await this.findById(productId);
     if (!product)

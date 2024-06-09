@@ -12,6 +12,7 @@ import { AuthorModule } from './author/author.module';
 import { PromotionModule } from './promotion/promotion.module';
 import { AccountModule } from './account/account.module';
 import { AboutModule } from './about/about.module';
+import { ReviewsModule } from './reviews/reviews.module';
 @Module({
   imports: [
     //guard
@@ -30,6 +31,7 @@ import { AboutModule } from './about/about.module';
     PromotionModule,
     AccountModule,
     AboutModule,
+    ReviewsModule,
   ],
 })
 export class AppModule {}
