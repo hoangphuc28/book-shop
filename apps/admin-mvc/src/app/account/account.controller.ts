@@ -22,6 +22,7 @@ export class AccountController {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   }
+
   @Post('edit')
   async updateAccount(@Body() body: { id: string, isActive: string }) {
     try {

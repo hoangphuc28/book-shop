@@ -18,9 +18,7 @@ export class ReviewService {
   ) { }
   async find(includeIsActive: boolean, page?: number, limit?: number, rating?: number): Promise<PaginationResultDto<Review>> {
     const queryBuilder = this.reviewRepository.createQueryBuilder('review');
-    if (includeIsActive) {
-      queryBuilder.andWhere('review.isActive = :isActive', { isActive: true });
-    }
+    queryBuilder.andWhere('review.isActive = :isActive', { isActive: includeIsActive });
     if (rating !== 0) {
       queryBuilder.andWhere('review.rating = :rating', { rating: rating });
     }
@@ -81,6 +79,9 @@ export class ReviewService {
       currentPage: page,
       itemsPerPage: limit
     }
+  }
+  async update(id: string, review: Partial<Review>) {
+    await this.reviewRepository.update(id, review);
   }
 
 

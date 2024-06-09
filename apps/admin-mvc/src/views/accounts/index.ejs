@@ -50,11 +50,11 @@
                 >
                   Email
                 </th>
-                <th
+                <!-- <th
                   class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
                   Address
-                </th>
+                </th> -->
                 <!-- <th
                   class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
@@ -94,11 +94,11 @@
                     <%= item.email %>
                   </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                <!-- <td class="px-6 py-4 whitespace-nowrap">
                   <div class="text-sm font-medium text-gray-900">
                     <%= item.address %>
                   </div>
-                </td>
+                </td> -->
                 <!-- <td class="px-6 py-4 whitespace-nowrap">
                   <div class="text-sm font-medium text-gray-900">
                     <%= item.total %>VND
@@ -120,7 +120,6 @@
                   <button type="button" class="border-solid border border-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white p-1 rounded-md " data-id="<%= item.id %>" data-status="<%= item.isActive ? 'unblock' : 'block' %>">
                     <%= item.isActive ? 'Block' : 'UnBlock' %>
                   </button>
-
                 </td>
               </tr>
               <% }) %>
@@ -156,7 +155,9 @@
             button.setAttribute('data-status', newStatus);
             button.textContent = newStatus === 'block' ? 'Block' : 'Unblock';
             alert('Account updated successfully')
-            window.location.href = '/accounts'
+            const currentUrl = window.location.href;
+              const currentParams = new URL(currentUrl).search;
+              window.location.href = `/reviews${currentParams}`;
           })
           .catch((error) => {
             alert('Something error')

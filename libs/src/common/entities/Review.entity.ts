@@ -33,6 +33,10 @@ export class Review extends BaseEntity{
   accounts: Account;
 
   @Field()
+  @Column({nullable: true, default: false})
+  isActive: boolean;
+
+  @Field()
   @Column()
   rating: number;
 

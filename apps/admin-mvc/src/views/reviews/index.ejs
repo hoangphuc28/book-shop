@@ -30,7 +30,8 @@
           <h1 class="text-2xl font-semibold text-gray-900">Reviews</h1>
         </div>
         <div class="bg-white shadow rounded-lg p-4">
-          <%- include('./toolbar.ejs',  { data: data , rating: rating}); %>
+          <%- include('./toolbar.ejs', { data: data , rating: rating, filter:
+          filter}); %> <%- include('./tab.ejs', {filter: filter}); %>
 
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
@@ -63,11 +64,6 @@
                 </th>
                 <th
                   class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Update at
-                </th>
-                <th
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 ></th>
               </tr>
             </thead>
@@ -79,9 +75,7 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   <div class="flex">
-                    <p class="mr-2">
-                      <%= item.rating %>
-                    </p>
+                    <p class="mr-2"><%= item.rating %></p>
                     <svg
                       class="w-4 h-4 text-yellow-300 me-1"
                       aria-hidden="true"
@@ -95,8 +89,8 @@
                     </svg>
                   </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <%= truncate(item.content, 10) %>
+                <td class="px-6 py-4 text-sm text-gray-500 w-40 break-words">
+                  <%= item.content %>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                   <span
@@ -111,9 +105,14 @@
                   Date(item.createdAt)); %>
                 </td>
                 <td>
-                  <a href="/authors/edit?id=<%= item.id %>">
-                    <i class="fa-solid fa-pen"></i>
-                  </a>
+                  <button
+                    type="button"
+                    class="editBtn border-solid border border-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white p-1 rounded-md"
+                    data-id="<%= item.id %>"
+                    data-status="<%= item.isActive %>"
+                  >
+                    <%= item.isActive ? 'Hide' : 'Show' %>
+                  </button>
                 </td>
               </tr>
               <% }) %>
@@ -122,5 +121,37 @@
         </div>
       </div>
     </div>
+    <script>
+      document.querySelectorAll('.editBtn').forEach((button) => {
+        button.addEventListener('click', function (event) {
+          event.preventDefault(); // Prevent any default action
+          // Get the current status and ID from the data attributes
+          const button = event.target;
+          const accountId = button.getAttribute('data-id');
+          const currentStatus = button.getAttribute('data-status');
+          // Determine the new status and label
+          const newStatus = currentStatus === 'true' ? 'false' : 'true';
+          // Make the API call to update the account status
+          fetch('/reviews/edit', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id: accountId, isActive: newStatus }),
+          })
+            .then((data) => {
+              // Update the button state and label
+              alert('Account updated successfully');
+              const currentUrl = window.location.href;
+              const currentParams = new URL(currentUrl).search;
+              window.location.href = `/reviews${currentParams}`;
+            })
+            .catch((error) => {
+              alert('Something error');
+              console.error('Error:', error);
+            });
+        });
+      });
+    </script>
   </body>
 </html>
