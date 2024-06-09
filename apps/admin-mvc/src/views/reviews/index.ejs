@@ -132,24 +132,28 @@
           // Determine the new status and label
           const newStatus = currentStatus === 'true' ? 'false' : 'true';
           // Make the API call to update the account status
-          fetch('/reviews/edit', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id: accountId, isActive: newStatus }),
-          })
-            .then((data) => {
-              // Update the button state and label
-              alert('Account updated successfully');
-              const currentUrl = window.location.href;
-              const currentParams = new URL(currentUrl).search;
-              window.location.href = `/reviews${currentParams}`;
+          const status = newStatus === 'true' ? 'show' : 'hide';
+          const confirmationMessage = `Are you sure you want to ${status} this review?`;
+          if (confirm(confirmationMessage)) {
+            fetch('/reviews/edit', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ id: accountId, isActive: newStatus }),
             })
-            .catch((error) => {
-              alert('Something error');
-              console.error('Error:', error);
-            });
+              .then((data) => {
+                // Update the button state and label
+                alert('Review updated successfully');
+                const currentUrl = window.location.href;
+                const currentParams = new URL(currentUrl).search;
+                window.location.href = `/reviews${currentParams}`;
+              })
+              .catch((error) => {
+                alert('Something error');
+                console.error('Error:', error);
+              });
+          }
         });
       });
     </script>

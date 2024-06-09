@@ -1,95 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <%- include('../partials/head.ejs'); %>
-  </head>
-
-  <body class="bg-gray-100">
-    <div class="flex">
-      <%- include('../partials/sidebar.ejs'); %>
-      <div class="w-full p-10 ml-64">
-        <form method="post" action="/promotions">
-          <div class="flex justify-between items-center">
-            <a href="/promotions" class="text-blue-500 mb-4 inline-block"
-              >&larr; Back to promotion listing</a
-            >
-            <button
-              type="submit"
-              class="px-4 py-2 bg-green-500 text-white rounded-lg mr-2 text-sm w-24"
-            >
-              Save
-            </button>
-          </div>
-          <div class="flex mt-7">
-            <div class="bg-white p-6 rounded-lg w-4/6">
-              <h2 class="text-2xl font-bold mb-6">Add Promotion</h2>
-              <div class="grid grid-cols-2 gap-6">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700"
-                    >Code</label
-                  >
-                  <input
-                    required
-                    type="text"
-                    name="code"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                    placeholder="Code"
-                  />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700"
-                    >Level</label
-                  >
-                  <select
-                    required
-                    name="level"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                  >
-                    <% levels.forEach(level => { %>
-                    <option value="<%= level %>"><%= level %></option>
-                    <% }); %>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700"
-                    >Start Date</label
-                  >
-                  <input
-                    required
-                    type="date"
-                    name="startDate"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                  />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700"
-                    >End Date</label
-                  >
-                  <input
-                    required
-                    type="date"
-                    name="endDate"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                  />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700"
-                    >Status</label
-                  >
-                  <select
-                    required
-                    name="isActive"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                  >
-                    <option value="true">Active</option>
-                    <option value="false">Inactive</option>
-                  </select>
-                </div>
+<head>
+  <%- include('../partials/head.ejs'); %>
+</head>
+<body class="bg-gray-100">
+  <div class="flex">
+    <%- include('../partials/sidebar.ejs'); %>
+    <div class="w-full p-10 ml-64">
+      <form id="promotionForm" method="post" action="/promotions">
+        <div class="flex justify-between items-center">
+          <a href="/promotions" class="text-blue-500 mb-4 inline-block">&larr; Back to promotion listing</a>
+          <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-lg mr-2 text-sm w-24">Save</button>
+        </div>
+        <div class="flex mt-7">
+          <div class="bg-white p-6 rounded-lg w-4/6">
+            <h2 class="text-2xl font-bold mb-6">Add Promotion</h2>
+            <div class="grid grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Code</label>
+                <input
+                  required
+                  type="text"
+                  name="code"
+                  id="code"
+                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                  placeholder="Code"
+                />
+                <p class="text-red-500 text-xs mt-1 hidden" id="codeError">Code is required.</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Level</label>
+                <select
+                  required
+                  name="level"
+                  id="level"
+                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                >
+                  <% levels.forEach(level => { %>
+                  <option value="<%= level %>"><%= level %></option>
+                  <% }); %>
+                </select>
+                <p class="text-red-500 text-xs mt-1 hidden" id="levelError">Level is required.</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Start Date</label>
+                <input
+                  required
+                  type="date"
+                  name="startDate"
+                  id="startDate"
+                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                />
+                <p class="text-red-500 text-xs mt-1 hidden" id="startDateError">Start date is required.</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">End Date</label>
+                <input
+                  required
+                  type="date"
+                  name="endDate"
+                  id="endDate"
+                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                />
+                <p class="text-red-500 text-xs mt-1 hidden" id="endDateError">End date is required.</p>
+                <p class="text-red-500 text-xs mt-1 hidden" id="dateError">End date must be after the start date.</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Status</label>
+                <select
+                  required
+                  name="isActive"
+                  id="isActive"
+                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                >
+                  <option value="true">Active</option>
+                  <option value="false">Inactive</option>
+                </select>
+                <p class="text-red-500 text-xs mt-1 hidden" id="isActiveError">Status is required.</p>
               </div>
             </div>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
-  </body>
+  </div>
+
+  <script>
+    document.getElementById('promotionForm').addEventListener('submit', function(event) {
+      let isValid = true;
+
+      const code = document.getElementById('code');
+      const level = document.getElementById('level');
+      const startDate = document.getElementById('startDate');
+      const endDate = document.getElementById('endDate');
+      const isActive = document.getElementById('isActive');
+      const dateError = document.getElementById('dateError');
+
+      if (!code.value.trim()) {
+        isValid = false;
+        document.getElementById('codeError').classList.remove('hidden');
+      } else {
+        document.getElementById('codeError').classList.add('hidden');
+      }
+
+      if (!level.value.trim()) {
+        isValid = false;
+        document.getElementById('levelError').classList.remove('hidden');
+      } else {
+        document.getElementById('levelError').classList.add('hidden');
+      }
+
+      if (!startDate.value.trim()) {
+        isValid = false;
+        document.getElementById('startDateError').classList.remove('hidden');
+      } else {
+        document.getElementById('startDateError').classList.add('hidden');
+      }
+
+      if (!endDate.value.trim()) {
+        isValid = false;
+        document.getElementById('endDateError').classList.remove('hidden');
+      } else {
+        document.getElementById('endDateError').classList.add('hidden');
+      }
+
+      if (!isActive.value.trim()) {
+        isValid = false;
+        document.getElementById('isActiveError').classList.remove('hidden');
+      } else {
+        document.getElementById('isActiveError').classList.add('hidden');
+      }
+
+      // Check if start date is earlier than end date
+      if (startDate.value && endDate.value && new Date(startDate.value) >= new Date(endDate.value)) {
+        isValid = false;
+        dateError.classList.remove('hidden');
+      } else {
+        dateError.classList.add('hidden');
+      }
+
+      if (!isValid) {
+        event.preventDefault();
+      }
+    });
+  </script>
+</body>
 </html>

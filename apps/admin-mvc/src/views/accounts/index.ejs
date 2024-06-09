@@ -117,7 +117,7 @@
                   Date(item.createdAt)); %>
                 </td>
                 <td>
-                  <button type="button" class="border-solid border border-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white p-1 rounded-md " data-id="<%= item.id %>" data-status="<%= item.isActive ? 'unblock' : 'block' %>">
+                  <button type="button" class="editAccountStatus-btn border-solid border border-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white p-1 rounded-md " data-id="<%= item.id %>" data-status="<%= item.isActive ? 'unblock' : 'block' %>">
                     <%= item.isActive ? 'Block' : 'UnBlock' %>
                   </button>
                 </td>
@@ -129,42 +129,51 @@
       </div>
     </div>
     <script>
-      document.querySelectorAll('.toggle-button').forEach(button => {
-        button.addEventListener('click', function(event) {
-          event.preventDefault(); // Prevent any default action
+      document.querySelectorAll('.editAccountStatus-btn').forEach(button => {
+  button.addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent any default action
 
-          // Get the current status and ID from the data attributes
-          const button = event.target;
-          const accountId = button.getAttribute('data-id');
-          const currentStatus = button.getAttribute('data-status');
+    // Get the current status and ID from the data attributes
+    const button = event.target;
+    const accountId = button.getAttribute('data-id');
+    const currentStatus = button.getAttribute('data-status');
 
-          // Determine the new status and label
-          const newStatus = currentStatus === 'block' ? 'unblock' : 'block';
-          const isActive = newStatus === 'block' ? 'false' : 'true'; // Adjust based on your logic
+    // Determine the new status and label
+    const newStatus = currentStatus === 'block' ? 'unblock' : 'block';
+    const isActive = newStatus === 'block' ? 'false' : 'true'; // Adjust based on your logic
 
-          // Make the API call to update the account status
-          fetch('/accounts/edit', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id: accountId, isActive })
-          })
-          .then(data => {
-            // Update the button state and label
-            button.setAttribute('data-status', newStatus);
-            button.textContent = newStatus === 'block' ? 'Block' : 'Unblock';
-            alert('Account updated successfully')
-            const currentUrl = window.location.href;
-              const currentParams = new URL(currentUrl).search;
-              window.location.href = `/reviews${currentParams}`;
-          })
-          .catch((error) => {
-            alert('Something error')
-            console.error('Error:', error);
-          });
-        });
+    // Show a confirmation dialog
+    const confirmationMessage = `Are you sure you want to ${newStatus} this account?`;
+    if (confirm(confirmationMessage)) {
+      // Make the API call to update the account status
+      fetch('/accounts/edit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id: accountId, isActive })
+      })
+      .then(response => {
+        if (response.ok) {
+          // Update the button state and label
+          button.setAttribute('data-status', newStatus);
+          button.textContent = newStatus === 'block' ? 'Block' : 'Unblock';
+          alert('Account updated successfully');
+          // Preserve query parameters in the URL
+          const currentUrl = window.location.href;
+          const currentParams = new URL(currentUrl).search;
+          window.location.href = `/accounts${currentParams}`;
+        } else {
+          throw new Error('Failed to update account status');
+        }
+      })
+      .catch((error) => {
+        alert('Something went wrong');
+        console.error('Error:', error);
       });
+    }
+  });
+});
       </script>
 
 

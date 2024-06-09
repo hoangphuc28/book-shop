@@ -89,5 +89,20 @@
     }
   </style>
 
-
+<script>
+    const truncate = (paragraph, maxLength) => {
+    return paragraph.length > maxLength
+      ? paragraph.substring(0, maxLength) + '...'
+      : paragraph;
+  };
+  const formatVND = (amount) => {
+    if (amount === undefined) {
+      return undefined;
+    }
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(parseFloat(amount));
+  };
+</script>
 </head>

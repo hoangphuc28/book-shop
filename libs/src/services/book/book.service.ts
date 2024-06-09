@@ -24,8 +24,17 @@ export class BookService {
       })
       .getMany();
   }
-  async findAll() {
-    return this.bookRepository.find({ where: { isActive: true } });
+  async findAll(search?: string) {
+    const queryBuilder = this.bookRepository.createQueryBuilder('book');
+
+    queryBuilder.where('book.isActive = :isActive', { isActive: true });
+
+    if (search) {
+      const searchTerm = search.toLowerCase();
+      queryBuilder.andWhere('LOWER(book.title) LIKE :search', { search: `%${searchTerm}%` });
+    }
+
+    return queryBuilder.getMany();
   }
   async find(
     limit: number,
@@ -63,18 +72,18 @@ export class BookService {
   }
   async findById(id: string) {
     const book = await this.bookRepository.createQueryBuilder('book')
-        .leftJoinAndSelect('book.category', 'category')
-        .leftJoinAndSelect('book.author', 'author')
-        .leftJoinAndSelect('book.reviews', 'reviews', 'reviews.isActive = :isActive', { isActive: true })
-        .where('book.id = :id', { id })
-        .getOne();
+      .leftJoinAndSelect('book.category', 'category')
+      .leftJoinAndSelect('book.author', 'author')
+      .leftJoinAndSelect('book.reviews', 'reviews', 'reviews.isActive = :isActive', { isActive: true })
+      .where('book.id = :id', { id })
+      .getOne();
 
     if (!book) {
-        throw new Error('Can not find book');
+      throw new Error('Can not find book');
     }
 
     return book;
-}
+  }
   async calculateRating(productId: string) {
     const product = await this.findById(productId);
     if (!product)
@@ -112,7 +121,7 @@ export class BookService {
         book.categoryId = categoryId;
         book.publishDate = publishDate;
         book.isActive = isActive;
-        if(salePrice)
+        if (salePrice)
           book.salePrice = salePrice;
       } else {
         // Create a new book
@@ -243,11 +252,11 @@ export class BookService {
       }
       case 2: {
         const query = this.orderItemRepository.createQueryBuilder('orderItem')
-        .select('orderItem.bookId', 'bookId')
-        .groupBy('orderItem.bookId')
-        .addSelect('SUM(orderItem.quantity)', 'total') // Thay COUNT bằng SUM để tính tổng số lượng mua
-        .orderBy('total', 'DESC') // Sắp xếp theo tổng số lượng giảm dần
-        .limit(limit);
+          .select('orderItem.bookId', 'bookId')
+          .groupBy('orderItem.bookId')
+          .addSelect('SUM(orderItem.quantity)', 'total') // Thay COUNT bằng SUM để tính tổng số lượng mua
+          .orderBy('total', 'DESC') // Sắp xếp theo tổng số lượng giảm dần
+          .limit(limit);
         const result = await query.getRawMany();
         return result.map(item => this.findById(item.bookId));
       }

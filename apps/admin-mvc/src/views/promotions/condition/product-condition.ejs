@@ -1,84 +1,109 @@
-<div class="grid grid-cols-2 gap-7">
-
-<div class="grid grid-cols-2 gap-7">
-  <div>
-    <label class="block text-sm font-medium text-gray-700"
-      >Discount value</label
-    >
-    <input
-    value="<%= item.validationRule.discountValuePerProduct %>"
-      required
-      type="number"
-      name="discountValuePerProduct"
-      class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-      placeholder="Discount value per product"
-    />
+<div class="h-screen">
+  <div id="itemList" class="mb-2">
+    <!-- Dynamically added items will appear here -->
   </div>
-  <div>
-    <p class="block text-sm font-medium text-gray-700">Select products</p>
-    <ul
-      id="checkbox-list"
-      class="w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-    >
-      <% products.forEach(item=> { %>
-
-      <li
-        class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600"
+  <div class="grid grid-cols-3 gap-7">
+    <div>
+      <label class="block text-sm font-medium text-gray-700"
+        >Discount value</label
       >
-        <div class="flex justify-between items-center">
-          <div class="flex items-center ps-3">
-            <input
-
-              name="productIdList"
-              value="<%= item.id %>"
-              type="checkbox"
-              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-            />
-            <label
-              for="vue-checkbox"
-              class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
-              <%= item.title %></label
-            >
-          </div>
-          <div class="mr-2">
-            <a> Preview </a>
-          </div>
+      <input
+        value="<%= item.validationRule.discountValuePerProduct %>"
+        required
+        type="number"
+        name="discountValuePerProduct"
+        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+        placeholder="Discount value per product"
+      />
+      <div
+        style="height: 200px"
+        class="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mt-4"
+      >
+        <div
+        class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+      >
+        <img
+          style="width: 100%; height: 200px"
+          id="thumbnail"
+          class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
+          src="https://s.net.vn/IjMX"
+          alt="Thumbnail preview"
+        />
+        <div class="w-full flex flex-col justify-between p-4 leading-normal">
+          <h5
+            id="title"
+            class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+          >
+            Title preview
+          </h5>
+          <p
+            style="height: 100px"
+            id="description"
+            class="mb-3 font-normal text-gray-700 dark:text-gray-400"
+          >
+            Description preview
+          </p>
+          <p
+            id="price"
+            class="mb-3 font-normal text-gray-700 dark:text-gray-400"
+          >
+            Price preview
+          </p>
         </div>
-      </li>
-      <% }) %>
-    </ul>
-  </div>
-</div>
-<div style="height: 200px;" class="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mt-4">
-  <a href="#" class="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-    <img style="height: 200px;" id="thumbnail" class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg" src="/docs/images/blog/image-4.jpg" alt="Thumbnail preview">
-    <div class="flex flex-col justify-between p-4 leading-normal">
-        <h5 id="title" class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Title preview</h5>
-        <p id="description" class="mb-3 font-normal text-gray-700 dark:text-gray-400">Description preview</p>
-        <p id="price" class="mb-3 font-normal text-gray-700 dark:text-gray-400">Price preview</p>
-
+      </div>
+      </div>
     </div>
-</a>
-</div>
+    <div class="col-span-2">
+      <%- include('./searchProduct.ejs', { promotion: promotion}); %>
+
+      <ul
+        id="checkbox-list"
+        style="max-height: 500px"
+        class="overflow-scroll w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+      >
+        <% products.forEach(item=> { %>
+
+        <li id="product-<%= item.id %>"
+          class="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600"
+        >
+          <div class="flex justify-between items-center">
+            <div class="flex items-center ps-3">
+              <input
+                name="productIdList"
+                value="<%= item.id %>"
+                type="checkbox"
+                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+              />
+              <label
+                for="vue-checkbox"
+                class="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                <%= item.title %>
+              </label>
+            </div>
+            <div class="mr-2">
+              <a style="cursor: pointer"> Preview </a>
+            </div>
+          </div>
+        </li>
+        <% }) %>
+      </ul>
+    </div>
+  </div>
 </div>
 <script>
-   const data =JSON.parse('<%- JSON.stringify(products) %>');
-   const promotion =JSON.parse('<%- JSON.stringify(promotion) %>');
-
-  function updateContentDisplay(item) {
-
-    $('#thumbnail').attr('src', item.thumbnail);
-    $('#title').text(item.title);
-    $('#price').text(item.price);
-    $('#description').text(item.description);
-  }
+  const data = JSON.parse('<%- JSON.stringify(products) %>');
+  const promotion = JSON.parse('<%- JSON.stringify(promotion) %>');
   $(document).ready(function () {
-    $('input[name="productIdList"]').each(function() {
+    $('input[name="productIdList"]').each(function () {
       const productId = $(this).val(); // Get the value of the input
       // Check if productId is included in promotion.validationRule.productsId
       if (promotion.validationRule.productIdList.includes(productId)) {
         $(this).prop('checked', true); // Mark the checkbox as checked
+        const product = data.find((product) => product.id === productId);
+        if (product) {
+          addItemToList(product.id, product.title);
+        }
       }
     });
 
@@ -87,10 +112,83 @@
     $list.on('click', 'a', function (event) {
       event.preventDefault();
       const index = $(this).closest('li').find('input[type="checkbox"]').val();
-      const item = data.find(product => product.id == index);
+      const item = data.find((product) => product.id == index);
       updateContentDisplay(item);
     });
   });
+  function addItemToList(id, title) {
+    const itemList = document.getElementById('itemList');
+
+    if (!document.getElementById(`item_${id}`)) {
+      const div = document.createElement('div');
+      div.id = `item_${id}`;
+      div.style.backgroundColor = 'transparent';
+      div.style.border = '1px solid #b2b2b278';
+      div.classList.add(
+        'text-gray-500',
+        'py-1',
+        'px-3',
+        'rounded-2xl',
+        'inline-flex',
+        'items-center',
+        'm-1',
+        'text-sm'
+      );
+
+      const innerDiv = document.createElement('div');
+      innerDiv.classList.add('flex', 'justify-between', 'items-center');
+
+      const p = document.createElement('p');
+      p.textContent = title;
+
+      const removeButton = document.createElement('button');
+      removeButton.innerHTML = '<i class="fa-regular fa-circle-xmark"></i>';
+      removeButton.classList.add('ml-3');
+      removeButton.addEventListener('click', () => removeItem(id));
+
+      innerDiv.appendChild(p);
+      innerDiv.appendChild(removeButton);
+      div.appendChild(innerDiv);
+
+      itemList.appendChild(div);
+    }
+  }
+
+  function removeItem(id) {
+    const itemList = document.getElementById('itemList');
+    const itemToRemove = document.getElementById(`item_${id}`);
+    if (itemToRemove) {
+      itemList.removeChild(itemToRemove);
+      // Uncheck the corresponding checkbox
+      const checkbox = document.querySelector(
+        `#checkbox-list input[value="${id}"]`
+      );
+      if (checkbox) {
+        checkbox.checked = false;
+      }
+    }
+  }
+
+  // Function to add an item to the list
+
+  const checkboxes = document.querySelectorAll('[name="productIdList"]');
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', function () {
+      const id = this.value;
+      const title = this.nextElementSibling.textContent;
+      if (this.checked) {
+        addItemToList(id, title);
+      } else {
+        removeItem(id);
+      }
+    });
+  });
+  function updateContentDisplay(item) {
+    $('#thumbnail').attr('src', item.thumbnail);
+    $('#title').text(item.title);
+    $('#price').text(formatVND(item.price));
+    $('#description').text(truncate(item.description, 100));
+  }
   const submit = () => {
     $('input:checkbox[name=productsId]:checked').each(function () {
       console.log($(this).val());

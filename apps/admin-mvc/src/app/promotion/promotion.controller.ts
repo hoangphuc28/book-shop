@@ -82,7 +82,7 @@ export class PromotionController {
 
   @Get('edit/condition')
   @Render('promotions/condition/index')
-  async editCondition(@Query('id') id: string) {
+  async editCondition(@Query('id') id: string, @Query('search') search = '') {
 
     const promotion = await this.promotionService.findOne(id);
     let condition = 0;
@@ -94,7 +94,7 @@ export class PromotionController {
         condition = 2
         break;
     }
-    const products = await this.productService.findAll()
+    const products = await this.productService.findAll(search)
     return { item: promotion, condition: condition, products: products };
   }
   @Post('edit/condition')
