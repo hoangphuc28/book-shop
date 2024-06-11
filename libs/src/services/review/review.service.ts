@@ -51,7 +51,6 @@ export class ReviewService {
 
     const savedReview = await this.reviewRepository.save(review);
 
-    await this.productService.calculateRating(product.id);
     return savedReview;
   }
   async getReviewByProduct(productId: string, limit: number, page: number) {
@@ -59,7 +58,7 @@ export class ReviewService {
 
     // Fetch reviews with pagination
     const [reviews, total] = await this.reviewRepository.findAndCount({
-      where: { bookId: productId },
+      where: { bookId: productId, isActive: true },
       relations: ['accounts'],
       skip: offset,
       take: limit,
@@ -80,8 +79,16 @@ export class ReviewService {
       itemsPerPage: limit
     }
   }
-  async update(id: string, review: Partial<Review>) {
-    await this.reviewRepository.update(id, review);
+  async update(review: Partial<Review>) {
+    try {
+    const res = await this.reviewRepository.save(review);
+    const rv = await this.reviewRepository.findOne({where: {id: res.id}})
+    if(rv)
+     await this.productService.calculateRating(rv?.bookId);
+    } catch (error) {
+      console.log(error)
+      throw error
+    }
   }
 
 

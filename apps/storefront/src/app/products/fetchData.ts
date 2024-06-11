@@ -20,6 +20,7 @@ export const loadBooks = async (page = 1, limit = 10, categories: string[], auth
     booksData: bookQuery.data.getBooks,
   };
 };
+
 export const loadCategories = async () => {
   const categoryQuery = await clientWithoutAuth.query({ query: getCategories });
   return {

@@ -47,7 +47,7 @@ export class Amount {
 
   @ValidateNested()
   @Type(() => Breakdown)
-  breakdown: Breakdown;
+  breakdown!: Breakdown;
 }
 
 export class PurchaseUnit {
@@ -84,4 +84,15 @@ export class OrderDto {
   @ValidateNested()
   @Type(() => ApplicationContext)
   application_context: ApplicationContext;
+}
+
+// export class Amount {
+//   value: string;
+//   currency_code: string;
+// }
+
+export class OrderRefund {
+  amount: Amount;
+  invoice_id: string;
+  note_to_payer: string;
 }

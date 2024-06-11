@@ -4,7 +4,7 @@ import { ApplyPromotionDto, CreatePromotionDto, Order, OrderLevelValidationRule,
 import { Repository } from 'typeorm';
 import { PromotionLevel } from '../../common/constants';
 import { BookService } from '../book/book.service';
-
+import { LessThanOrEqual } from 'typeorm';
 
 @Injectable()
 export class PromotionService {
@@ -14,10 +14,10 @@ export class PromotionService {
   ) {}
 
   async findAll(includeActive: boolean): Promise<Promotion[]> {
+    const currentDate = new Date();
     if(includeActive)
-      return this.promotionRepository.find({where: {isActive: true}, order: {createdAt: 'ASC'}});
+      return this.promotionRepository.find({where: {isActive: true,  endDate: LessThanOrEqual(currentDate)}, order: {createdAt: 'ASC'}});
     return this.promotionRepository.find()
-
   }
 
   async findOne(id: string): Promise<Promotion> {

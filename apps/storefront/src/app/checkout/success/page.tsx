@@ -3,10 +3,12 @@ import { captureOrderMutation } from "./captureOrder"
 import { redirect } from 'next/navigation'
 export default async function CheckoutSuccess({searchParams}: {searchParams?: {
   token?: string,
-  PayerID?: string
+  PayerID?: string,
+  orderId?: string
 }}) {
   const token = searchParams?.token || ''
-  const res = await captureOrderMutation(token)
+  const orderId = searchParams?.orderId || ''
+  const res = await captureOrderMutation(token, orderId)
   if(res?.data?.captureOrder === 'fail') {
     redirect('/checkout/fail')
   }

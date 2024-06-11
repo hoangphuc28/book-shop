@@ -10,6 +10,7 @@ type Category {
 
 type OrderItem {
   orderItemID: String!
+  book: Book!
   bookId: String!
   extendPrice: Float
   orderID: String!
@@ -30,6 +31,8 @@ type Promotion {
   startDate: DateTime!
   endDate: DateTime!
   orders: [Order!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   level: PromotionLevel!
   validationRule: ValidationRule!
 }
@@ -58,28 +61,36 @@ type Order {
   address: String!
   phone: String!
   email: String!
+  orderCode: String
   total: Float!
   status: OrderStatus!
+  deliveringDate: DateTime
+  deliveredDate: DateTime
+  cancelledDate: DateTime
+  cancelePendingDate: DateTime
+  note: String
+  captureOrderId: String
   paymentMethod: PaymentMethod!
   createdAt: DateTime!
   updatedAt: DateTime!
   orderItems: [OrderItem!]!
-  promotion: Promotion!
+  promotion: Promotion
 }
 
 """The status of order"""
 enum OrderStatus {
-  Order_Placed
-  Order_Confirmed
-  In_Transit
-  Dilivered
-  Cancelled
+  PENDING
+  DELIVERING
+  DELIVERED
+  CANCEL_PENDING
+  CANCELLED
+  REJECTED
 }
 
 """The payment method of order"""
 enum PaymentMethod {
-  Cod
-  Paypal
+  COD
+  PAYPAL
 }
 
 type CartItem {
@@ -116,6 +127,7 @@ type Review {
   id: String!
   book: Book!
   accounts: Account!
+  isActive: Boolean!
   rating: Float!
   content: String!
 }
@@ -181,7 +193,8 @@ type Query {
   getBooksWithCondition(condition: Float!, limit: Float!): [Book!]!
   getAboutPage: String!
   orders: [Order!]!
-  ordersByAccount(accountId: String!): [Order!]!
+  findOrdersByAccountId(status: String!): [Order!]!
+  getDetailOrder(orderId: String!): Order!
   getCart: Cart!
   information: GetAccountInformationDto!
   getCategories: [Category!]!
@@ -200,7 +213,8 @@ input BookSearchCondition {
 type Mutation {
   createReview(productId: String!, rating: Float!, content: String!): Review!
   createOrder(order: CreateOrderInput!): CreateOrderReponse!
-  captureOrder(token: String!): String!
+  captureOrder(token: String!, orderId: String!): String!
+  updateOrderStatus(orderId: String!, orderStatus: String!): String!
   updateCart(bookId: String!, quantity: Float!, isReplace: Boolean!): Cart!
   clearCart: Cart!
   saveAccount(fullName: String, phone: String!, address: String!): Account!

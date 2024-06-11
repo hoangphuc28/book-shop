@@ -74,7 +74,7 @@ export class BookService {
     const book = await this.bookRepository.createQueryBuilder('book')
       .leftJoinAndSelect('book.category', 'category')
       .leftJoinAndSelect('book.author', 'author')
-      .leftJoinAndSelect('book.reviews', 'reviews', 'reviews.isActive = :isActive', { isActive: true })
+      .leftJoinAndSelect('book.reviews', 'review', 'review.isActive = :isActive', { isActive: true })
       .where('book.id = :id', { id })
       .getOne();
 
@@ -86,13 +86,32 @@ export class BookService {
   }
   async calculateRating(productId: string) {
     const product = await this.findById(productId);
-    if (!product)
-      throw new Error('Can not find product');
-    for (let i = 0; i < product.reviews.length; i++) {
-      product.rating += product.reviews[i].rating
+    if (!product) {
+        throw new Error('Can not find product');
     }
-    product.rating = Math.round(product.rating / product.reviews.length)
-    this.bookRepository.save(product)
+
+    let total = 0;
+    const reviews = product.reviews || [];  // Đảm bảo reviews là một mảng hợp lệ
+    const length = reviews.length;
+    if (length === 0) {
+        await this.bookRepository.save({ id: product.id, rating: 0 })
+        return
+    }
+
+    for (let i = 0; i < length; i++) {
+        const rating = reviews[i].rating;
+        if (typeof rating === 'number' && !isNaN(rating)) {
+            total += rating;
+        } else {
+            throw new Error(`Invalid rating value at index ${i}`);
+        }
+    }
+
+    const averageRating = total / length;
+    product.rating = Math.round(averageRating);
+
+    await this.bookRepository.save({ id: product.id, rating: product.rating })
+
   }
   async save(
     title: string,
@@ -228,11 +247,15 @@ export class BookService {
   }
   async getBooksOneSale() {
     return this.bookRepository.find({
-      where: { salePrice: MoreThan(0) }, relations: [
+         relations: [
         'category',
         'author',
         'reviews.accounts',
       ],
+      order: {
+        createdAt: 'DESC',
+      },
+      take: 8,
     });
   }
   async getBooksWithCondition(condition: number, limit: number) {

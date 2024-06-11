@@ -19,6 +19,7 @@ export class OrderItem extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   orderItemID: string;
 
+  @Field(() => Book)
   @ManyToOne(() => Book, (book) => book.orderItems, { cascade: true })
   @JoinColumn({ name: 'bookId' })
   book: Book;

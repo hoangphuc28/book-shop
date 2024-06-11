@@ -8,7 +8,7 @@
     <div class="flex">
       <%- include('../partials/sidebar.ejs'); %>
       <div class="w-full p-10 ml-64">
-        <form method="post" action="/promotions/edit">
+        <form id="promotionForm" method="post" action="/promotions/edit">
           <% if (item) { %>
             <input type="hidden" name="id" value="<%= item.id %>">
           <div class="flex justify-between items-center">
@@ -39,6 +39,19 @@
                     placeholder="Code"
                   />
                 </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700"
+                    >Status</label
+                  >
+                  <select
+                    required
+                    name="isActive"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                  >
+                  <option value="true" <%=(item.isActive===true) && 'selected' %>>Active</option>
+                  <option value="false" <%=(item.isActive===false) && 'selected' %>>Inactive</option>
+                  </select>
+                </div>
                 <!-- <div>
                   <label class="block text-sm font-medium text-gray-700"
                     >Level</label
@@ -58,6 +71,7 @@
                     >Start Date</label
                   >
                   <input
+                  id="startDate"
                   value="<%= item.startDate ? new Date(item.startDate).toISOString().split('T')[0] : '' %>"
                     required
                     type="date"
@@ -70,6 +84,7 @@
                     >End Date</label
                   >
                   <input
+                  id="endDate"
                   value="<%= item.endDate ? new Date(item.endDate).toISOString().split('T')[0] : '' %>"
 
                     required
@@ -77,20 +92,11 @@
                     name="endDate"
                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                   />
+                  <p class="text-red-500 text-xs mt-1 hidden" id="dateError">End date must be after the start date.</p>
+
+
                 </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700"
-                    >Status</label
-                  >
-                  <select
-                    required
-                    name="isActive"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                  >
-                  <option value="true" <%=(item.isActive===true) && 'selected' %>>Active</option>
-                  <option value="false" <%=(item.isActive===false) && 'selected' %>>Inactive</option>
-                  </select>
-                </div>
+
               </div>
             </div>
           </div>
@@ -99,5 +105,25 @@
         </form>
       </div>
     </div>
+    <script>
+      document.getElementById('promotionForm').addEventListener('submit', function(event) {
+        let isValid = true;
+
+        const startDate = document.getElementById('startDate');
+        const endDate = document.getElementById('endDate');
+
+        // Check if start date is earlier than end date
+        if (startDate.value && endDate.value && new Date(startDate.value) >= new Date(endDate.value)) {
+          isValid = false;
+          dateError.classList.remove('hidden');
+        } else {
+          dateError.classList.add('hidden');
+        }
+
+        if (!isValid) {
+          event.preventDefault();
+        }
+      });
+    </script>
   </body>
 </html>

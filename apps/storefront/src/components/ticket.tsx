@@ -1,3 +1,4 @@
+import React from "react";
 import { CheckPromotionLevel } from "../utils/checkLevelPromotion";
 import { formatVndTo1k } from "../utils/formatCurrency";
 import { PromotionLevel } from "../utils/interfaces/enum"
@@ -10,6 +11,7 @@ interface Props {
   promotion: Promotion
 }
 export default function Ticket({promotion}: Props) {
+
   const {applyPromotion} = useOrder()
   return (
 
@@ -28,6 +30,8 @@ export default function Ticket({promotion}: Props) {
             </div>
             <button onClick={() => applyPromotion(promotion)} className="text-base rounded-sm">Apply</button>
           </section>
+
         </article>
   )
 }
+

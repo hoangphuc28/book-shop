@@ -222,8 +222,8 @@ export const createOrder = gql`
   }
 `;
 export const captureOrder = gql`
-mutation CaptureOrder($token: String!) {
-    captureOrder(token: $token)
+mutation CaptureOrder($token: String!, $orderId: String!) {
+    captureOrder(token: $token, orderId: $orderId)
 }
 `
 export const clearCart = gql`
@@ -303,3 +303,94 @@ export const getBooksWithCondition = gql`
     }
   }
 `;
+export const getOrdersByAccount = gql`
+query FindOrdersByAccountId($status: String!) {
+    findOrdersByAccountId(status: $status) {
+        orderID
+        fullName
+        address
+        phone
+        email
+        total
+        status
+        paymentMethod
+        orderCode
+        orderItems {
+            orderItemID
+            bookId
+            extendPrice
+            orderID
+            quantity
+            price
+            createdAt
+            updatedAt
+        }
+        promotion {
+            id
+            code
+            startDate
+            endDate
+            createdAt
+            updatedAt
+            level
+            validationRule {
+               ... on OrderLevelValidationRule {
+                    limit
+                    percentage
+                }
+                ... on ProductLevelValidationRule {
+                    productIdList
+                    discountValuePerProduct
+                }
+            }
+        }
+    }
+}
+`
+export const getDetailOrder = gql`
+query GetDetailOrder($orderId: String!) {
+    getDetailOrder(orderId: $orderId) {
+
+        orderID
+        fullName
+        address
+        phone
+        email
+        orderCode
+        total
+        status
+        paymentMethod
+        createdAt
+        updatedAt
+        cancelePendingDate
+        cancelledDate
+        deliveredDate
+        deliveringDate
+        orderItems {
+            orderItemID
+            bookId
+            extendPrice
+            orderID
+            quantity
+            price
+            createdAt
+            updatedAt
+            book {
+                id
+                title
+                thumbnail
+                description
+                price
+                salePrice
+                publishDate
+                rating
+            }
+        }
+    }
+}
+`
+export const updateOrderStatus = gql`
+mutation UpdateOrderStatus($orderId: String!, $orderStatus: String!) {
+    updateOrderStatus(orderId: $orderId, orderStatus: $orderStatus)
+}
+`

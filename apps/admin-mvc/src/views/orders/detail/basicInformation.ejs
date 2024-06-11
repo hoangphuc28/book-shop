@@ -41,7 +41,7 @@
 
           </td>
         </tr>
-        <tr>
+        <!-- <tr>
           <td class="py-2 px-4 border-b">Status</td>
           <td class="py-2 px-4 border-b">
             <select id="orderStatus" class="border border-gray-300 rounded px-2 py-1">
@@ -50,11 +50,23 @@
               <% }) %>
             </select>
           </td>
+        </tr> -->
+        <tr>
+          <td class="py-2 px-4 border-b">Order Status</td>
+          <td class="py-2 px-4 border-b">
+            <%= data.status %>
+          </td>
         </tr>
         <tr>
           <td class="py-2 px-4 border-b">Payment Method</td>
           <td class="py-2 px-4 border-b">
             <%= data.paymentMethod %>
+          </td>
+        </tr>
+        <tr>
+          <td class="py-2 px-4 border-b">Payment Status</td>
+          <td class="py-2 px-4 border-b">
+            <%= data.paymentStatus %>
           </td>
         </tr>
         <tr>

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ApplicationContext, Item, Order, OrderDto, OrderIntent, OrderResponse, PurchaseUnit } from '../../common';
+import { Amount, ApplicationContext, Item, Order, OrderDto, OrderIntent, OrderRefund, OrderResponse, PurchaseUnit } from '../../common';
 import axios from 'axios';
 @Injectable()
 export class PaypalService {
@@ -12,6 +12,7 @@ export class PaypalService {
   private readonly payoutApi: string;
   private readonly getAccessTokenApi: string;
   private readonly identifyApi: string;
+  private readonly refundApi: string;
   constructor(
     private configService: ConfigService
   ) {
@@ -23,6 +24,7 @@ export class PaypalService {
     this.payoutApi = this.configService.get<string>('PAYPAL.PayoutApi' || '') || '';
     this.getAccessTokenApi = this.configService.get<string>('PAYPAL.GetAccessToken') || '';
     this.identifyApi = this.configService.get<string>('PAYPAL.IdentifyApi') || '';
+    this.refundApi = this.configService.get<string>('PAYPAL.RefundApi') || '';
     this.validateConfig();
   }
 
@@ -81,13 +83,42 @@ export class PaypalService {
           'Authorization': `Bearer ${accessToken}`
       },
       })
-      console.log(res)
+      const captureOrderId = res.data?.purchase_units[0]?.payments?.captures[0]?.id
+
+      return captureOrderId
+    } catch (error) {
+      console.log(error)
+      return 'fail'
+    }
+  }
+  async refund(orderCaptureId: string, order: Order) {
+    try {
+      const captureOrderUrl = `${this.baseUrl}${this.refundApi.replace('%s', orderCaptureId)}`;
+      const accessToken = await this.getAccessToken();
+      const data = new OrderRefund()
+      const amount = new Amount()
+      amount.value = this.convertVNDToUSD(order.total+order.promotionValue).toString()
+      amount.currency_code = 'USD'
+      data.amount = amount
+      data.invoice_id = Date.now().toString()
+      data.note_to_payer = 'Defective product'
+      const res = await axios({
+        url: captureOrderUrl,
+        method: 'POST',
+        data: data,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
+      },
+      })
       return 'success'
     } catch (error) {
       console.log(error)
       return 'fail'
     }
   }
+
+
   private validateConfig() {
     if (!this.clientId) throw new Error('PayPal ClientId is not defined');
     if (!this.secretKey) throw new Error('PayPal SecretKey is not defined');
@@ -143,4 +174,5 @@ export class PaypalService {
   convertVNDToUSD(vnd: number, conversionRate = 0.000043): number {
     return Math.round(vnd*conversionRate* 100) /100;
   }
+
 }

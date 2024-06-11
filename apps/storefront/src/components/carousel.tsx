@@ -14,7 +14,7 @@ export default async function Carousel() {
   return (
     <div className="container pb-16 mt-10">
       <h2 className="text-2xl font-medium text-gray-800 uppercase mb-5">
-        Products On Sale
+        New Products
       </h2>
         <Swiper
         slidesPerView={4}

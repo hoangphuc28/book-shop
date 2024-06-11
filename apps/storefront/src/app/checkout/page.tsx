@@ -76,7 +76,7 @@ export default function Checkout() {
       const status = res?.data?.createOrder?.order?.paymentMethod as PaymentMethod
       resetOrder()
       reset({})
-      if(status === PaymentMethod?.Paypal) {
+      if(status === PaymentMethod?.PAYPAL) {
        window.location.href = res?.data?.createOrder?.link
       } else {
         alert('Order successfully')
@@ -160,7 +160,7 @@ export default function Checkout() {
                         required
                         style={{ height: 20, width: 20 }}
                         type="radio"
-                        defaultValue={PaymentMethod.Cod}
+                        defaultValue={PaymentMethod.COD}
                         name="paymentMethod"
                       />
                       <div className="mr-10 ml-5">
@@ -190,7 +190,7 @@ export default function Checkout() {
                         required
                         style={{ height: 20, width: 20 }}
                         type="radio"
-                        defaultValue={PaymentMethod.Paypal}
+                        defaultValue={PaymentMethod.PAYPAL}
                         name="paymentMethod"
                       />
                       <div className="mr-5 ml-5">
@@ -219,12 +219,19 @@ export default function Checkout() {
               </div>
             </div>
             <div className="col-span-5 border border-gray-200 p-4 rounded mr-5">
-              <SummaryOrder action={<button
-                type='submit'
-                className="btn-style1 px-2 py-2 w-full block text-center"
-              >
-                Submit
-              </button>} />
+            <SummaryOrder
+          action={
+            cart?.length === 0 ? (
+              <button disabled className="btn-style1 px-2 py-2 w-full block text-center">
+                CHECKOUT
+              </button>
+            ) : (
+              <button type='submit' className="btn-style1 px-2 py-2 w-full block text-center">
+              CHECKOUT
+            </button>
+            )
+          }
+        />
             </div>
           </div>
         </form>

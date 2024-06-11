@@ -6,9 +6,14 @@ import Logo from "../../images/logo2.png";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useAuth } from "../utils/providers/auth";
 import { useOrder } from "../utils/providers/order";
+import { getInformation } from "../utils/api/graphQL/query";
+import { useQuery } from "@apollo/client";
+import { Account } from "../utils/interfaces/account";
 export default function Nav() {
 const {token} = useAuth()
 const {count} = useOrder()
+const { data } = useQuery(getInformation)
+const accountData: Account = data?.information as Account
   return (
     <nav className="sticky top-0 z-30" style={{ background: '#040028' }}>
       <div className="container flex">
@@ -51,7 +56,8 @@ const {count} = useOrder()
               </div>
             </Link>
             {token !== '' ? <Link href='/profile/information'>
-              <AccountCircleIcon fontSize="large" sx={{ color: 'white' }} />
+            <img style={{borderRadius: '50%'}} src={accountData?.avatar} width={30} height={30}/>
+              {/* <AccountCircleIcon fontSize="large" sx={{ color: 'white' }} /> */}
             </Link> : <Link href={'/auth/login'} className="transition t-style1" style={{ letterSpacing: '3px' }}>
               Login
             </Link>}

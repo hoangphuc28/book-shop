@@ -1,13 +1,35 @@
-
+'use client'
 import { Fragment } from "react";
-import ListOrders from "../../../components/listOrders";
+
+import { OrderStatus } from "../../../utils/interfaces/enum";
+import { useQuery } from "@apollo/client";
+import { getOrdersByAccount } from "../../../utils/api/graphQL/query";
+import OrderCard from "../../../components/orderCard";
+import { Order } from "../../../utils/interfaces/order";
+
+
 
 export default function Orders() {
-    const src = "https://cdn.shopify.com/s/files/1/0533/2089/files/design-books-the-design-of-everyday-things-book-cover.jpg?v=1587988106";
+    const {data} = useQuery(getOrdersByAccount, {
+      variables: {
+        status: OrderStatus.PENDING
+      }
+    })
 
     return (
         <Fragment>
-            <ListOrders/>
+        <div className="col-span-9 space-y-4">
+
+          {
+            data?.findOrdersByAccountId?.map((item: Order, index: number) => {
+              return(
+                <Fragment key={index}>
+                   <OrderCard order={item}/>
+                </Fragment>
+              )
+            })
+          }
+</div>
         </Fragment>
 
     )

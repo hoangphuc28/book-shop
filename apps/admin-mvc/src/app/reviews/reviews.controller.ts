@@ -33,7 +33,7 @@ export class ReviewsController {
   @Post('edit')
   async updateAccount(@Body() body: { id: string, isActive: string }) {
     try {
-      return this.reviewService.update(body.id, { isActive: (body.isActive === 'true') })
+      return this.reviewService.update({id: body.id, isActive: (body.isActive === 'true') })
     } catch (error) {
       console.log(error)
       throw new Error("Something error");

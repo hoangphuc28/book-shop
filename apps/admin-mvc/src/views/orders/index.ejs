@@ -32,10 +32,17 @@
         </div>
         <div class="bg-white shadow rounded-lg p-4">
           <table class="min-w-full divide-y divide-gray-200">
-          <%- include('../partials/toolBar.ejs',  { data: data }); %>
+            <%- include('../partials/toolBar.ejs', { data: data }); %> <%-
+            include('./tab.ejs', { data: data, filter: filter, orderStatuses:
+            orderStatuses }); %>
 
             <thead class="bg-gray-50">
               <tr>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Order Code
+                </th>
                 <th
                   class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
@@ -46,25 +53,31 @@
                 >
                   Phone
                 </th>
-                <th
+                <!-- <th
                   class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
                   Email
-                </th>
-                <th
+                </th> -->
+                <!-- <th
                   class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
                   Address
-                </th>
+                </th> -->
                 <!-- <th
                   class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
                   Total
                 </th> -->
-                <th
+                <!-- <th
                   class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
                   Status
+                </th> -->
+
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Payment Status
                 </th>
 
                 <th
@@ -75,11 +88,19 @@
                 <th
                   class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 ></th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                ></th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
               <% data.items.forEach(item=> { %>
               <tr>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900">
+                    <%= item.orderCode %>
+                  </div>
+                </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="text-sm font-medium text-gray-900">
                     <%= item.fullName %>
@@ -90,26 +111,33 @@
                     <%= item.phone %>
                   </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                <!-- <td class="px-6 py-4 whitespace-nowrap">
                   <div class="text-sm font-medium text-gray-900">
                     <%= item.email %>
                   </div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                </td> -->
+                <!-- <td class="px-6 py-4 whitespace-nowrap">
                   <div class="text-sm font-medium text-gray-900">
                     <%= item.address %>
                   </div>
-                </td>
+                </td> -->
                 <!-- <td class="px-6 py-4 whitespace-nowrap">
                   <div class="text-sm font-medium text-gray-900">
                     <%= item.total %>VND
                   </div>
                 </td> -->
-                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <!-- <td class="px-6 py-4 whitespace-nowrap text-sm">
                   <span
                     class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800"
                   >
                     <%= item.status %>
+                  </span>
+                </td> -->
+                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                  <span
+                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800"
+                  >
+                    <%= item.paymentStatus %>
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -122,6 +150,62 @@
                     <i class="fa-solid fa-pen"></i>
                   </a>
                 </td>
+                <td>
+                  <% if (item.status == 'PENDING') { %>
+                  <div class="flex">
+                    <button
+                      onclick="changeStatus()"
+                      type="button"
+                      class="mr-2 text-sm editAccountStatus-btn border-solid border bg-red-400 text-white p-1 rounded-md"
+                      data-id="<%= item.orderID %>"
+                      data-status="REJECTED"
+                    >
+                      Reject
+                    </button>
+                    <button
+                      onclick="changeStatus()"
+                      type="button"
+                      class="text-sm editAccountStatus-btn border-solid border bg-green-500 text-white p-1 rounded-md"
+                      data-id="<%= item.orderID %>"
+                      data-status="DELIVERING"
+                    >
+                      Delivering
+                    </button>
+                  </div>
+
+                  <% } else if (item.status == 'DELIVERING') { %>
+                  <button
+                    onclick="changeStatus()"
+                    type="button"
+                    class="mr-2 text-sm editAccountStatus-btn border-solid border bg-green-500 text-white p-1 rounded-md"
+                    data-id="<%= item.orderID %>"
+                    data-status="DELIVERED"
+                  >
+                    Delivered
+                  </button>
+                  <% } else if(item.status == 'CANCEL_PENDING') { %>
+                  <div class="flex">
+                    <button
+                      onclick="changeStatus()"
+                      type="button"
+                      class="mr-2 text-sm editAccountStatus-btn border-solid border bg-red-400 text-white p-1 rounded-md"
+                      data-id="<%= item.orderID %>"
+                      data-status="CANCELLED"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onclick="changeStatus()"
+                      type="button"
+                      class="text-sm editAccountStatus-btn border-solid border bg-green-500 text-white p-1 rounded-md"
+                      data-id="<%= item.orderID %>"
+                      data-status="DELIVERING"
+                    >
+                      Delivering
+                    </button>
+                  </div>
+                  <% } %>
+                </td>
               </tr>
               <% }) %>
             </tbody>
@@ -129,5 +213,34 @@
         </div>
       </div>
     </div>
+    <script>
+      const changeStatus = () => {
+        var button = event.target; // Get the button element that triggered the event
+        var dataStatus = button.getAttribute('data-status'); // Get the value of data-status attribute
+        var dataId = button.getAttribute('data-id');
+        console.log(dataStatus);
+        console.log(dataId);
+        const confirmationMessage = `Are you sure you want to change order status to ${dataStatus}?`;
+        if (confirm(confirmationMessage)) {
+          fetch(`/orders/${dataId}/status`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status: dataStatus }),
+          })
+            .then((data) => {
+              alert('Order status updated successfully');
+              const currentUrl = window.location.href;
+              const currentParams = new URL(currentUrl).search;
+              window.location.href = `/orders${currentParams}`;
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+              alert('Can not change order status');
+            });
+        }
+      };
+    </script>
   </body>
 </html>

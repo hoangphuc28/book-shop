@@ -1,18 +1,19 @@
 export enum PaymentMethod {
-  Cod = 'COD',
-  Paypal = 'PAYPAL',
+  COD = 'COD',
+  PAYPAL = 'PAYPAL',
 }
 export enum OrderStatus {
-  Order_Placed = 'ORDER_PLACED',// the order is registered in the merchant's system
-  Order_Confirmed = 'ORDER_CONFIRMED',// confirms that the order is legit
-  In_Transit = 'IN_TRANSIT', // the package are moved
-  Dilivered = 'DELIVERED', // the customer's address has successfully received the package
-  Cancelled = 'CENCELLED', // stock issues or payment problems
+  PENDING = 'PENDING',// the order is registered in the merchant's system
+  DELIVERING = 'DELIVERING', // the package are moved
+  DELIVERED = 'DELIVERED', // the customer's address has successfully received the package
+  CANCEL_PENDING = 'CANCEL_PENDING',
+  CANCELLED = 'CANCELLED', // stock issues or payment problems
+  REJECTED = 'REJECTED'
 }
 export enum PaymentStatus {
-  Pending = 'PENDING',
-  Paid = 'PAID',
-  Refunded = 'REFUNDED'
+  PENDING = 'PENDING',
+  PAID = 'PAID',
+  REFUNDED = 'REFUNDED'
 }
 export enum PromotionLevel {
   Level_Order = 'ORDER_LEVEL',

@@ -7,7 +7,7 @@ export const orderInformationSchema = z.object({
   email: z.string().trim().min(1, { message: 'Email is required' }).email({ message: 'Invalid email address' }),
   address: z.string().trim().min(1, { message: 'Address is required' }),
   phone: z.string().trim().min(1, { message: 'Phone is required' }),
-  paymentMethod: z.enum([PaymentMethod.Cod, PaymentMethod.Paypal], {
+  paymentMethod: z.enum([PaymentMethod.COD, PaymentMethod.PAYPAL], {
     errorMap: () => ({ message: 'Invalid payment method' }),
   }),
 })

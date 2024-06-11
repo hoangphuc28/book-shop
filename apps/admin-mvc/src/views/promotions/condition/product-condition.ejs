@@ -8,8 +8,10 @@
         >Discount value</label
       >
       <input
+      id="discountValue"
         value="<%= item.validationRule.discountValuePerProduct %>"
         required
+        min="5000"
         type="number"
         name="discountValuePerProduct"
         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
@@ -55,7 +57,6 @@
     </div>
     <div class="col-span-2">
       <%- include('./searchProduct.ejs', { promotion: promotion}); %>
-
       <ul
         id="checkbox-list"
         style="max-height: 500px"

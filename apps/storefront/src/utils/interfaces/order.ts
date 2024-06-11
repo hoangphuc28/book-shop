@@ -1,6 +1,7 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { PaymentMethod } from './enum';
+import { OrderStatus, PaymentMethod, PaymentStatus } from './enum';
 import { Book } from './book';
+import { Promotion } from './promotion';
 
 export interface CreateOrderInput {
   fullName?: string;
@@ -39,5 +40,43 @@ export interface OrderItemInput {
 
   totalItemPrice?: number;
 
+}
 
+export interface Order {
+  orderID: string;
+  fullName: string;
+  address: string;
+  phone: string;
+  email: string;
+  total?: number;
+  status: OrderStatus;
+  paymentMethod: PaymentMethod;
+  paymentStatus: PaymentStatus;
+  createdAt: Date;
+  updatedAt: Date;
+  orderItems: OrderItem[];
+  orderCode: string;
+  promotion?: Promotion;
+  promotionId?: string;
+  promotionValue?: number;
+
+  deliveringDate: Date;
+
+  deliveredDate: Date;
+
+  cancelledDate: Date;
+
+  cancelePendingDate: Date;
+}
+export interface OrderItem {
+  orderItemID: string;
+  book: Book;
+  bookId: string;
+  extendPrice?: number;
+  order: Order;
+  orderID?: string;
+  quantity: number;
+  price: number;
+  createdAt: Date;
+  updatedAt: Date;
 }

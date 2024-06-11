@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateOrderInput, CreateOrderReponse, Order, OrderItem, OrderStatus, PaginationResultDto, PaymentMethod } from '../../common';
+import { CreateOrderInput, CreateOrderReponse, Order, OrderItem, OrderStatus, PaginationResultDto, PaymentMethod, PaymentStatus } from '../../common';
 import { Repository } from 'typeorm';
 import { PromotionService } from '../promotion/promotion.service';
 import { BookService } from '../book/book.service';
@@ -32,7 +32,7 @@ export class OrdersService {
       const newOrder = new Order();
       Object.assign(newOrder, createOrderInput);
       newOrder.total = 0;
-
+      newOrder.orderCode = await this.generateOrderID()
       let savedOrder = await queryRunner.manager.save(newOrder);
 
       for (const item of savedOrder.orderItems) {
@@ -70,7 +70,8 @@ export class OrdersService {
 
       const res = new CreateOrderReponse();
       res.order = savedOrder
-      if (savedOrder.paymentMethod === PaymentMethod.Paypal) {
+      if (savedOrder.paymentMethod === PaymentMethod.PAYPAL) {
+
         const orderSavedTemp = await queryRunner.manager.findOne(Order, {
           where: { orderID: savedOrder.orderID },
           relations: ["orderItems.book", "promotion"]
@@ -101,7 +102,8 @@ export class OrdersService {
       relations: ['orderItems', 'promotion'],
     });
   }
-  async find(page?: number, limit?: number, query = ''): Promise<PaginationResultDto<Order>> {
+
+  async find(page?: number, limit?: number, query = '', status = OrderStatus.DELIVERING): Promise<PaginationResultDto<Order>> {
     const queryBuilder = this.orderRepository.createQueryBuilder('order');
 
     // Include relations
@@ -114,6 +116,9 @@ export class OrdersService {
         .andWhere('LOWER(order.fullName) LIKE LOWER(:fullName)', { fullName: `%${query}%` })
         .orWhere('LOWER(order.phone) LIKE LOWER(:phone)', { phone: `%${query}%` })
         .orWhere('LOWER(order.email) LIKE LOWER(:email)', { email: `%${query}%` });
+    }
+    if (status) {
+      queryBuilder.andWhere('order.status = :status', { status });
     }
 
     // Apply pagination if both page and limit are provided
@@ -130,10 +135,10 @@ export class OrdersService {
   }
 
 
-  async findOrdersByAccountId(accountId: string): Promise<Order[]> {
+  async findOrdersByAccountId(accountId: string, status?: OrderStatus): Promise<Order[]> {
     return this.orderRepository.find({
       where: { account: { id: accountId } },
-      relations: ['orderItems', 'promotion'],
+      relations: ['orderItems.book', 'promotion'],
     });
   }
   async findById(id: string): Promise<Order | null> {
@@ -145,13 +150,50 @@ export class OrdersService {
   async updateOrderStatus(id: string, status: OrderStatus) {
     try {
       const order = await this.findById(id);
+      console.log(order?.status)
       if (order) {
         order.status = status;
+        console.log(order.status)
+        if((order.status === OrderStatus.CANCELLED || order.status === OrderStatus.REJECTED) && order.paymentStatus === PaymentStatus.PAID) {
+          await this.paypalSerivce.refund(order.captureOrderId, order)
+          order.paymentStatus = PaymentStatus.REFUNDED
+        }
+        if(order.status === OrderStatus.DELIVERED) {
+          order.paymentStatus = PaymentStatus.PAID
+        }
+        await this.orderRepository.save(order);
+        return order;
+      }
+    } catch (error) {
+      console.log(error)
+      throw new Error('Can not change order status')
+    }
+  }
+  async updatePaymentStatus(id: string, status: PaymentStatus) {
+    try {
+      const order = await this.findById(id);
+      if (order) {
+        order.paymentStatus = status;
         await this.orderRepository.save(order);
         return order;
       }
     } catch (error) {
       throw new Error('Can not change order status')
     }
+  }
+  async generateOrderID(): Promise<string> {
+    const now = new Date();
+    const year = now.getFullYear().toString().slice(-2); // Lấy 2 chữ số cuối của năm
+    const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Tháng (01-12)
+    const day = now.getDate().toString().padStart(2, '0'); // Ngày (01-31)
+    const hours = now.getHours().toString().padStart(2, '0'); // Giờ (00-23)
+    const minutes = now.getMinutes().toString().padStart(2, '0'); // Phút (00-59)
+    const seconds = now.getSeconds().toString().padStart(2, '0'); // Giây (00-59)
+    const milliseconds = now.getMilliseconds().toString().padStart(3, '0'); // Milliseconds (000-999)
+
+    return `ORD-${year}${month}${day}-${hours}${minutes}${seconds}${milliseconds}`;
+  }
+  async updateOrderCaptureId(id: string, orderCaptureId: string) {
+    this.orderRepository.save({orderID: id, captureOrderId: orderCaptureId})
   }
 }
