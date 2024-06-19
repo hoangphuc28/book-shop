@@ -118,7 +118,6 @@ export class Order extends BaseEntity {
         break;
       }
     }
-
   }
 
   @Field(() => PaymentMethod)

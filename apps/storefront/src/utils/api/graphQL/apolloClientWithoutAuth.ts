@@ -7,6 +7,7 @@ const httpLink = new HttpLink({
   uri: process.env.NEXT_PUBLIC_URL_SERVER_GRAPHQL,
   fetchOptions: { cache: "no-store" }
 });
+
 const defaultOptions: DefaultOptions = {
   watchQuery: {
     fetchPolicy: 'no-cache',
