@@ -1,10 +1,9 @@
-import { useMutation, useQuery } from '@apollo/client';
-import React, { useEffect, useState } from 'react';
-import { getCart, updateCart } from '../utils/api/graphQL/query';
-import { count } from 'rxjs';
+import { useMutation } from '@apollo/client';
+import React, { useState } from 'react';
+import { updateCart } from '../../utils/api/graphQL/query';
 import { useDebouncedCallback } from 'use-debounce';
 import { useRouter } from 'next/navigation';
-import { useLoading } from '../utils/providers/loading';
+import { useLoading } from '../../utils/providers/loading';
 interface Props {
   defaultValue: number
   productId: string
@@ -36,7 +35,7 @@ export default function CounterInput({ defaultValue, productId }: Props) {
       const res = await updateCartMutation({
         variables: {
           bookId: productId,
-          quantity: parseInt(count),
+          quantity: parseInt(count.toString()),
           isReplace: true
         },
       });

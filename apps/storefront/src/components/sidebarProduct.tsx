@@ -48,7 +48,6 @@ export default function SidebarProducts() {
   };
   const isCategoryChecked = (categoryId: string) => {
     const params = new URLSearchParams(searchParams.toString());
-
     const categoryParam = params.getAll('category')
 
     if (Array.isArray(categoryParam)) {

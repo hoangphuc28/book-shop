@@ -10,8 +10,9 @@ const statusColors: { [key in OrderStatus]: string } = {
   [OrderStatus.PENDING]: 'text-yellow-400',
   [OrderStatus.DELIVERING]: 'text-blue-500',
   [OrderStatus.DELIVERED]: 'text-green-500',
-  [OrderStatus.CENCELLED]: 'text-red-400',
+  [OrderStatus.CANCELLED]: 'text-red-400',
   [OrderStatus.CANCEL_PENDING]: 'text-orange-500',
+  [OrderStatus.REJECTED]: 'text-red-400',
 };
 export default function OrderCard({ order }: Props) {
   const statusClass = statusColors[order.status] || 'bg-gray-500';
